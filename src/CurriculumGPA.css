@@ -1,0 +1,521 @@
+/* CurriculumGPA.css */
+
+/* ── LAYOUT ── */
+.curric-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f4f5f7;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* ── HEADER ── */
+.curric-header {
+    background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.curric-header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.curric-back-btn {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.curric-back-btn:hover {
+    color: #00aeef;
+}
+
+.curric-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.curric-dept-name {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    padding-left: 14px;
+}
+
+.curric-gpa-card {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 8px 20px;
+    text-align: center;
+    min-width: 110px;
+}
+
+.curric-gpa-label {
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.curric-gpa-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #00aeef;
+    text-shadow: 0 0 10px rgba(0, 174, 239, 0.4);
+    line-height: 1.2;
+}
+
+/* ── THREE-COLUMN LAYOUT ── */
+.curric-layout {
+    display: flex;
+    gap: 0;
+    flex: 1;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.curric-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
+    padding: 16px 12px;
+}
+
+.curric-sidebar h3 {
+    font-size: 0.72rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.curric-search {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    color: #333;
+}
+
+.curric-search:focus {
+    outline: none;
+    border-color: #00aeef;
+}
+
+.curric-faculty-list {
+    margin-top: 6px;
+}
+
+.curric-faculty-group {
+    margin-bottom: 4px;
+}
+
+.curric-faculty-btn {
+    width: 100%;
+    text-align: left;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.curric-faculty-btn:hover {
+    background: #e8f4fc;
+    color: #003366;
+}
+
+.curric-faculty-btn.open {
+    background: #003366;
+    color: #fff;
+}
+
+.curric-faculty-btn .arrow {
+    font-size: 0.65rem;
+    transition: transform 0.2s;
+}
+
+.curric-faculty-btn.open .arrow {
+    transform: rotate(180deg);
+}
+
+.curric-dept-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.curric-sub-list {
+    background: #fafafa;
+    border-radius: 6px;
+    padding: 6px 0;
+    margin-top: 3px;
+}
+
+.curric-dept-list li button {
+    width: 100%;
+    text-align: left;
+    padding: 7px 10px 7px 18px;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    color: #666;
+    font-size: 0.78rem;
+    transition: all 0.15s;
+}
+
+.curric-dept-list li button:hover,
+.curric-dept-list li button.active {
+    color: #00aeef;
+    background: #e8f4fc;
+    border-left-color: #00aeef;
+    font-weight: 600;
+}
+
+/* ── MAIN GRID AREA ── */
+.curric-grid-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #f4f5f7;
+}
+
+.curric-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #aaa;
+    font-size: 1rem;
+}
+
+.curric-placeholder span {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+/* ── SEMESTER BLOCK ── */
+.curric-semester {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+}
+
+.curric-sem-header {
+    background: #e9ecef;
+    color: #333;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.curric-sem-grid {
+    padding: 6px 8px;
+}
+
+.curric-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.curric-row:last-child {
+    margin-bottom: 0;
+}
+
+/* ── COURSE PAIR ── */
+.curric-pair {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.curric-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    width: 70px;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── COURSE BOX ── */
+.curric-box {
+    flex: 1;
+    min-width: 0;
+    height: 28px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Fixed course — clickable to set grade */
+.fixed-course.ungraded {
+    background: #b0bec5;
+    color: #fff;
+    cursor: pointer;
+}
+
+.fixed-course.graded {
+    cursor: pointer;
+}
+
+.curric-box-text {
+    pointer-events: none;
+    padding: 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.curric-grade-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+/* Elective slot */
+.elective-slot.empty {
+    background: #e65100;
+    cursor: default;
+}
+
+.elective-slot.filled {
+    cursor: grab;
+    font-size: 0.65rem;
+    padding: 0 3px;
+}
+
+.elective-slot.filled:active {
+    cursor: grabbing;
+}
+
+.elective-slot.droppable.empty {
+    background: #bf360c;
+    outline: 2px dashed rgba(255, 255, 255, 0.6);
+}
+
+/* ── COURSES PANEL ── */
+.courses-panel {
+    width: 175px;
+    flex-shrink: 0;
+    background: #fff;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 10px;
+    overflow-y: auto;
+}
+
+.courses-panel h3 {
+    font-size: 0.72rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 12px 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+/* Add form */
+.pool-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 6px;
+}
+
+.pool-code-input {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+.pool-code-input:focus {
+    outline: none;
+    border-color: #00aeef;
+}
+
+.pool-form-row {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.pool-grade-select {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 4px 3px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.pool-credits-input {
+    width: 36px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 4px 4px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.pool-add-btn {
+    background: #003366;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 26px;
+    height: 26px;
+    font-size: 1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.pool-add-btn:hover {
+    background: #00aeef;
+}
+
+.pool-hint {
+    font-size: 0.65rem;
+    color: #aaa;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* Pool items */
+.pool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.pool-empty {
+    font-size: 0.75rem;
+    color: #bbb;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pool-item {
+    border-radius: 5px;
+    padding: 5px 7px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    cursor: grab;
+    user-select: none;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.pool-item:active {
+    cursor: grabbing;
+    transform: scale(0.97);
+}
+
+.pool-item.pool-assigned {
+    cursor: default;
+}
+
+.pool-item-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+.pool-remove-btn {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 1px 4px;
+    flex-shrink: 0;
+}
+
+.pool-remove-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ── SCROLLBAR ── */
+.curric-grid-area::-webkit-scrollbar,
+.curric-sidebar::-webkit-scrollbar,
+.courses-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.curric-grid-area::-webkit-scrollbar-track,
+.curric-sidebar::-webkit-scrollbar-track,
+.courses-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.curric-grid-area::-webkit-scrollbar-thumb,
+.curric-sidebar::-webkit-scrollbar-thumb,
+.courses-panel::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}

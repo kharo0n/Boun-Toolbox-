@@ -1,0 +1,519 @@
+/* src/GPACalculator.css - Light Premium Theme */
+
+/* --- 1. CSS VARIABLES --- */
+:root {
+  --boun-blue: #00aeef;
+  --boun-dark: #003366;
+  --cream-bg: #faf9f7;
+  --card-bg: #ffffff;
+  --text-dark: #333;
+  --text-muted: #666;
+  --border-light: rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* --- 2. MAIN CONTAINER --- */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* --- 3. HEADER --- */
+.top-header {
+  background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+  color: #fff;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+  width: 100%;
+  padding: 0 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-btn {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #00aeef;
+}
+
+.curriculum-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 174, 239, 0.15);
+  border: 1px solid rgba(0, 174, 239, 0.4);
+  color: #00aeef;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.curriculum-nav-btn:hover {
+  background: rgba(0, 174, 239, 0.3);
+  border-color: #00aeef;
+  color: #fff;
+}
+
+
+.boun-logo {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #00aeef 0%, #0077cc 100%);
+  color: white;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.4);
+}
+
+.title-group h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.title-group span {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.header-right-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search-box {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.9rem;
+  width: 220px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+
+.search-box::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-box:focus {
+  outline: none;
+  border-color: var(--boun-blue);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.total-gpa-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.gpa-label {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.gpa-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #00aeef;
+  line-height: 1.2;
+  text-shadow: 0 0 10px rgba(0, 174, 239, 0.3);
+}
+
+/* --- 4. MAIN LAYOUT --- */
+.main-layout {
+  display: flex;
+  max-width: 1350px;
+  margin: 40px auto;
+  padding: 0 20px;
+  gap: 40px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* --- 5. SIDEBAR --- */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.sidebar h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.faculty-group {
+  margin-bottom: 5px;
+}
+
+.faculty-btn {
+  width: 100%;
+  text-align: left;
+  background: var(--cream-bg);
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border-radius: 8px;
+}
+
+.faculty-btn:hover {
+  background: #e8f4fc;
+  color: var(--boun-dark);
+}
+
+.faculty-btn.open {
+  background: linear-gradient(135deg, #00aeef 0%, #0077cc 100%);
+  color: #fff;
+}
+
+.faculty-btn .arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.faculty-btn.open .arrow {
+  transform: rotate(180deg);
+}
+
+.dept-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sub-list {
+  background: var(--cream-bg);
+  padding: 8px 0;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.dept-list li button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 15px 10px 25px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.dept-list li button:hover,
+.dept-list li button.active {
+  color: var(--boun-blue);
+  background: #e8f4fc;
+  border-left-color: var(--boun-blue);
+  font-weight: 600;
+}
+
+/* --- 6. CONTENT AREA --- */
+.content-area {
+  flex: 1;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+  row-gap: 30px;
+  align-items: start;
+}
+
+/* --- 7. SEMESTER BLOCKS --- */
+.semester-block {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s;
+}
+
+.semester-block:hover {
+  box-shadow: 0 8px 30px rgba(0, 174, 239, 0.12);
+  border-color: rgba(0, 174, 239, 0.2);
+}
+
+.semester-header {
+  font-size: 1.1rem;
+  color: var(--boun-blue);
+  border-bottom: 2px solid rgba(0, 174, 239, 0.2);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  margin-top: 0;
+  font-weight: 700;
+}
+
+.table-row {
+  display: flex;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.header-row {
+  border-bottom: none;
+  padding-bottom: 5px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.col-code {
+  width: 100px;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--boun-dark);
+  font-size: 0.85rem;
+}
+
+.col-name {
+  flex: 1;
+  padding-right: 10px;
+  color: var(--text-dark);
+  line-height: 1.3;
+  font-size: 0.85rem;
+}
+
+.col-credits {
+  width: 40px;
+  text-align: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.col-grade {
+  width: 60px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.total-row {
+  border-top: 2px solid rgba(0, 174, 239, 0.2);
+  margin-top: 10px;
+  padding-top: 15px;
+}
+
+.spa-text {
+  color: var(--boun-blue);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* --- 8. FORM ELEMENTS --- */
+.clean-input {
+  width: 100%;
+  border: 1px solid var(--border-light);
+  background: var(--cream-bg);
+  padding: 6px 8px;
+  font-family: inherit;
+  color: var(--boun-dark);
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.clean-input:focus {
+  outline: none;
+  border-color: var(--boun-blue);
+  background: #fff;
+}
+
+.clean-select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--boun-dark);
+}
+
+.grade-dropdown {
+  border: 1px solid var(--border-light);
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--boun-blue);
+  transition: all 0.2s;
+}
+
+.grade-dropdown:focus {
+  outline: none;
+  border-color: var(--boun-blue);
+}
+
+.credits-input {
+  width: 50px;
+  text-align: center;
+}
+
+/* --- REPEAT / RETAKE FEATURE --- */
+.col-grade {
+  width: 95px;
+  /* widened to fit repeat btn + dropdown */
+}
+
+.grade-with-repeat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.repeat-btn {
+  background: none;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 3px 5px;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.repeat-btn:hover {
+  background: #fff3e0;
+  border-color: #ff7043;
+  color: #ff7043;
+}
+
+.repeat-btn.repeat-active {
+  background: #fff3e0;
+  border-color: #ff7043;
+  color: #ff7043;
+  box-shadow: 0 0 6px rgba(255, 112, 67, 0.25);
+}
+
+.repeat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0 8px 0;
+  margin-left: 4px;
+  animation: slideDown 0.2s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.repeat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.old-grade-dropdown {
+  border-color: #ff7043 !important;
+  color: #ff7043 !important;
+  font-size: 0.82rem !important;
+  padding: 3px 6px !important;
+}
+
+/* --- 9. RESPONSIVE --- */
+@media (max-width: 900px) {
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

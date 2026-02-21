@@ -1,0 +1,1740 @@
+{
+  "fakulteler": [
+    {
+      "ad": "Eğitim Fakültesi",
+      "bolumler": [
+        { "id": "bote", "name": "Bilgisayar ve Öğretim Teknolojileri Eğitimi" },
+        { "id": "ed", "name": "Eğitim Bilimleri" },
+        { "id": "temel", "name": "Temel Eğitim" },
+        { "id": "mfe", "name": "Matematik ve Fen Bilimleri Eğitimi" },
+        { "id": "yde", "name": "Yabancı Diller Eğitimi" }
+      ]
+    },
+    {
+      "ad": "Fen Fakültesi",
+      "bolumler": [
+        { "id": "phys", "name": "Fizik" },
+        { "id": "chem", "name": "Kimya" },
+        { "id": "math", "name": "Matematik" },
+        { "id": "mbg", "name": "Moleküler Biyoloji ve Genetik" }
+      ]
+    },
+    {
+      "ad": "Hukuk Fakültesi",
+      "bolumler": [
+        { "id": "law", "name": "Hukuk" }
+      ]
+    },
+    {
+      "ad": "İktisadi ve İdari Bilimler Fakültesi",
+      "bolumler": [
+        { "id": "ikt", "name": "İktisat" },
+        { "id": "man", "name": "İşletme" },
+        { "id": "pols", "name": "Siyaset Bilimi ve Uluslararası İlişkiler" },
+        { "id": "tourism", "name": "Turizm İşletmeciliği" },
+        { "id": "intt", "name": "Uluslararası Ticaret" },
+        { "id": "ybs", "name": "Yönetim Bilişim Sistemleri" }
+      ]
+    },
+    {
+      "ad": "İletişim Fakültesi",
+      "bolumler": [
+        { "id": "comm", "name": "İletişim" }
+      ]
+    },
+    {
+      "ad": "İnsan ve Toplum Bilimleri Fakültesi",
+      "bolumler": [
+        { "id": "soc", "name": "Sosyoloji" },
+        { "id": "psy", "name": "Psikoloji" },
+        { "id": "hist", "name": "Tarih" },
+        { "id": "tll", "name": "Türk Dili ve Edebiyatı" },
+        { "id": "west", "name": "Batı Dilleri ve Edebiyatları" },
+        { "id": "trans", "name": "Çeviribilimi" },
+        { "id": "ling", "name": "Dilbilimi" },
+        { "id": "phil", "name": "Felsefe" },
+        { "id": "tk", "name": "Türkçe Dersleri Koordinatörlüğü" }
+      ]
+    },
+    {
+      "ad": "Mühendislik Fakültesi",
+      "bolumler": [
+        { "id": "cmpe", "name": "Bilgisayar Mühendisliği" },
+        { "id": "ee", "name": "Elektrik-Elektronik Mühendisliği" },
+        { "id": "ie", "name": "Endüstri Mühendisliği" },
+        { "id": "ce", "name": "İnşaat Mühendisliği" },
+        { "id": "che", "name": "Kimya Mühendisliği" },
+        { "id": "me", "name": "Makina Mühendisliği" }
+      ]
+    }
+  ],
+  "dersProgramlari": {
+    "ikt": [
+      [
+        { "id": "ikt-s1-law101", "code": "LAW 101", "name": "Introduction to Law", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s1-ec103", "code": "EC 103", "name": "Orientation to Economics I", "credits": 1, "type": "fixed" },
+        { "id": "ikt-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "ikt-s1-pols101", "code": "POLS 101", "name": "Introduction to Political Science", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s1-hss", "code": "AE/HSS Elective", "name": "English / HSS Elective*", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ikt-s2-mis130", "code": "MIS 130", "name": "Introduction to Programming for Managerial Sciences", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s2-ec104", "code": "EC 104", "name": "Orientation to Economics II", "credits": 1, "type": "fixed" },
+        { "id": "ikt-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "ikt-s2-psy101", "code": "PSY 101", "name": "Introduction to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s2-hss", "code": "AE/HSS Elective", "name": "English / HSS Elective**", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s2-unr", "code": "HSS/Unrestricted", "name": "HSS/Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ikt-s3-ad211", "code": "AD 211", "name": "Financial Accounting for Economics", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s3-ec203", "code": "EC 203", "name": "Microeconomics I", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s3-ec205", "code": "EC 205", "name": "Macroeconomics I", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s3-ec233", "code": "EC 233", "name": "Mathematical Statistics I", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "ikt-s3-tk221", "code": "TK 221", "name": "Turkish for Native Speakers I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ikt-s4-ec206", "code": "EC 206", "name": "Microeconomics II", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s4-ec208", "code": "EC 208", "name": "Macroeconomics II", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s4-ec223", "code": "EC 223", "name": "Mathematics for Economists", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s4-ec234", "code": "Ec 234", "name": "Mathematical Statistics II", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s4-tk222", "code": "TK 222", "name": "Turkish for Native Speakers II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ikt-s5-ec331", "code": "EC 331", "name": "Econometrics", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s5-area1", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s5-area2", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s5-area3", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s5-htr311", "code": "HTR 311", "name": "History of the Turkish Repuclic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ikt-s6-area1", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s6-area2", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s6-area3", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s6-area4", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s6-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s6-htr312", "code": "HTR 312", "name": "History of the Turkish Repuclic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ikt-s7-area1", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s7-area2", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s7-area3", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ikt-s8-ec470", "code": "EC 470", "name": "Turkish Economy", "credits": 3, "type": "fixed" },
+        { "id": "ikt-s8-area1", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s8-area2", "code": "EC Area Elective", "name": "Area Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s8-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ikt-s8-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+
+
+    "ybs": [
+      [
+        { "id": "ybs-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s1-mis113", "code": "MIS 113", "name": "Principles of Management", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s1-mis125", "code": "MIS 125", "name": "Introduction to Information Systems and Technology", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s1-mis131", "code": "MIS 131", "name": "Introduction to Programming and Algorithms", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "ybs-s1-elective", "code": "Elective", "name": "Unrestricted/HSS/English Elective*", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ybs-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s2-mis116", "code": "MIS 116", "name": "Principles of Marketing", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s2-mis128", "code": "MIS 128", "name": "Managerial Communication", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s2-mis132", "code": "MIS 132", "name": "Intermediate Programming", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s2-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "ybs-s2-elective", "code": "Elective", "name": "Unrestricted/HSS/English Elective*", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ybs-s3-mis211", "code": "MIS 211", "name": "Financial Accounting", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s3-mis213", "code": "MIS 213", "name": "Applied Statistics I", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s3-mis233", "code": "MIS 233", "name": "Web Based Application Programming", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s3-mis251", "code": "MIS 251", "name": "Information Technology Infrastructures", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s3-elective", "code": "Elective", "name": "Unrestricted/HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s3-tk221", "code": "TK 221", "name": "Turkish for Native Speakers I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ybs-s4-mis214", "code": "MIS 214", "name": "Applied Statistics II", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s4-mis218", "code": "MIS 218", "name": "Finance", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s4-mis236", "code": "MIS 236", "name": "Database Systems", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s4-mis252", "code": "MIS 252", "name": "Business Data Communications & Security", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s4-elective", "code": "Elective", "name": "Unrestricted/HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s4-tk222", "code": "TK 222", "name": "Turkish for Native Speakers II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ybs-s5-mis321", "code": "MIS 321", "name": "System Analysis and Design", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s5-mis331", "code": "MIS 331", "name": "Data Analytics", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s5-mis323", "code": "MIS 323", "name": "Research Methodology", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s5-law353", "code": "LAW 353", "name": "Cyber Law", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s5-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s5-htr311", "code": "HTR 311", "name": "History of the Turkish Republic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ybs-s6-mis326", "code": "MIS 326", "name": "Object Oriented Modeling and Development", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s6-mis344", "code": "MIS 344", "name": "Analytical Decision Making", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s6-mis346", "code": "MIS 346", "name": "Enterprise Information Systems", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s6-deptcomp", "code": "DEPT/COMP Elective", "name": "Departmental/Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s6-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s6-htr312", "code": "HTR 312", "name": "History of the Turkish Republic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ybs-s7-mis433", "code": "MIS 433", "name": "Information Systems Project Management", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s7-mis441", "code": "MIS 441", "name": "Customer Relationship Management", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s7-mis463", "code": "MIS 463", "name": "Business Intelligence and Digital Transformation", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s7-mis481", "code": "MIS 481", "name": "Senior Seminars in MIS", "credits": 1, "type": "fixed" },
+        { "id": "ybs-s7-dept1", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s7-dept2", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ybs-s8-mis400", "code": "MIS 400", "name": "Internship", "credits": 0, "type": "fixed" },
+        { "id": "ybs-s8-mis422", "code": "MIS 422", "name": "Digital Business Management", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s8-mis432", "code": "MIS 432", "name": "Digital Value Chain Management", "credits": 3, "type": "fixed" },
+        { "id": "ybs-s8-mis492", "code": "MIS 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "ybs-s8-dept1", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ybs-s8-dept2", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "soc": [
+      [
+        { "id": "soc-s1-ae101", "code": "AE 101/LIT", "name": "English for Academic Purposes I", "credits": 3, "type": "fixed" },
+        { "id": "soc-s1-ec101", "code": "EC 101", "name": "Principles of Micro Economy", "credits": 3, "type": "fixed" },
+        { "id": "soc-s1-hist", "code": "HIST/HUM", "name": "Humanities Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s1-math", "code": "MATH 105/106", "name": "Int. to Fin.Math./Calculus", "credits": 4, "type": "fixed" },
+        { "id": "soc-s1-pols", "code": "POLS 101", "name": "Int. to Political Science", "credits": 3, "type": "fixed" },
+        { "id": "soc-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "soc-s2-ae102", "code": "AE 102/LIT", "name": "English for Academic Purposes II", "credits": 3, "type": "fixed" },
+        { "id": "soc-s2-ec102", "code": "EC 102", "name": "Principles of Macro Economy", "credits": 3, "type": "fixed" },
+        { "id": "soc-s2-hist", "code": "HIST/HUM", "name": "Humanities Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s2-sci", "code": "Math/Sci", "name": "Math/Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s2-psy101", "code": "PSY 101", "name": "Int. to Psycho.", "credits": 3, "type": "fixed" },
+        { "id": "soc-s2-soc108", "code": "SOC 108", "name": "Sociological Analysis", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "soc-s3-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s3-soc221", "code": "SOC 221", "name": "Social Change and Development", "credits": 3, "type": "fixed" },
+        { "id": "soc-s3-soc281", "code": "SOC 281", "name": "Social Anthropology", "credits": 3, "type": "fixed" },
+        { "id": "soc-s3-dept1", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s3-dept2", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "soc-s4-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s4-soc204", "code": "SOC 204", "name": "Introduction to Research Methods", "credits": 4, "type": "fixed" },
+        { "id": "soc-s4-select1", "code": "SOC Seçmeli", "name": "Urban Soc./Pop. Studies", "credits": 3, "type": "select", "options": ["SOC 224", "SOC 262"] },
+        { "id": "soc-s4-select2", "code": "SOC Seçmeli", "name": "Culture/Peasant/Eco/Pol", "credits": 3, "type": "select", "options": ["SOC 272", "SOC 282", "SOC 284", "SOC 286"] },
+        { "id": "soc-s4-dept", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "soc-s5-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s5-comp", "code": "COMP", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s5-htr311", "code": "HTR 311", "name": "History of Turk. Rep. I", "credits": 2, "type": "fixed" },
+        { "id": "soc-s5-dept", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s5-soc303", "code": "SOC 303", "name": "Social Statistics", "credits": 4, "type": "fixed" },
+        { "id": "soc-s5-soc371", "code": "SOC 371", "name": "History of Sociological Theory", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "soc-s6-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s6-comp", "code": "COMP", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s6-htr312", "code": "HTR 312", "name": "History of Turk. Rep. II", "credits": 2, "type": "fixed" },
+        { "id": "soc-s6-select", "code": "SOC Seçmeli", "name": "Data Analysis/Qual. Res.", "credits": 4, "type": "select", "options": ["SOC 304", "SOC 306"] },
+        { "id": "soc-s6-soc324", "code": "SOC 324", "name": "Power and Inequality", "credits": 3, "type": "fixed" },
+        { "id": "soc-s6-dept", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "soc-s7-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s7-dept1", "code": "SOC Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s7-dept2", "code": "SOC Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s7-soc471", "code": "SOC 471", "name": "Adv. Iss. in Soc. Th.", "credits": 3, "type": "fixed" },
+        { "id": "soc-s7-deptcomp", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "soc-s8-unrest", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s8-dept", "code": "SOC Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s8-soc472", "code": "SOC 472", "name": "Contemporary Social Theories", "credits": 3, "type": "fixed" },
+        { "id": "soc-s8-deptcomp1", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "soc-s8-deptcomp2", "code": "SOC/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "man": [
+      [
+        { "id": "man-s1-law101", "code": "LAW 101", "name": "Introduction to Law", "credits": 3, "type": "fixed" },
+        { "id": "man-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "man-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "man-s1-psy101", "code": "PSY 101", "name": "Introduction to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "man-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "man-s1-hss", "code": "HSS Elective", "name": "Humanities and Social Sciences", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "man-s2-ad101", "code": "AD 101", "name": "Introduction to Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "man-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "man-s2-pols101", "code": "POLS 101", "name": "Introduction to Political Science", "credits": 3, "type": "fixed" },
+        { "id": "man-s2-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s2-hss", "code": "HSS Elective", "name": "Humanities and Social Sciences", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "man-s3-ad213", "code": "AD 213", "name": "Financial Accounting", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-ad220", "code": "AD 220", "name": "Management of Organizations", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-law231", "code": "LAW 231", "name": "Introduction to Business Law", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-ad251", "code": "AD 251", "name": "Managerial Statistics I", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-mis130", "code": "MIS 130", "name": "Introduction to Programming for Managerial Sciences", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-ec203", "code": "EC 203", "name": "Microeconomics I", "credits": 3, "type": "fixed" },
+        { "id": "man-s3-tk221", "code": "TK 221", "name": "Turkish for Native Speakers I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "man-s4-ad204", "code": "AD 204", "name": "Business Communications", "credits": 3, "type": "fixed" },
+        { "id": "man-s4-ad214", "code": "AD 214", "name": "Managerial Accounting", "credits": 3, "type": "fixed" },
+        { "id": "man-s4-ad242", "code": "AD 242", "name": "Strategic Marketing Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s4-ad252", "code": "AD 252", "name": "Managerial Statistics", "credits": 3, "type": "fixed" },
+        { "id": "man-s4-ec205", "code": "EC 205", "name": "Macroeconomics I", "credits": 3, "type": "fixed" },
+        { "id": "man-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s4-tk222", "code": "TK 222", "name": "Turkish for Native Speakers II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "man-s5-ad311", "code": "AD 311", "name": "Financial Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s5-ad351", "code": "AD 351", "name": "Operations Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s5-ad352", "code": "AD 352", "name": "Information Systems Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s5-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s5-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s5-htr311", "code": "HTR 311", "name": "History of the Turkish Republic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "man-s6-ad302", "code": "AD 302", "name": "Business Analytics", "credits": 3, "type": "fixed" },
+        { "id": "man-s6-ad312", "code": "AD 312", "name": "Money and Banking", "credits": 3, "type": "fixed" },
+        { "id": "man-s6-ad353", "code": "AD 353", "name": "Management Science", "credits": 3, "type": "fixed" },
+        { "id": "man-s6-dept", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s6-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s6-htr312", "code": "HTR 312", "name": "History of the Turkish Republic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "man-s7-ad401", "code": "AD 401", "name": "Globalization and International Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s7-ad497", "code": "AD 497", "name": "Bachelor of Arts Degree Project", "credits": 3, "type": "fixed" },
+        { "id": "man-s7-dept1", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s7-dept2", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s7-dept3", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "man-s8-ad408", "code": "AD 408", "name": "Strategic Management", "credits": 3, "type": "fixed" },
+        { "id": "man-s8-ad409", "code": "AD 409", "name": "Business Ethics", "credits": 3, "type": "fixed" },
+        { "id": "man-s8-dept1", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s8-dept2", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "man-s8-dept3", "code": "AD Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "pols": [
+      [
+        { "id": "pols-s1-law101", "code": "LAW 101", "name": "Introduction to Law", "credits": 3, "type": "fixed" },
+        { "id": "pols-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "pols-s1-math105", "code": "MATH 105", "name": "Introduction to Finite Mathematics", "credits": 4, "type": "fixed" },
+        { "id": "pols-s1-pols101", "code": "POLS 101", "name": "Introduction to Political Science", "credits": 3, "type": "fixed" },
+        { "id": "pols-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "pols-s1-eng", "code": "AE/HSS", "name": "English / HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "pols-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "pols-s2-math106", "code": "MATH 106", "name": "Introduction to Calculus for Social Sciences", "credits": 4, "type": "fixed" },
+        { "id": "pols-s2-law132", "code": "LAW 132", "name": "Introduction to Turkish Constitutional Law", "credits": 3, "type": "fixed" },
+        { "id": "pols-s2-psy101", "code": "PSY 101", "name": "Introduction to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "pols-s2-soc108", "code": "SOC 108", "name": "Sociological of Analysis", "credits": 3, "type": "fixed" },
+        { "id": "pols-s2-eng", "code": "AE/HSS", "name": "English / HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "pols-s3-pols201", "code": "POLS 201", "name": "History of Political Thought I", "credits": 3, "type": "fixed" },
+        { "id": "pols-s3-pols203", "code": "POLS 203", "name": "Social Statistics", "credits": 4, "type": "fixed" },
+        { "id": "pols-s3-pols215", "code": "POLS 215", "name": "Comparative Politics", "credits": 3, "type": "fixed" },
+        { "id": "pols-s3-pols217", "code": "POLS 217", "name": "Diplomatic History", "credits": 3, "type": "fixed" },
+        { "id": "pols-s3-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s3-tk221", "code": "TK 221", "name": "Turkish for Native Speakers I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "pols-s4-pols202", "code": "POLS 202", "name": "History of Political Thought II", "credits": 3, "type": "fixed" },
+        { "id": "pols-s4-pols206", "code": "POLS 206", "name": "Political Science Research Methods", "credits": 4, "type": "fixed" },
+        { "id": "pols-s4-pols242", "code": "POLS 242", "name": "Introduction to International Relations", "credits": 3, "type": "fixed" },
+        { "id": "pols-s4-pols246", "code": "POLS 246", "name": "Introduction to Turkish Politics", "credits": 3, "type": "fixed" },
+        { "id": "pols-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s4-tk222", "code": "TK 222", "name": "Turkish for Native Speakers II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "pols-s5-pols303", "code": "POLS 303", "name": "Fundamentals of Political Economy", "credits": 3, "type": "fixed" },
+        { "id": "pols-s5-dept1", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s5-dept2", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s5-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s5-htr311", "code": "HTR 311", "name": "History of the Turkish Republic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "pols-s6-pols340", "code": "POLS 340", "name": "Foreign Policy", "credits": 3, "type": "fixed" },
+        { "id": "pols-s6-dept1", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s6-dept2", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s6-dept3", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s6-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s6-htr312", "code": "HTR 312", "name": "History of the Turkish Republic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "pols-s7-dept1", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s7-dept2", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s7-dept3", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s7-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "pols-s8-pols472", "code": "POLS 472", "name": "Comparative Political Systems", "credits": 3, "type": "fixed" },
+        { "id": "pols-s8-dept1", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s8-dept2", "code": "POLS Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s8-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "pols-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "tourism" : [
+      [
+        { "id": "tur-s1-trm101", "code": "TRM 101", "name": "Intro. to Tourism Ind.", "credits": 3, "type": "fixed" },
+        { "id": "tur-s1-trm107", "code": "TRM 107", "name": "Anatolian Civilizations", "credits": 3, "type": "fixed" },
+        { "id": "tur-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "tur-s1-trm141", "code": "TRM 141", "name": "Intro. to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "tur-s1-math105", "code": "MATH 105", "name": "Introduction to Finite Mathematics", "credits": 4, "type": "fixed" },
+        { "id": "tur-s1-elec", "code": "Elective", "name": "DEPT/HSS/COMP Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tur-s2-trm104", "code": "TRM 104", "name": "Environment and Tourism", "credits": 3, "type": "fixed" },
+        { "id": "tur-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "tur-s2-trm124", "code": "TRM 124", "name": "Business Communication", "credits": 3, "type": "fixed" },
+        { "id": "tur-s2-trm134", "code": "TRM 134", "name": "Principles of Management", "credits": 3, "type": "fixed" },
+        { "id": "tur-s2-math106", "code": "MATH 106", "name": "Introduction to Calculus for Social Sciences", "credits": 4, "type": "fixed" },
+        { "id": "tur-s2-elec", "code": "Elective", "name": "DEPT/HSS/COMP Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tur-s3-trm223", "code": "TRM 223", "name": "Accommodation Industry", "credits": 3, "type": "fixed" },
+        { "id": "tur-s3-trm231", "code": "TRM 231", "name": "Financial Accounting", "credits": 3, "type": "fixed" },
+        { "id": "tur-s3-law101", "code": "LAW 101", "name": "Introduction to Law", "credits": 3, "type": "fixed" },
+        { "id": "tur-s3-trm257", "code": "TRM 257", "name": "Applied Statistics I", "credits": 3, "type": "fixed" },
+        { "id": "tur-s3-trm263", "code": "TRM 263", "name": "Princ. of Marketing", "credits": 3, "type": "fixed" },
+        { "id": "tur-s3-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tur-s4-trm224", "code": "TRM 224", "name": "Interpersonal Communication", "credits": 3, "type": "fixed" },
+        { "id": "tur-s4-trm232", "code": "TRM 232", "name": "Manag. Accounting for Tourism Industry", "credits": 3, "type": "fixed" },
+        { "id": "tur-s4-trm242", "code": "TRM 242", "name": "Tourism Law", "credits": 3, "type": "fixed" },
+        { "id": "tur-s4-trm258", "code": "TRM 258", "name": "Applied Statistics II", "credits": 3, "type": "fixed" },
+        { "id": "tur-s4-trm282", "code": "TRM 282", "name": "Travel Industry", "credits": 3, "type": "fixed" },
+        { "id": "tur-s4-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tur-s5-trm331", "code": "TRM 331", "name": "Management of Human Resources", "credits": 3, "type": "fixed" },
+        { "id": "tur-s5-trm335", "code": "TRM 335", "name": "Intro. to Finance", "credits": 3, "type": "fixed" },
+        { "id": "tur-s5-trm355", "code": "TRM 355", "name": "Research Methodology", "credits": 3, "type": "fixed" },
+        { "id": "tur-s5-dept", "code": "TRM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s5-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tur-s6-trm336", "code": "TRM 336", "name": "Organiz. Behaviour", "credits": 3, "type": "fixed" },
+        { "id": "tur-s6-trm364", "code": "TRM 364", "name": "Services Marketing", "credits": 3, "type": "fixed" },
+        { "id": "tur-s6-trm378", "code": "TRM 378", "name": "Food Services Management", "credits": 3, "type": "fixed" },
+        { "id": "tur-s6-dept", "code": "TRM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s6-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tur-s7-trm405", "code": "TRM 405", "name": "Conventions and Special Events", "credits": 3, "type": "fixed" },
+        { "id": "tur-s7-trm409", "code": "TRM 409", "name": "Business Ethics", "credits": 3, "type": "fixed" },
+        { "id": "tur-s7-trm413", "code": "TRM 413", "name": "Tourism Destination Development", "credits": 3, "type": "fixed" },
+        { "id": "tur-s7-dept", "code": "TRM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s7-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tur-s8-trm400", "code": "TRM 400", "name": "Internship", "credits": 0, "type": "fixed" },
+        { "id": "tur-s8-trm408", "code": "TRM 408", "name": "Operations Research for Service Industry", "credits": 3, "type": "fixed" },
+        { "id": "tur-s8-trm472", "code": "TRM 472", "name": "Business Strategy", "credits": 3, "type": "fixed" },
+        { "id": "tur-s8-trm492", "code": "TRM 492", "name": "Tourism Research Topics", "credits": 3, "type": "fixed" },
+        { "id": "tur-s8-dept", "code": "TRM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "tur-s8-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "intt": [
+      [
+        { "id": "intt-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "intt-s1-math105", "code": "MATH 105", "name": "Introduction to Finite Mathematics", "credits": 4, "type": "fixed" },
+        { "id": "intt-s1-intt125", "code": "INTT 125", "name": "Information Systems for Trade", "credits": 3, "type": "fixed" },
+        { "id": "intt-s1-intt142", "code": "INTT 142", "name": "Legal Environment of Business", "credits": 3, "type": "fixed" },
+        { "id": "intt-s1-hss", "code": "HSS Elective", "name": "Humanities and Social Sciences", "credits": 3, "type": "customInput" },
+        { "id": "intt-s1-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s1-ae", "code": "AE/English", "name": "English for Academic Purposes", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "intt-s2-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "intt-s2-math106", "code": "MATH 106", "name": "Introduction to Calculus for Social Sciences", "credits": 4, "type": "fixed" },
+        { "id": "intt-s2-intt132", "code": "INTT 132", "name": "Management and Organizations", "credits": 3, "type": "fixed" },
+        { "id": "intt-s2-intt162", "code": "INTT 162", "name": "Creative Thinking and Innovation", "credits": 3, "type": "fixed" },
+        { "id": "intt-s2-hss", "code": "HSS Elective", "name": "Humanities and Social Sciences", "credits": 3, "type": "customInput" },
+        { "id": "intt-s2-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "intt-s3-intt203", "code": "INTT 203", "name": "Financial Accounting", "credits": 3, "type": "fixed" },
+        { "id": "intt-s3-intt241", "code": "INTT 241", "name": "International Economic Law", "credits": 3, "type": "fixed" },
+        { "id": "intt-s3-intt227", "code": "INTT 227", "name": "Applied Statistics I", "credits": 3, "type": "fixed" },
+        { "id": "intt-s3-intt211", "code": "INTT 211", "name": "International Trade Theories and Policies", "credits": 3, "type": "fixed" },
+        { "id": "intt-s3-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s3-tk221", "code": "TK 221", "name": "Turkish for Native Speakers I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "intt-s4-intt277", "code": "INTT 277", "name": "Financial Decision Making", "credits": 3, "type": "fixed" },
+        { "id": "intt-s4-intt212", "code": "INTT 212", "name": "Exchange Rate Regimes and Trade", "credits": 3, "type": "fixed" },
+        { "id": "intt-s4-intt228", "code": "INTT 228", "name": "Applied Statistics II", "credits": 3, "type": "fixed" },
+        { "id": "intt-s4-intt252", "code": "INTT 252", "name": "Principles of Marketing", "credits": 3, "type": "fixed" },
+        { "id": "intt-s4-intt254", "code": "INTT 254", "name": "International Trade Operations", "credits": 3, "type": "fixed" },
+        { "id": "intt-s4-lang", "code": "Foreign Lang.", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s4-tk222", "code": "TK 222", "name": "Turkish for Native Speakers II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "intt-s5-intt321", "code": "INTT 321", "name": "Quantitative Analysis and Applications", "credits": 3, "type": "fixed" },
+        { "id": "intt-s5-intt333", "code": "INTT 333", "name": "International Management", "credits": 3, "type": "fixed" },
+        { "id": "intt-s5-intt355", "code": "INTT 355", "name": "Electronic Commerce", "credits": 3, "type": "fixed" },
+        { "id": "intt-s5-intt375", "code": "INTT 375", "name": "Risk and Insurance", "credits": 3, "type": "fixed" },
+        { "id": "intt-s5-unre", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s5-htr311", "code": "HTR 311", "name": "History of the Turkish Republic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "intt-s6-intt322", "code": "INTT 322", "name": "Operations and Supply Chain Management", "credits": 3, "type": "fixed" },
+        { "id": "intt-s6-intt323", "code": "INTT 323", "name": "Research Methodology", "credits": 3, "type": "fixed" },
+        { "id": "intt-s6-intt334", "code": "INTT 334", "name": "Business Ethics", "credits": 3, "type": "fixed" },
+        { "id": "intt-s6-intt362", "code": "INTT 362", "name": "Economic Integration and EU", "credits": 3, "type": "fixed" },
+        { "id": "intt-s6-intt378", "code": "INTT 378", "name": "Trade Financing", "credits": 3, "type": "fixed" },
+        { "id": "intt-s6-dept", "code": "DEPT/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s6-htr312", "code": "HTR 312", "name": "History of the Turkish Republic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "intt-s7-intt467", "code": "INTT 467", "name": "Politics of Globalization", "credits": 3, "type": "fixed" },
+        { "id": "intt-s7-intt459", "code": "INTT 459", "name": "International Marketing", "credits": 3, "type": "fixed" },
+        { "id": "intt-s7-intt425", "code": "INTT 425", "name": "International Logistics", "credits": 3, "type": "fixed" },
+        { "id": "intt-s7-dept", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s7-deptcomp", "code": "DEPT/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "intt-s8-intt400", "code": "INTT 400", "name": "Internship", "credits": 0, "type": "fixed" },
+        { "id": "intt-s8-intt434", "code": "INTT 434", "name": "Business Development and Entrepreneurship", "credits": 3, "type": "fixed" },
+        { "id": "intt-s8-law336", "code": "LAW 336", "name": "Competition Law", "credits": 3, "type": "fixed" },
+        { "id": "intt-s8-intt438", "code": "INTT 438", "name": "International Negotiations", "credits": 3, "type": "fixed" },
+        { "id": "intt-s8-dept", "code": "DEPT Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "intt-s8-come", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "cmpe": [
+      [
+        { "id": "cmpe-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s1-phys121", "code": "PHYS 121", "name": "Int. Mechanics & Thermo", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s1-chem105", "code": "CHEM 105", "name": "General Chem.", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s1-cmpe150", "code": "CMPE 150", "name": "Int. to Comp.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s1-ec101", "code": "EC 101", "name": "Princ. of Microecon.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "cmpe-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s2-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s2-cmpe160", "code": "CMPE 160", "name": "Intermediate Prog.", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s2-ec102", "code": "EC 102", "name": "Princ. of Macroecon.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s2-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "cmpe-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s3-phys202", "code": "PHYS 202", "name": "Physics IV", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s3-ee210", "code": "EE 210", "name": "Electrical Eng.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s3-cmpe220", "code": "CMPE 220", "name": "Discrete Comp. Struct.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s3-cmpe250", "code": "CMPE 250", "name": "Data Structures and Algorithms", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "cmpe-s4-math202", "code": "MATH 202", "name": "Differential Eq.", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s4-ee212", "code": "EE 212", "name": "Prin. of Electr. Eng.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s4-cmpe230", "code": "CMPE 230", "name": "Systems Prog.", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s4-cmpe240", "code": "CMPE 240", "name": "Digital Systems", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s4-cmpe260", "code": "CMPE 260", "name": "Princ.of Prog. Lang.", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "cmpe-s5-cmpe300", "code": "CMPE 300", "name": "Analysis of Algorithms", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s5-cmpe322", "code": "CMPE 322", "name": "Operating Systems", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s5-cmpe343", "code": "CMPE 343", "name": "Intro. to Probability and Stats", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s5-cmpe344", "code": "CMPE 344", "name": "Computer Organization", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s5-ie310", "code": "IE 310", "name": "Operations Research", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s5-htr311", "code": "HTR 311", "name": "Hist. Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "cmpe-s6-cmpe321", "code": "CMPE 321", "name": "Int. to Database Sys.", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s6-cmpe350", "code": "CMPE 350", "name": "Formal Languages and Automata", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s6-cmpe352", "code": "CMPE 352", "name": "Fundamentals of Software Eng.", "credits": 2, "type": "fixed" },
+        { "id": "cmpe-s6-cmpe362", "code": "CMPE 362", "name": "Intro. to Signals Processing", "credits": 3, "type": "fixed" },
+        { "id": "cmpe-s6-ie306", "code": "IE 306", "name": "System Simulation", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s6-htr312", "code": "HTR 312", "name": "Hist. Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "cmpe-s7-cmpe451", "code": "CMPE 451", "name": "Project Dev. in Software Eng.", "credits": 2, "type": "fixed" },
+        { "id": "cmpe-s7-cmpe443", "code": "CMPE 443", "name": "Principles of Embedded Systems", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s7-cc1", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" },
+        { "id": "cmpe-s7-cc2", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" },
+        { "id": "cmpe-s7-cc3", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "cmpe-s8-cmpe492", "code": "CMPE 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "cmpe-s8-cmpe400", "code": "CMPE 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" },
+        { "id": "cmpe-s8-cc1", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" },
+        { "id": "cmpe-s8-cc2", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" },
+        { "id": "cmpe-s8-cc3", "code": "CC Elective", "name": "Comp. Course Elective", "credits": 3, "type": "customInput" },
+        { "id": "cmpe-s8-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "ee": [
+      [
+        { "id": "ee-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "ee-s1-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "ee-s1-chem105", "code": "CHEM 105", "name": "General Chemistry", "credits": 4, "type": "fixed" },
+        { "id": "ee-s1-ee101", "code": "EE 101", "name": "Orientation to EE", "credits": 3, "type": "fixed" },
+        { "id": "ee-s1-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "ee-s2-cmpe150", "code": "CMPE 150", "name": "Intro. to Comp.", "credits": 3, "type": "fixed" },
+        { "id": "ee-s2-phys121", "code": "PHYS 121", "name": "Int to Mech. & Ther.", "credits": 4, "type": "fixed" },
+        { "id": "ee-s2-ec102", "code": "EC 102", "name": "Princ. of Macroecon.", "credits": 3, "type": "fixed" },
+        { "id": "ee-s2-ee142", "code": "EE 142", "name": "Digital Systems", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s3-math202", "code": "MATH 202", "name": "Differential Equations", "credits": 4, "type": "fixed" },
+        { "id": "ee-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "ee-s3-ee201", "code": "EE 201", "name": "Electrical Circuits", "credits": 4, "type": "fixed" },
+        { "id": "ee-s3-ee271", "code": "EE 271", "name": "Signals and Systems I", "credits": 3, "type": "fixed" },
+        { "id": "ee-s3-hum", "code": "HUM/HSS", "name": "Cultural Encounters / HSS Elect.", "credits": 3, "type": "customInput" },
+        { "id": "ee-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s4-ee214", "code": "EE 214", "name": "Probability for EE", "credits": 3, "type": "fixed" },
+        { "id": "ee-s4-phys202", "code": "PHYS 202", "name": "Physics IV", "credits": 4, "type": "fixed" },
+        { "id": "ee-s4-ee232", "code": "EE 232", "name": "Electronic Devices", "credits": 3, "type": "fixed" },
+        { "id": "ee-s4-ee272", "code": "EE 272", "name": "Signals and Systems II", "credits": 3, "type": "fixed" },
+        { "id": "ee-s4-ee244", "code": "EE 244", "name": "Digital System Design", "credits": 3, "type": "fixed" },
+        { "id": "ee-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s5-ee333", "code": "EE 333", "name": "Electronics I", "credits": 3, "type": "fixed" },
+        { "id": "ee-s5-ee335", "code": "EE 335", "name": "Electronics Lab I", "credits": 1, "type": "fixed" },
+        { "id": "ee-s5-ee351", "code": "EE 351", "name": "System Dynamics and Control", "credits": 3, "type": "fixed" },
+        { "id": "ee-s5-ee363", "code": "EE 363", "name": "Electromag. Field Theory", "credits": 3, "type": "fixed" },
+        { "id": "ee-s5-ee371", "code": "EE 371", "name": "Communication Engineering", "credits": 3, "type": "fixed" },
+        { "id": "ee-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s6-ee304", "code": "EE 304", "name": "Energy Conversion", "credits": 3, "type": "fixed" },
+        { "id": "ee-s6-spec1a", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s6-spec1b", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s6-spec2", "code": "Elective", "name": "Specified Elective 2", "credits": 3, "type": "customInput" },
+        { "id": "ee-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "ee-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ee-s7-dept", "code": "EE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ee-s7-spec1a", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s7-spec1b", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s7-comp1", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ee-s7-comp2", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ee-s8-spec1a", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s8-spec1b", "code": "EE Elective", "name": "Specified Elective 1", "credits": 3, "type": "customInput" },
+        { "id": "ee-s8-ee492", "code": "EE 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "ee-s8-restr1", "code": "Restr. Elective", "name": "Restricted Elective 3", "credits": 3, "type": "customInput" },
+        { "id": "ee-s8-restr2", "code": "Restr. Elective", "name": "Restricted Elective 3", "credits": 3, "type": "customInput" },
+        { "id": "ee-s8-ee400", "code": "EE 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" }
+      ]
+    ],
+    "ie": [
+      [
+        { "id": "ie-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "ie-s1-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "ie-s1-phys121", "code": "PHYS 121", "name": "Introd. Mech. and Thermodyn.", "credits": 4, "type": "fixed" },
+        { "id": "ie-s1-engg110", "code": "ENGG 110", "name": "Engineering Graphics", "credits": 3, "type": "fixed" },
+        { "id": "ie-s1-ie120", "code": "IE 120", "name": "Ind. Eng. Overview & Orient.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "ie-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "ie-s2-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "ie-s2-cmpe150", "code": "CMPE 150", "name": "Introduction to Computing", "credits": 3, "type": "fixed" },
+        { "id": "ie-s2-chem105", "code": "CHEM 105", "name": "Fundamentals of Chemistry", "credits": 4, "type": "fixed" },
+        { "id": "ie-s2-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ie-s3-ie201", "code": "IE 201", "name": "Intermediate Programming", "credits": 3, "type": "fixed" },
+        { "id": "ie-s3-ie202", "code": "IE 202", "name": "Operations Research I", "credits": 4, "type": "fixed" },
+        { "id": "ie-s3-ie255", "code": "IE 255", "name": "Probability for IE", "credits": 3, "type": "fixed" },
+        { "id": "ie-s3-ad216", "code": "AD 216", "name": "Financial and Cost Accounting", "credits": 4, "type": "fixed" },
+        { "id": "ie-s3-ec101", "code": "EC 101", "name": "Principles of Microeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ie-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ie-s4-math202", "code": "MATH 202", "name": "Differential Equations", "credits": 4, "type": "fixed" },
+        { "id": "ie-s4-ie203", "code": "IE 203", "name": "Operations Research II", "credits": 4, "type": "fixed" },
+        { "id": "ie-s4-ie220", "code": "IE 220", "name": "Materials & Processes in Manufacturing", "credits": 3, "type": "fixed" },
+        { "id": "ie-s4-ie256", "code": "IE 256", "name": "Statistics for IE", "credits": 3, "type": "fixed" },
+        { "id": "ie-s4-ec102", "code": "EC 102", "name": "Principles of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "ie-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ie-s5-ie306", "code": "IE 306", "name": "Systems Simulation", "credits": 4, "type": "fixed" },
+        { "id": "ie-s5-ie312", "code": "IE 312", "name": "Facilities Design and Planning", "credits": 4, "type": "fixed" },
+        { "id": "ie-s5-ie341", "code": "IE 341", "name": "Engineering Economics", "credits": 4, "type": "fixed" },
+        { "id": "ie-s5-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s5-htr311", "code": "HTR 311", "name": "History of Turkish Republic I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ie-s6-ie313", "code": "IE 313", "name": "Supply Chain Management", "credits": 4, "type": "fixed" },
+        { "id": "ie-s6-spec", "code": "IE Specialization", "name": "Specialization Course", "credits": 3, "type": "customInput" },
+        { "id": "ie-s6-dept1", "code": "IE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s6-dept2", "code": "IE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s6-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s6-htr312", "code": "HTR 312", "name": "History of Turkish Republic II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ie-s7-comp", "code": "CC Elective", "name": "Computer Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s7-ie423", "code": "IE 423", "name": "Quality Engineering", "credits": 3, "type": "fixed" },
+        { "id": "ie-s7-spec1", "code": "IE Specialization", "name": "Specialization Course", "credits": 3, "type": "customInput" },
+        { "id": "ie-s7-spec2", "code": "IE Specialization", "name": "Specialization Course", "credits": 3, "type": "customInput" },
+        { "id": "ie-s7-dept", "code": "IE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ie-s8-ie492", "code": "IE 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "ie-s8-dept", "code": "IE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s8-cc", "code": "CC Elective", "name": "Computer Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s8-hss", "code": "HSS Elective", "name": "Humanities Elective", "credits": 3, "type": "customInput" },
+        { "id": "ie-s8-ie400", "code": "IE 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" }
+      ]
+    ],
+    "ce": [
+      [
+        { "id": "ce-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "ce-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" },
+        { "id": "ce-s1-ce101", "code": "CE 101", "name": "Int. to Civil Eng.", "credits": 3, "type": "fixed" },
+        { "id": "ce-s1-ce111", "code": "CE 111", "name": "Visual Tech. in Civil Eng.", "credits": 3, "type": "fixed" },
+        { "id": "ce-s1-ec101", "code": "EC 101", "name": "Princ. of Microec.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "ce-s2-phys102", "code": "PHYS 102", "name": "Physics II", "credits": 4, "type": "fixed" },
+        { "id": "ce-s2-chem105", "code": "CHEM 105", "name": "Fund. of Chem.", "credits": 4, "type": "fixed" },
+        { "id": "ce-s2-cmpe150", "code": "CMPE 150", "name": "Int. to Computing", "credits": 3, "type": "fixed" },
+        { "id": "ce-s2-ec102", "code": "EC 102", "name": "Princ. of Macroecon.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "ce-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "ce-s3-ce211", "code": "CE 211", "name": "Materials Science", "credits": 4, "type": "fixed" },
+        { "id": "ce-s3-ce231", "code": "CE 231", "name": "Earth Sciences", "credits": 3, "type": "fixed" },
+        { "id": "ce-s3-ce243", "code": "CE 243", "name": "Statics", "credits": 3, "type": "fixed" },
+        { "id": "ce-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s4-math202", "code": "MATH 202", "name": "Differential Equations", "credits": 4, "type": "fixed" },
+        { "id": "ce-s4-ce212", "code": "CE 212", "name": "Engineering Materials", "credits": 3, "type": "fixed" },
+        { "id": "ce-s4-ce214", "code": "CE 214", "name": "Fluid Mechanics", "credits": 4, "type": "fixed" },
+        { "id": "ce-s4-ce202", "code": "CE 202", "name": "Prob. & Stat.", "credits": 3, "type": "fixed" },
+        { "id": "ce-s4-ce246", "code": "CE 246", "name": "Strength of Materials", "credits": 4, "type": "fixed" },
+        { "id": "ce-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s5-ce353", "code": "CE 353", "name": "Steel Structures", "credits": 3, "type": "fixed" },
+        { "id": "ce-s5-ce315", "code": "CE 315", "name": "Hydraulic Engineering I", "credits": 4, "type": "fixed" },
+        { "id": "ce-s5-ce335", "code": "CE 335", "name": "Soil Mechanics", "credits": 4, "type": "fixed" },
+        { "id": "ce-s5-ce355", "code": "CE 355", "name": "Structural Analysis", "credits": 4, "type": "fixed" },
+        { "id": "ce-s5-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s6-ce322", "code": "CE 322", "name": "Sustainability in Civil Eng.", "credits": 3, "type": "fixed" },
+        { "id": "ce-s6-ce336", "code": "CE 336", "name": "Foundation Engineering", "credits": 4, "type": "fixed" },
+        { "id": "ce-s6-ce354", "code": "CE 354", "name": "Reinforced Concrete I", "credits": 4, "type": "fixed" },
+        { "id": "ce-s6-ce344", "code": "CE 344", "name": "Str. Dyn. & EQ Eng.", "credits": 4, "type": "fixed" },
+        { "id": "ce-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ce-s7-ce401", "code": "CE 401", "name": "Construction Eng. & Management", "credits": 3, "type": "fixed" },
+        { "id": "ce-s7-ce461", "code": "CE 461", "name": "Transport Systems Eng", "credits": 4, "type": "fixed" },
+        { "id": "ce-s7-dept1", "code": "CE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s7-dept2", "code": "CE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ce-s8-ce402", "code": "CE 402", "name": "Civil Eng. Systems Analysis", "credits": 3, "type": "fixed" },
+        { "id": "ce-s8-ce492", "code": "CE 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "ce-s8-dept", "code": "CE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s8-restr", "code": "Restr. Elective", "name": "Restricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ce-s8-ce400", "code": "CE 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" }
+      ]
+    ],
+    "che": [
+      [
+        { "id": "che-s1-che110", "code": "ChE 110", "name": "Intro. Chem & Biosystems Eng.", "credits": 3, "type": "fixed" },
+        { "id": "che-s1-chem103", "code": "CHEM 103", "name": "General Chemistry I", "credits": 3, "type": "fixed" },
+        { "id": "che-s1-chem109", "code": "CHEM 109", "name": "Gen.Chem.Lab.", "credits": 1, "type": "fixed" },
+        { "id": "che-s1-cmpe150", "code": "CMPE 150", "name": "Intro. to Comp.", "credits": 3, "type": "fixed" },
+        { "id": "che-s1-ec101", "code": "EC 101", "name": "Princ. of Microecon.", "credits": 3, "type": "fixed" },
+        { "id": "che-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" }
+      ],
+      [
+        { "id": "che-s2-chem104", "code": "CHEM 104", "name": "General Chemistry II", "credits": 3, "type": "fixed" },
+        { "id": "che-s2-ec102", "code": "EC 102", "name": "Princ. of Macroecon.", "credits": 3, "type": "fixed" },
+        { "id": "che-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "che-s2-phys121", "code": "PHYS 121", "name": "Int. to Mech. & Thermo.", "credits": 4, "type": "fixed" },
+        { "id": "che-s2-hss", "code": "HSS Elective", "name": "Hum. Soc. Sci. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "che-s3-che201", "code": "ChE 201", "name": "Physico Chem. Sys. I", "credits": 3, "type": "fixed" },
+        { "id": "che-s3-che203", "code": "ChE 203", "name": "Physico Chem. Sys. Lab.", "credits": 1, "type": "fixed" },
+        { "id": "che-s3-che211", "code": "ChE 211", "name": "Mass and Energy Balances", "credits": 4, "type": "fixed" },
+        { "id": "che-s3-chem241", "code": "CHEM 241", "name": "Organic Chem. for. Eng.", "credits": 4, "type": "fixed" },
+        { "id": "che-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "che-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "che-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "che-s4-che202", "code": "ChE 202", "name": "Physico Chem.Sys.II", "credits": 3, "type": "fixed" },
+        { "id": "che-s4-che222", "code": "ChE 222", "name": "Intro. to Biosystems", "credits": 3, "type": "fixed" },
+        { "id": "che-s4-che232", "code": "ChE 232", "name": "Fluid Mechanics", "credits": 3, "type": "fixed" },
+        { "id": "che-s4-math202", "code": "MATH 202", "name": "Differential Eq.", "credits": 4, "type": "fixed" },
+        { "id": "che-s4-me210", "code": "ME 210", "name": "Material Science", "credits": 3, "type": "fixed" },
+        { "id": "che-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "che-s5-che321", "code": "ChE 321", "name": "Chem. Eng.Thermodyn.", "credits": 4, "type": "fixed" },
+        { "id": "che-s5-che333", "code": "ChE 333", "name": "Heat Transfer", "credits": 3, "type": "fixed" },
+        { "id": "che-s5-che353", "code": "ChE 353", "name": "Chem.and Biochem. Processes", "credits": 3, "type": "fixed" },
+        { "id": "che-s5-che383", "code": "ChE 383", "name": "Prob. Stat.in Chem. Eng.App.", "credits": 3, "type": "fixed" },
+        { "id": "che-s5-htr311", "code": "HTR 311", "name": "Hist. Of.Turkish Republic I", "credits": 2, "type": "fixed" },
+        { "id": "che-s5-cc", "code": "CC Elective", "name": "Complementary Course", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "che-s6-che302", "code": "ChE 302", "name": "Chem. Eng. Lab.", "credits": 3, "type": "fixed" },
+        { "id": "che-s6-che334", "code": "ChE 334", "name": "Mass Trans.Operations", "credits": 4, "type": "fixed" },
+        { "id": "che-s6-che342", "code": "ChE 342", "name": "Reac.Kin.and Reac.Design", "credits": 4, "type": "fixed" },
+        { "id": "che-s6-che386", "code": "ChE 386", "name": "Modeling and Optimization", "credits": 3, "type": "fixed" },
+        { "id": "che-s6-htr312", "code": "HTR 312", "name": "Hist.of Turkish Republic II", "credits": 2, "type": "fixed" },
+        { "id": "che-s6-hss", "code": "HSS Elective", "name": "Hum/Soc. Sc. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "che-s7-che401", "code": "ChE 401", "name": "Chem. Eng. and Biotechnology Lab.", "credits": 3, "type": "fixed" },
+        { "id": "che-s7-che433", "code": "ChE 433", "name": "Des.of. Chem. Proc. Units", "credits": 3, "type": "fixed" },
+        { "id": "che-s7-che475", "code": "ChE 475", "name": "Proc.Dyn. And Control", "credits": 3, "type": "fixed" },
+        { "id": "che-s7-dept1", "code": "ChE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "che-s7-dept2", "code": "ChE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "che-s8-che462", "code": "ChE 462", "name": "Plant Design and Economıcs", "credits": 3, "type": "fixed" },
+        { "id": "che-s8-che492", "code": "ChE 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "che-s8-dept", "code": "ChE Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "che-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "che-s8-cc", "code": "CC Elective", "name": "Complementary Course", "credits": 3, "type": "customInput" },
+        { "id": "che-s8-che400", "code": "ChE 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" }
+      ]
+    ],
+    "me": [
+      [
+        { "id": "me-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "me-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" },
+        { "id": "me-s1-chem105", "code": "CHEM 105", "name": "General Chemistry", "credits": 4, "type": "fixed" },
+        { "id": "me-s1-cmpe150", "code": "CMPE 150", "name": "Int. to Comp.", "credits": 3, "type": "fixed" },
+        { "id": "me-s1-ec101", "code": "EC 101", "name": "Princ. of Microecon.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "me-s2-phys130", "code": "PHYS 130", "name": "Ther. & Mod. Phys.", "credits": 4, "type": "fixed" },
+        { "id": "me-s2-me120", "code": "ME 120", "name": "Int. to Mech. Eng.", "credits": 3, "type": "fixed" },
+        { "id": "me-s2-me110", "code": "ME 110", "name": "Engineering Drawing", "credits": 3, "type": "fixed" },
+        { "id": "me-s2-ec102", "code": "EC 102", "name": "Princ. of Macroecon.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "me-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "me-s3-me241", "code": "ME 241", "name": "Statics", "credits": 3, "type": "fixed" },
+        { "id": "me-s3-ee210", "code": "EE 210", "name": "Electrical Eng.", "credits": 3, "type": "fixed" },
+        { "id": "me-s3-me207", "code": "ME 207", "name": "Probability and Statistics for ME", "credits": 3, "type": "fixed" },
+        { "id": "me-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s4-math202", "code": "MATH 202", "name": "Differential Equations", "credits": 4, "type": "fixed" },
+        { "id": "me-s4-me212", "code": "ME 212", "name": "Materials Science", "credits": 4, "type": "fixed" },
+        { "id": "me-s4-me242", "code": "ME 242", "name": "Dynamics", "credits": 3, "type": "fixed" },
+        { "id": "me-s4-me244", "code": "ME 244", "name": "Mechanics of Materials", "credits": 4, "type": "fixed" },
+        { "id": "me-s4-me263", "code": "ME 263", "name": "Thermodynamics I", "credits": 3, "type": "fixed" },
+        { "id": "me-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s5-me331", "code": "ME 331", "name": "Mechatronics", "credits": 3, "type": "fixed" },
+        { "id": "me-s5-me303", "code": "ME 303", "name": "Comp. App. in Mech. Eng.", "credits": 3, "type": "fixed" },
+        { "id": "me-s5-me324", "code": "ME 324", "name": "Machine Design I", "credits": 4, "type": "fixed" },
+        { "id": "me-s5-me353", "code": "ME 353", "name": "Fluid Mechanics I", "credits": 4, "type": "fixed" },
+        { "id": "me-s5-hss", "code": "HSS Elective", "name": "Humanities or Social Sciences", "credits": 3, "type": "customInput" },
+        { "id": "me-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s6-me304", "code": "ME 304", "name": "Experimental Eng.", "credits": 3, "type": "fixed" },
+        { "id": "me-s6-me318", "code": "ME 318", "name": "Manufacturing Tech.", "credits": 4, "type": "fixed" },
+        { "id": "me-s6-me335", "code": "ME 335", "name": "Modeling and Control", "credits": 4, "type": "fixed" },
+        { "id": "me-s6-me362", "code": "ME 362", "name": "Heat Transfer", "credits": 4, "type": "fixed" },
+        { "id": "me-s6-hss", "code": "HSS Elective", "name": "Humanities or Social Science", "credits": 3, "type": "customInput" },
+        { "id": "me-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "me-s7-me424", "code": "ME 424", "name": "Machine Design II", "credits": 4, "type": "fixed" },
+        { "id": "me-s7-me429", "code": "ME 429", "name": "Mechanical and Thermal Design", "credits": 4, "type": "fixed" },
+        { "id": "me-s7-opt", "code": "ME Option", "name": "Option Course", "credits": 3, "type": "customInput" },
+        { "id": "me-s7-cc1", "code": "CC Elective", "name": "Comp. Course", "credits": 3, "type": "customInput" },
+        { "id": "me-s7-cc2", "code": "CC Elective", "name": "Comp. Course", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "me-s8-me492", "code": "ME 492", "name": "Project", "credits": 4, "type": "fixed" },
+        { "id": "me-s8-opt1", "code": "ME Option", "name": "Option Course", "credits": 3, "type": "customInput" },
+        { "id": "me-s8-opt2", "code": "ME Option", "name": "Option Course", "credits": 3, "type": "customInput" },
+        { "id": "me-s8-cc", "code": "CC Elective", "name": "Comp. Course", "credits": 3, "type": "customInput" },
+        { "id": "me-s8-free", "code": "Free Elective", "name": "Free Elective", "credits": 3, "type": "customInput" },
+        { "id": "me-s8-me400", "code": "ME 400", "name": "Engineering Internship", "credits": 0, "type": "fixed" }
+      ]
+    ],
+    "psy": [
+      [
+        { "id": "psy-s1-psy111", "code": "PSY 111", "name": "Fundamentals of Psychology I", "credits": 3, "type": "fixed" },
+        { "id": "psy-s1-hist105", "code": "HIST 105", "name": "Making of the Modern World I", "credits": 3, "type": "fixed" },
+        { "id": "psy-s1-math105", "code": "MATH 105", "name": "Int. to Finite Math.", "credits": 4, "type": "fixed" },
+        { "id": "psy-s1-phil101", "code": "PHIL 101", "name": "Int. to Philosophy", "credits": 3, "type": "fixed" },
+        { "id": "psy-s1-soc101", "code": "SOC 101", "name": "Int. to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "psy-s1-psy100", "code": "PSY 100", "name": "Orientation to Psychology", "credits": 1, "type": "fixed" },
+        { "id": "psy-s1-ae", "code": "AE/HSS/UNR", "name": "Unrest. Elective / English", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "psy-s2-psy112", "code": "PSY 112", "name": "Fundamentals of Psychology II", "credits": 3, "type": "fixed" },
+        { "id": "psy-s2-hist106", "code": "HIST 106", "name": "Making of the Modern World II", "credits": 3, "type": "fixed" },
+        { "id": "psy-s2-bio152", "code": "BIO 152", "name": "Int. to Modern Bio.", "credits": 3, "type": "fixed" },
+        { "id": "psy-s2-math106", "code": "MATH 106", "name": "Int. to Calc. for Soc. Sci.", "credits": 4, "type": "fixed" },
+        { "id": "psy-s2-ae", "code": "AE/HSS/UNR", "name": "Unrest. Elective / English", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "psy-s3-psy201", "code": "PSY 201", "name": "Int. to Stat. for Psy. I", "credits": 4, "type": "fixed" },
+        { "id": "psy-s3-dept1", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s3-dept2", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s3-ec", "code": "EC 101/102", "name": "Principles of Micro/Macro Econ.", "credits": 3, "type": "select", "options": ["EC 101", "EC 102"] },
+        { "id": "psy-s3-unr", "code": "HUM/AE/UNR", "name": "Unrest. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "psy-s4-psy202", "code": "PSY 202", "name": "Int. to Stat. for Psy. II", "credits": 4, "type": "fixed" },
+        { "id": "psy-s4-dept1", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s4-dept2", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "psy-s5-psy301", "code": "PSY 301", "name": "Research Methods in Psychology", "credits": 4, "type": "fixed" },
+        { "id": "psy-s5-dept1", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s5-dept2", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s5-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s5-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "psy-s6-psy304", "code": "PSY 304", "name": "Experimental Psychology", "credits": 4, "type": "fixed" },
+        { "id": "psy-s6-dept", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s6-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s6-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s6-unr3", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "psy-s7-dept", "code": "PSY Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "psy-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s7-unr3", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s7-unr4", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "psy-s8-psy411", "code": "PSY 411", "name": "Theories in Psy. I", "credits": 3, "type": "fixed" },
+        { "id": "psy-s8-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s8-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s8-unr3", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "psy-s8-unr4", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "hist": [
+      [
+        { "id": "hist-s1-hist101", "code": "HIST 101", "name": "Hist.Meth.& Thought I", "credits": 3, "type": "fixed" },
+        { "id": "hist-s1-hist105", "code": "HIST 105", "name": "Mak. of Mod. World I", "credits": 3, "type": "fixed" },
+        { "id": "hist-s1-ae", "code": "AE/LIT", "name": "English / Lit. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s1-socsci", "code": "Soc. Sci.", "name": "Int. to PSY/POLS/PHIL", "credits": 3, "type": "select", "options": ["PSY 101", "POLS 101", "PHIL 101"] },
+        { "id": "hist-s1-soc101", "code": "SOC 101", "name": "Int. to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "hist-s1-math105", "code": "MATH 105", "name": "Lin. Algebra & Calc. I", "credits": 4, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s2-hist102", "code": "HIST 102", "name": "Hist.Meth.& Thought II", "credits": 3, "type": "fixed" },
+        { "id": "hist-s2-hist106", "code": "HIST 106", "name": "Mak. of Mod. World II", "credits": 3, "type": "fixed" },
+        { "id": "hist-s2-ae", "code": "AE/LIT", "name": "English / Lit. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s2-hist100", "code": "HIST 100", "name": "Introduction to History", "credits": 2, "type": "fixed" },
+        { "id": "hist-s2-ec102", "code": "EC 102", "name": "Int. To Macro Econ.", "credits": 3, "type": "fixed" },
+        { "id": "hist-s2-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "hist-s3-hist209", "code": "HIST 209", "name": "Res. Methods in History", "credits": 4, "type": "fixed" },
+        { "id": "hist-s3-pool", "code": "HIST Pool", "name": "Area History Elective", "credits": 3, "type": "select", "options": ["HIST 221", "HIST 231", "HIST 232", "HIST 213", "HIST 214"] },
+        { "id": "hist-s3-hist241", "code": "HIST 241", "name": "Western European Soc. 1450-1750", "credits": 3, "type": "fixed" },
+        { "id": "hist-s3-tkl101", "code": "TKL 101", "name": "Ottoman Turkish I", "credits": 4, "type": "fixed" },
+        { "id": "hist-s3-mle", "code": "MLE", "name": "Modern Lang. Elect.", "credits": 3, "type": "customInput" },
+        { "id": "hist-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s4-hist210", "code": "HIST 210", "name": "Res. Meth. in Hist. II", "credits": 4, "type": "fixed" },
+        { "id": "hist-s4-hist222", "code": "HIST 222", "name": "Ottoman History 1300-1600", "credits": 3, "type": "fixed" },
+        { "id": "hist-s4-hist242", "code": "HIST 242", "name": "Western European Soc. 1750-1890", "credits": 3, "type": "fixed" },
+        { "id": "hist-s4-tkl102", "code": "TKL 102", "name": "Ottoman Turkish II", "credits": 4, "type": "fixed" },
+        { "id": "hist-s4-mle", "code": "MLE", "name": "Modern Lang. Elect.", "credits": 3, "type": "customInput" },
+        { "id": "hist-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s5-pool1", "code": "HIST Pool", "name": "HIST 320/321/322", "credits": 3, "type": "select", "options": ["HIST 320", "HIST 321", "HIST 322"] },
+        { "id": "hist-s5-pool2", "code": "Byzantine", "name": "Byzantine History", "credits": 3, "type": "select", "options": ["HIST 335", "HIST 336"] },
+        { "id": "hist-s5-tkl215", "code": "TKL 215", "name": "Ottoman Paleog. I", "credits": 3, "type": "fixed" },
+        { "id": "hist-s5-dept", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s5-mle", "code": "MLE", "name": "Modern Lang. Elect.", "credits": 3, "type": "customInput" },
+        { "id": "hist-s5-htr311", "code": "HTR 311", "name": "Hist. Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s6-pool1", "code": "HIST Pool", "name": "HIST 320/321/322", "credits": 3, "type": "select", "options": ["HIST 320", "HIST 321", "HIST 322"] },
+        { "id": "hist-s6-tkl216", "code": "TKL 216", "name": "Ottoman Paleog. II", "credits": 3, "type": "fixed" },
+        { "id": "hist-s6-restr", "code": "HIST Restr.", "name": "Restricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s6-dept", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s6-mle", "code": "MLE", "name": "Modern Lang. Elect.", "credits": 3, "type": "customInput" },
+        { "id": "hist-s6-htr312", "code": "HTR 312", "name": "Hist. Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s7-hist401", "code": "HIST 401", "name": "Historiography I", "credits": 3, "type": "fixed" },
+        { "id": "hist-s7-dept1", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s7-dept2", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s7-hist495", "code": "HIST 495", "name": "Thesis", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "hist-s8-hist402", "code": "HIST 402", "name": "Historiography II", "credits": 3, "type": "fixed" },
+        { "id": "hist-s8-dept1", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s8-dept2", "code": "HIST/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "hist-s8-hist496", "code": "HIST 496", "name": "Thesis", "credits": 3, "type": "fixed" }
+      ]
+    ],
+    "tll": [
+      [
+        { "id": "tll-s1-tkl101", "code": "TKL 101", "name": "Ottoman Turkish I", "credits": 4, "type": "fixed" },
+        { "id": "tll-s1-tkl103", "code": "TKL 103", "name": "Turk. Lang. Gram. I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s1-tkl107", "code": "TKL 107", "name": "Int. Text. Analysis", "credits": 3, "type": "fixed" },
+        { "id": "tll-s1-ling101", "code": "LING 101", "name": "Int. to Language and Linguistics I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s1-ae", "code": "AE/HSS", "name": "English / HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tll-s2-tkl102", "code": "TKL 102", "name": "Ottoman Turkish II", "credits": 4, "type": "fixed" },
+        { "id": "tll-s2-tkl104", "code": "TKL 104", "name": "Turk.Lang. Gram II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s2-tkl108", "code": "TKL 108", "name": "Turkish Writing Techn.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s2-hss", "code": "HSS Elect.", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s2-ae", "code": "AE/HSS", "name": "English / HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tll-s3-tkl201", "code": "TKL 201", "name": "Research Meth. in Turk. Lit.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s3-tkl204", "code": "TKL 204", "name": "Genres in Divan Lit", "credits": 3, "type": "fixed" },
+        { "id": "tll-s3-tkl211", "code": "TKL 211", "name": "Mod. in Turk. Lit. I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s3-tkl213", "code": "TKL 213", "name": "Turkic Lang&Dial. I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s3-hist235", "code": "HIST 235", "name": "Ottoman Cult. Hist.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s3-phil111", "code": "PHIL 111", "name": "Int. to Anci. Med. Phil.", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "tll-s4-tkl205", "code": "TKL 205", "name": "Methods of Analy. Divan Poet.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s4-tkl212", "code": "TKL 212", "name": "Modern. in Turk. Lit II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s4-tkl214", "code": "TKL 214", "name": "Turkic Lang.&Dialects II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s4-tkl217", "code": "TKL 217", "name": "Old Anatolian Turkish", "credits": 3, "type": "fixed" },
+        { "id": "tll-s4-phil112", "code": "PHIL 112", "name": "Int. to Modern Phil.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s4-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tll-s5-tkl301", "code": "TKL 301", "name": "Lit. Th. Prac. Crit.I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s5-tkl309", "code": "TKL 309", "name": "Turk. Poet. in the Repub. Period", "credits": 3, "type": "fixed" },
+        { "id": "tll-s5-tkl311", "code": "TKL 311", "name": "Turk. Folk Lit. I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s5-tkl313", "code": "TKL 313", "name": "Divan Literature I", "credits": 3, "type": "fixed" },
+        { "id": "tll-s5-sci", "code": "Science Elective", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s5-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tll-s6-tkl302", "code": "TKL 302", "name": "Lit. Th. & Prac. Crit. II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s6-tkl312", "code": "TKL 312", "name": "Turk. Folk Literature II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s6-tkl314", "code": "TKL 314", "name": "Divan Literature II", "credits": 3, "type": "fixed" },
+        { "id": "tll-s6-ling314", "code": "LING 314", "name": "Syntax and Semantics of Modern Turkish", "credits": 3, "type": "fixed" },
+        { "id": "tll-s6-sci", "code": "Science Elective", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "tll-s7-tkl409", "code": "TKL 409", "name": "Prose in Old Turkish Literature", "credits": 3, "type": "fixed" },
+        { "id": "tll-s7-tkl414", "code": "TKL 414", "name": "Tanzimat Novel", "credits": 3, "type": "fixed" },
+        { "id": "tll-s7-tkl433", "code": "TKL 433", "name": "Short Story in Mod. Turkish Lit.", "credits": 3, "type": "fixed" },
+        { "id": "tll-s7-dept", "code": "TKL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "tll-s8-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s8-tkl434", "code": "TKL 434", "name": "Novel in Modern Turkish Literature", "credits": 3, "type": "fixed" },
+        { "id": "tll-s8-dept1", "code": "TKL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s8-dept2", "code": "TKL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s8-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "tll-s8-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "trans": [
+      [
+        { "id": "trans-s1-tr109", "code": "TR 109", "name": "Intro. to Transl. & Transl. Studies I", "credits": 3, "type": "fixed" },
+        { "id": "trans-s1-tr111", "code": "TR 111", "name": "Rhetoric & Composition for Translators", "credits": 4, "type": "fixed" },
+        { "id": "trans-s1-hist", "code": "HIST/HUM", "name": "History / Cultural Encounters I", "credits": 3, "type": "select", "options": ["HIST 105", "HUM 101"] },
+        { "id": "trans-s1-soc", "code": "Soc. Sci.", "name": "SOC/PSY/PHIL Elective", "credits": 3, "type": "select", "options": ["SOC 101", "PSY 101", "PHIL 101"] },
+        { "id": "trans-s1-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s2-tr106", "code": "TR 106", "name": "Research Paper Writing in TS", "credits": 3, "type": "fixed" },
+        { "id": "trans-s2-tr108", "code": "TR 108", "name": "Turkish for Translators", "credits": 3, "type": "fixed" },
+        { "id": "trans-s2-tr110", "code": "TR 110", "name": "Intro. to Transl. & Transl. Studies II", "credits": 3, "type": "fixed" },
+        { "id": "trans-s2-hist", "code": "HIST/HUM", "name": "History / Cultural Encounters II", "credits": 3, "type": "select", "options": ["HIST 106", "HUM 102"] },
+        { "id": "trans-s2-ling101", "code": "LING 101", "name": "Int. to Lang. and Ling. I", "credits": 3, "type": "fixed" },
+        { "id": "trans-s2-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s3-dept", "code": "TR Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s3-tr203", "code": "TR 203", "name": "IT for Translators", "credits": 3, "type": "fixed" },
+        { "id": "trans-s3-tr215", "code": "TR 215", "name": "Tech. Translation", "credits": 3, "type": "fixed" },
+        { "id": "trans-s3-engl105", "code": "ENGL 105", "name": "Intro. to Literary Forms I", "credits": 3, "type": "fixed" },
+        { "id": "trans-s3-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s3-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s4-dept", "code": "TR Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s4-int202", "code": "INT 202", "name": "Intro. to Interpreting", "credits": 3, "type": "fixed" },
+        { "id": "trans-s4-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s4-engl106", "code": "ENGL 106", "name": "Intro. to Literary Forms II", "credits": 3, "type": "fixed" },
+        { "id": "trans-s4-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s4-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s5-tr301", "code": "TR 301", "name": "Theories of Translat.", "credits": 3, "type": "fixed" },
+        { "id": "trans-s5-dept", "code": "TR Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s5-int301", "code": "INT 301", "name": "Intro. to Consec. Int.", "credits": 3, "type": "fixed" },
+        { "id": "trans-s5-pols101", "code": "POLS 101", "name": "Intro. to Political Sc.", "credits": 3, "type": "fixed" },
+        { "id": "trans-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" },
+        { "id": "trans-s5-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s6-tr314", "code": "TR 314", "name": "Literary Translation", "credits": 3, "type": "fixed" },
+        { "id": "trans-s6-tr316", "code": "TR 316", "name": "Translation Criticism", "credits": 3, "type": "fixed" },
+        { "id": "trans-s6-tr318", "code": "TR 318", "name": "Seminar", "credits": 1, "type": "fixed" },
+        { "id": "trans-s6-dept", "code": "TR/INT", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" },
+        { "id": "trans-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s6-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s7-tr401", "code": "TR 401", "name": "Contemp. Iss. in Transl.", "credits": 1, "type": "fixed" },
+        { "id": "trans-s7-tr427", "code": "TR 427", "name": "Translation Project Design", "credits": 1, "type": "fixed" },
+        { "id": "trans-s7-dept1", "code": "TR Elective", "name": "Departmental Elect.", "credits": 3, "type": "customInput" },
+        { "id": "trans-s7-dept2", "code": "TR Elective", "name": "Departmental Elect.", "credits": 3, "type": "customInput" },
+        { "id": "trans-s7-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s7-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "trans-s8-tr428", "code": "TR 428/INT", "name": "Translation Project (or INT)", "credits": 3, "type": "customInput" },
+        { "id": "trans-s8-dept1", "code": "TR Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s8-dept2", "code": "TR Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s8-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s8-lang", "code": "Language", "name": "Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "trans-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "ling": [
+      [
+        { "id": "ling-s1-ling101", "code": "LING 101", "name": "Intro. to Lang. & Linguistics I", "credits": 3, "type": "fixed" },
+        { "id": "ling-s1-psy101", "code": "PSY 101", "name": "Introduction to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "ling-s1-phil101", "code": "PHIL 101", "name": "Introduction to Philosophy", "credits": 3, "type": "fixed" },
+        { "id": "ling-s1-hist", "code": "HIST/HUM", "name": "Making of Modern World / Cultural Encounters", "credits": 3, "type": "select", "options": ["HIST 105", "HUM 101"] },
+        { "id": "ling-s1-ae", "code": "AE 111/2XX", "name": "Advanced English Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ling-s2-ling102", "code": "LING 102", "name": "Intro. to Lang. & Linguistics II", "credits": 3, "type": "fixed" },
+        { "id": "ling-s2-ling104", "code": "LING 104", "name": "Phonetics", "credits": 3, "type": "fixed" },
+        { "id": "ling-s2-engl105", "code": "ENGL 105", "name": "Intro. to Literary Forms I", "credits": 3, "type": "fixed" },
+        { "id": "ling-s2-hist", "code": "HIST/HUM", "name": "Making of Modern World / Cultural Encounters", "credits": 3, "type": "select", "options": ["HIST 106", "HUM 102"] },
+        { "id": "ling-s2-ae", "code": "AE 112/2XX", "name": "Advanced English Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ling-s3-ling201", "code": "LING 201", "name": "Phonology", "credits": 3, "type": "fixed" },
+        { "id": "ling-s3-ling203", "code": "LING 203", "name": "Syntax", "credits": 3, "type": "fixed" },
+        { "id": "ling-s3-phil131", "code": "PHIL 131", "name": "Logic", "credits": 4, "type": "fixed" },
+        { "id": "ling-s3-sci", "code": "Math/Sci", "name": "Math/Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s3-lang", "code": "Language", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ling-s4-ling202", "code": "LING 202", "name": "Morphology", "credits": 3, "type": "fixed" },
+        { "id": "ling-s4-ling206", "code": "LING 206", "name": "Language Typology", "credits": 3, "type": "fixed" },
+        { "id": "ling-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s4-sci", "code": "Math/Sci", "name": "Math/Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s4-lang", "code": "Language", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ling-s5-ling313", "code": "LING 313", "name": "Phon. & Morph. of Mod. Turkish", "credits": 3, "type": "fixed" },
+        { "id": "ling-s5-dept1", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s5-dept2", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s5-lang", "code": "Language", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ling-s6-ling314", "code": "LING 314", "name": "Syntax & Semantics of Mod. Turkish", "credits": 3, "type": "fixed" },
+        { "id": "ling-s6-dept1", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s6-dept2", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s6-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s6-lang", "code": "Language", "name": "Foreign Language Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ling-s7-ling411", "code": "LING 411", "name": "Linguistic Methodology", "credits": 4, "type": "fixed" },
+        { "id": "ling-s7-dept", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s7-deptcomp", "code": "LING/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s7-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ling-s8-ling412", "code": "LING 412", "name": "Research and Writing", "credits": 4, "type": "fixed" },
+        { "id": "ling-s8-dept", "code": "LING Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s8-deptcomp", "code": "LING/COMP", "name": "Dept./Comp. Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s8-comp", "code": "COMP Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ling-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "phil": [
+      [
+        { "id": "phil-s1-phil101", "code": "PHIL 101", "name": "Int. to Philosophy", "credits": 3, "type": "fixed" },
+        { "id": "phil-s1-phil131", "code": "PHIL 131", "name": "Logic I", "credits": 4, "type": "fixed" },
+        { "id": "phil-s1-ss", "code": "SS Elective", "name": "Soc. Sciences Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s1-phil105", "code": "PHIL 105", "name": "Informal Logic", "credits": 4, "type": "fixed" },
+        { "id": "phil-s1-ae", "code": "AE 261/Lit", "name": "Engl. for Phil. I / Lit. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "phil-s2-phil106", "code": "PHIL 106", "name": "Philosophical Texts", "credits": 3, "type": "fixed" },
+        { "id": "phil-s2-phil132", "code": "PHIL 132", "name": "Logic II", "credits": 4, "type": "fixed" },
+        { "id": "phil-s2-math", "code": "MATH Elective", "name": "Mathematics Elect.", "credits": 4, "type": "customInput" },
+        { "id": "phil-s2-ss", "code": "SS Elective", "name": "Soc. Sciences Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s2-ae", "code": "AE 262/Lit", "name": "Engl. for Phil. II / Lit. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "phil-s3-phil213", "code": "PHIL 213", "name": "History of Phil. I", "credits": 3, "type": "fixed" },
+        { "id": "phil-s3-phil273", "code": "PHIL 273", "name": "Epistemology", "credits": 3, "type": "fixed" },
+        { "id": "phil-s3-sci", "code": "SCI Elective", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s3-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s3-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phil-s4-phil214", "code": "PHIL 214", "name": "History of Phil. II", "credits": 3, "type": "fixed" },
+        { "id": "phil-s4-phil222", "code": "PHIL 222", "name": "Phil. of Science", "credits": 3, "type": "fixed" },
+        { "id": "phil-s4-sci", "code": "SCI Elective", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s4-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s4-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phil-s5-phil313", "code": "PHIL 313", "name": "Hist. of Mod. Phil III", "credits": 3, "type": "fixed" },
+        { "id": "phil-s5-phil341", "code": "PHIL 341", "name": "Ethics", "credits": 3, "type": "fixed" },
+        { "id": "phil-s5-dept", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s5-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s5-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep.I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phil-s6-phil314", "code": "PHIL 314", "name": "Hist. of Mod. Phil IV", "credits": 3, "type": "fixed" },
+        { "id": "phil-s6-phil382", "code": "PHIL 382", "name": "Ontology", "credits": 3, "type": "fixed" },
+        { "id": "phil-s6-dept", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s6-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s6-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep.II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phil-s7-dept1", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s7-dept2", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s7-dept3", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "phil-s8-dept1", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s8-dept2", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s8-dept3", "code": "PHIL Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phil-s8-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phil-s8-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "phys": [
+      [
+        { "id": "phys-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" },
+        { "id": "phys-s1-chem105", "code": "CHEM 105", "name": "Fundamentals of Chemistry", "credits": 4, "type": "fixed" },
+        { "id": "phys-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "phys-s1-phys197", "code": "PHYS 197", "name": "Analytical Methods in Physics", "credits": 3, "type": "fixed" },
+        { "id": "phys-s1-ae", "code": "AE/EC", "name": "AE 101/111 or EC 101", "credits": 3, "type": "select", "options": ["AE 101", "AE 111", "EC 101"] }
+      ],
+      [
+        { "id": "phys-s2-phys102", "code": "PHYS 102", "name": "Physics II", "credits": 4, "type": "fixed" },
+        { "id": "phys-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "phys-s2-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "phys-s2-phys198", "code": "PHYS 198", "name": "Numerical Methods in Physics", "credits": 3, "type": "fixed" },
+        { "id": "phys-s2-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "phys-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "phys-s3-phys221", "code": "PHYS 221", "name": "Ther. Prop. of Mat.", "credits": 3, "type": "fixed" },
+        { "id": "phys-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "phys-s3-ec", "code": "EC/Unrest.", "name": "EC 101 or Unrest. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phys-s3-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "phys-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phys-s4-phys202", "code": "PHYS 202", "name": "Physics IV", "credits": 4, "type": "fixed" },
+        { "id": "phys-s4-math202", "code": "MATH 202", "name": "Differential Eq.", "credits": 4, "type": "fixed" },
+        { "id": "phys-s4-ee210", "code": "EE 210", "name": "Int. to Electrical Eng.", "credits": 3, "type": "fixed" },
+        { "id": "phys-s4-ec102", "code": "EC 102", "name": "Prin. of Macroeconomics", "credits": 3, "type": "fixed" },
+        { "id": "phys-s4-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "phys-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phys-s5-phys301", "code": "PHYS 301", "name": "Classical Mechanics I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s5-phys311", "code": "PHYS 311", "name": "Modern Physics I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s5-phys325", "code": "PHYS 325", "name": "Math. Meth.of Phys.I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s5-phys331", "code": "PHYS 331", "name": "Electronics for Physics I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phys-s5-htr311", "code": "HTR 311", "name": "Hist. Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phys-s6-phys302", "code": "PHYS 302", "name": "Classical Mechanics II", "credits": 3, "type": "fixed" },
+        { "id": "phys-s6-phys312", "code": "PHYS 312", "name": "Modern Physics II", "credits": 3, "type": "fixed" },
+        { "id": "phys-s6-phys326", "code": "PHYS 326", "name": "Math. Meth. of Phys II", "credits": 3, "type": "fixed" },
+        { "id": "phys-s6-phys442", "code": "PHYS 442", "name": "Experimental Phys.", "credits": 4, "type": "fixed" },
+        { "id": "phys-s6-unr", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phys-s6-htr312", "code": "HTR 312", "name": "Hist. Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "phys-s7-phys401", "code": "PHYS 401", "name": "Electromagnetism I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s7-phys411", "code": "PHYS 411", "name": "Quantum Mech. I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s7-phys421", "code": "PHYS 421", "name": "Statistical Mech. I", "credits": 3, "type": "fixed" },
+        { "id": "phys-s7-phys443", "code": "PHYS 443", "name": "Experimental Phys I", "credits": 4, "type": "fixed" },
+        { "id": "phys-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "phys-s8-phys402", "code": "PHYS 402", "name": "Electromagnetism II", "credits": 3, "type": "fixed" },
+        { "id": "phys-s8-phys412", "code": "PHYS 412", "name": "Quantum Mechanics II", "credits": 3, "type": "fixed" },
+        { "id": "phys-s8-dept", "code": "PHYS Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "phys-s8-unr1", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" },
+        { "id": "phys-s8-unr2", "code": "Unrestricted", "name": "Unrestricted Elect.", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "chem": [
+      [
+        { "id": "chem-s1-chem100", "code": "CHEM 100", "name": "Orientation to Chemistry", "credits": 1, "type": "fixed" },
+        { "id": "chem-s1-chem101", "code": "CHEM 101", "name": "General Chemistry I", "credits": 3, "type": "fixed" },
+        { "id": "chem-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "chem-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" },
+        { "id": "chem-s1-ae", "code": "AE/HSS", "name": "English / HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "chem-s2-chem102", "code": "CHEM 102", "name": "General Chemistry II", "credits": 3, "type": "fixed" },
+        { "id": "chem-s2-chem106", "code": "CHEM 106", "name": "General Chemistry Lab", "credits": 2, "type": "fixed" },
+        { "id": "chem-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "chem-s2-phys", "code": "PHYS 130/102", "name": "Ther. & Mod. Phys / Physics II", "credits": 4, "type": "select", "options": ["PHYS 130", "PHYS 102"] },
+        { "id": "chem-s2-comp", "code": "Comp. Elective", "name": "Computer Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "chem-s3-chem213", "code": "CHEM 213", "name": "Organic Chem. I", "credits": 4, "type": "fixed" },
+        { "id": "chem-s3-chem215", "code": "CHEM 215", "name": "Org. Chem. Lab I", "credits": 2, "type": "fixed" },
+        { "id": "chem-s3-chem223", "code": "CHEM 223", "name": "Analytical Chemistry", "credits": 3, "type": "fixed" },
+        { "id": "chem-s3-chem225", "code": "CHEM 225", "name": "Analytical Chemistry Lab", "credits": 2, "type": "fixed" },
+        { "id": "chem-s3-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "chem-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "chem-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "chem-s4-chem214", "code": "CHEM 214", "name": "Organic Chem. II", "credits": 4, "type": "fixed" },
+        { "id": "chem-s4-chem216", "code": "CHEM 216", "name": "Org. Chem. Lab. II", "credits": 2, "type": "fixed" },
+        { "id": "chem-s4-chem224", "code": "CHEM 224", "name": "Instrumental Analysis I", "credits": 3, "type": "fixed" },
+        { "id": "chem-s4-chem226", "code": "CHEM 226", "name": "Instrumental Analysis Lab", "credits": 2, "type": "fixed" },
+        { "id": "chem-s4-chem234", "code": "CHEM 234", "name": "Inorganic Chemistry I", "credits": 3, "type": "fixed" },
+        { "id": "chem-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "chem-s5-chem325", "code": "CHEM 325", "name": "Inst. Analysis II", "credits": 3, "type": "fixed" },
+        { "id": "chem-s5-chem335", "code": "CHEM 335", "name": "Inorganic Chemistry II", "credits": 3, "type": "fixed" },
+        { "id": "chem-s5-chem337", "code": "CHEM 337", "name": "Inorganic. Chem. Lab.", "credits": 2, "type": "fixed" },
+        { "id": "chem-s5-chem345", "code": "CHEM 345", "name": "Equilibrium Thermodynamics", "credits": 4, "type": "fixed" },
+        { "id": "chem-s5-chem347", "code": "CHEM 347", "name": "Physical Chemistry Lab", "credits": 2, "type": "fixed" },
+        { "id": "chem-s5-htr311", "code": "HTR 311", "name": "Hist. Turk. Rep. I", "credits": 2, "type": "fixed" },
+        { "id": "chem-s5-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "chem-s6-chem316", "code": "CHEM 316", "name": "Organic Chemistry III", "credits": 3, "type": "fixed" },
+        { "id": "chem-s6-chem346", "code": "CHEM 346", "name": "Quantum Theory & Spectroscopy", "credits": 4, "type": "fixed" },
+        { "id": "chem-s6-dept", "code": "CHEM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s6-htr312", "code": "HTR 312", "name": "Hist. Turk. Rep. II", "credits": 2, "type": "fixed" },
+        { "id": "chem-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s6-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "chem-s7-chem400", "code": "CHEM 400", "name": "Chem. Internship", "credits": 0, "type": "fixed" },
+        { "id": "chem-s7-chem401", "code": "CHEM 401", "name": "Chemistry Seminar", "credits": 1, "type": "fixed" },
+        { "id": "chem-s7-chem447", "code": "CHEM 447", "name": "Stat. Thermo. & Chem. Kinetics", "credits": 4, "type": "fixed" },
+        { "id": "chem-s7-chem457", "code": "CHEM 457", "name": "General Biochemistry", "credits": 4, "type": "fixed" },
+        { "id": "chem-s7-cmpl", "code": "CMPL Elective", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s7-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "chem-s8-dept1", "code": "CHEM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s8-dept2", "code": "CHEM Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s8-deptcomp", "code": "CHEM/CMPL", "name": "Dept./Compl. Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s8-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "chem-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "math": [
+      [
+        { "id": "math-s1-math131", "code": "MATH 131", "name": "Calculus of a single variable", "credits": 4, "type": "fixed" },
+        { "id": "math-s1-math111", "code": "MATH 111", "name": "Int. to Math. Str.", "credits": 4, "type": "fixed" },
+        { "id": "math-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" },
+        { "id": "math-s1-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s1-ae", "code": "AE/HSS/MLE", "name": "Eng./HSS/Mod. Lang. Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "math-s2-math132", "code": "MATH 132", "name": "Calculus of several variables", "credits": 4, "type": "fixed" },
+        { "id": "math-s2-math162", "code": "MATH 162", "name": "Discrete Math.", "credits": 4, "type": "fixed" },
+        { "id": "math-s2-phys102", "code": "PHYS 102", "name": "Physics II", "credits": 4, "type": "fixed" },
+        { "id": "math-s2-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s2-ae", "code": "AE/HSS/MLE", "name": "Eng./HSS/Mod. Lang. Elective", "credits": 4, "type": "customInput" }
+      ],
+      [
+        { "id": "math-s3-math221", "code": "MATH 221", "name": "Linear Algebra", "credits": 4, "type": "fixed" },
+        { "id": "math-s3-math231", "code": "MATH 231", "name": "Advanced Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "math-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "math-s3-cmpe150", "code": "CmpE 150", "name": "Int. to Computing", "credits": 3, "type": "fixed" },
+        { "id": "math-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "math-s4-math202", "code": "MATH 202", "name": "Differential Eq.", "credits": 4, "type": "fixed" },
+        { "id": "math-s4-math222", "code": "MATH 222", "name": "Group Theory", "credits": 4, "type": "fixed" },
+        { "id": "math-s4-math234", "code": "MATH 234", "name": "Advanced Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "math-s4-hss", "code": "HSS/MLE", "name": "HSS / Mod. Lang. Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "math-s5-math323", "code": "MATH 323", "name": "Rings, Fields and Galois Theory", "credits": 4, "type": "fixed" },
+        { "id": "math-s5-math331", "code": "MATH 331", "name": "Metric Spaces", "credits": 4, "type": "fixed" },
+        { "id": "math-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s5-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "math-s6-math338", "code": "MATH 338", "name": "Complex Analysis I", "credits": 4, "type": "fixed" },
+        { "id": "math-s6-dept1", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s6-dept2", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s6-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "math-s7-dept1", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s7-dept2", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s7-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "math-s8-dept1", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s8-dept2", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s8-dept3", "code": "MATH Elective", "name": "Math Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "math-s8-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "mbg": [
+      [
+        { "id": "mbg-s1-bio101", "code": "BIO 101", "name": "Cellular and Molecular Bio. I", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s1-bio111", "code": "BIO 111", "name": "Prelude to Molecular Biology", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s1-chem103", "code": "CHEM 103", "name": "General Chemistry I", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s1-chem109", "code": "CHEM 109", "name": "General Chemistry Lab", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" }
+      ],
+      [
+        { "id": "mbg-s2-bio102", "code": "BIO 102", "name": "Cellular and Molecular Bio. II", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s2-bio106", "code": "BIO 106", "name": "Cell Biology Lab", "credits": 2, "type": "fixed" },
+        { "id": "mbg-s2-chem104", "code": "CHEM 104", "name": "General Chemistry II", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s2-math102", "code": "MATH 102", "name": "Calculus II", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s2-phys130", "code": "PHYS 130", "name": "Thermodyn, Waves, Opt & Mod Phy.", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s2-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "mbg-s3-bio201", "code": "BIO 201", "name": "Evolution and Biodiversity", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s3-stat", "code": "BIO/MATH", "name": "Biostatistics / Statistics", "credits": 3, "type": "select", "options": ["BIO 203", "MATH 344"] },
+        { "id": "mbg-s3-chem203", "code": "CHEM 203", "name": "Organic Chemistry Lab I", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s3-chem221", "code": "CHEM 221", "name": "Survey of Organic Chemistry", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s3-hist", "code": "HIST/HUM", "name": "History / Humanities Elective", "credits": 3, "type": "select", "options": ["HIST 105", "HUM 101"] },
+        { "id": "mbg-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "mbg-s4-bio252", "code": "BIO 252", "name": "Genetics", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s4-bio254", "code": "BIO 254", "name": "Genetics Lab.", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s4-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s4-cmpe", "code": "CMPE Elective", "name": "Computer Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s4-hist", "code": "HIST/HUM", "name": "History / Humanities Elective", "credits": 3, "type": "select", "options": ["HIST 106", "HUM 102"] },
+        { "id": "mbg-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "mbg-s5-bio301", "code": "BIO 301", "name": "Biochemistry I", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s5-bio331", "code": "BIO 331", "name": "Tech. in Biological Research", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s5-bio333", "code": "BIO 333", "name": "Biochemistry Lab", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s5-bio353", "code": "BIO 353", "name": "Molecular Genetics", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s5-bio355", "code": "BIO 355", "name": "Molecular Biology Lab.", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rev. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "mbg-s6-bio302", "code": "BIO 302", "name": "Biochemistry II", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s6-bio308", "code": "BIO 308", "name": "Seminar I", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s6-bio310", "code": "BIO 310", "name": "Cellular and Molecular Bio. III", "credits": 4, "type": "fixed" },
+        { "id": "mbg-s6-bio322", "code": "BIO 322", "name": "Research Topics in Mol. Bio.", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s6-bio342", "code": "BIO 342", "name": "Human Physiology", "credits": 3, "type": "fixed" },
+        { "id": "mbg-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rev. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "mbg-s7-bio403", "code": "BIO 403", "name": "Scientific Conduct", "credits": 1, "type": "fixed" },
+        { "id": "mbg-s7-bio407", "code": "BIO 407", "name": "Seminar II", "credits": 2, "type": "fixed" },
+        { "id": "mbg-s7-dept", "code": "BIO Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s7-comp", "code": "COMP/BIO", "name": "Comp/Dept Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s7-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s7-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "mbg-s8-dept1", "code": "BIO Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s8-dept2", "code": "BIO Elective", "name": "Dept. Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s8-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "mbg-s8-comp", "code": "COMP/BIO", "name": "Comp/Dept. Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "bote": [
+      [
+        { "id": "bote-s1-ae111", "code": "AE 111/HSS", "name": "Critical Skills in English I / HSS", "credits": 3, "type": "customInput" },
+        { "id": "bote-s1-cet101", "code": "CET 101", "name": "Introduction to Educational Technology", "credits": 4, "type": "fixed" },
+        { "id": "bote-s1-ed101", "code": "ED 101", "name": "Introduction to Education", "credits": 3, "type": "fixed" },
+        { "id": "bote-s1-math101", "code": "MATH 101", "name": "Calculus I", "credits": 4, "type": "fixed" },
+        { "id": "bote-s1-phys101", "code": "PHYS 101", "name": "Physics I", "credits": 4, "type": "fixed" }
+      ],
+      [
+        { "id": "bote-s2-ae112", "code": "AE 112/HSS", "name": "Critical Skills in English II / HSS", "credits": 3, "type": "customInput" },
+        { "id": "bote-s2-cet102", "code": "CET 102", "name": "Information Systems in Education", "credits": 4, "type": "fixed" },
+        { "id": "bote-s2-cmpe150", "code": "CMPE 150", "name": "Introduction to Computing", "credits": 3, "type": "fixed" },
+        { "id": "bote-s2-math201", "code": "MATH 201", "name": "Matrix Theory", "credits": 4, "type": "fixed" },
+        { "id": "bote-s2-phys130", "code": "PHYS 130", "name": "Thermodynamics, Waves, Optics", "credits": 4, "type": "fixed" }
+      ],
+      [
+        { "id": "bote-s3-cet215", "code": "CET 215", "name": "Education and Technology", "credits": 3, "type": "fixed" },
+        { "id": "bote-s3-cmpe210", "code": "CMPE 210", "name": "Fund. of Object Oriented Prog.", "credits": 4, "type": "fixed" },
+        { "id": "bote-s3-ed211", "code": "ED 211", "name": "Educational Psychology", "credits": 3, "type": "fixed" },
+        { "id": "bote-s3-ed221", "code": "ED 221", "name": "Fund. of Guidance and Counseling", "credits": 3, "type": "fixed" },
+        { "id": "bote-s3-phys201", "code": "PHYS 201", "name": "Physics III", "credits": 4, "type": "fixed" },
+        { "id": "bote-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "bote-s4-cet224", "code": "CET 224", "name": "Visualization in Education", "credits": 3, "type": "fixed" },
+        { "id": "bote-s4-cet282", "code": "CET 282", "name": "Principles and Methods in Instruction", "credits": 3, "type": "fixed" },
+        { "id": "bote-s4-chem103", "code": "CHEM 103", "name": "General Chemistry I", "credits": 3, "type": "fixed" },
+        { "id": "bote-s4-chem109", "code": "CHEM 109", "name": "General Chemistry Lab", "credits": 1, "type": "fixed" },
+        { "id": "bote-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" },
+        { "id": "bote-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "bote-s5-cet301", "code": "CET 301", "name": "Visual Programming Platforms", "credits": 3, "type": "fixed" },
+        { "id": "bote-s5-cet321", "code": "CET 321", "name": "Intro. to Database Management", "credits": 3, "type": "fixed" },
+        { "id": "bote-s5-cet341", "code": "CET 341", "name": "Instructional Design", "credits": 3, "type": "fixed" },
+        { "id": "bote-s5-sced370", "code": "SCED 370", "name": "Measurement and Assessment", "credits": 3, "type": "fixed" },
+        { "id": "bote-s5-htr311", "code": "HTR 311", "name": "Hist. Turk. Rep. I", "credits": 2, "type": "fixed" },
+        { "id": "bote-s5-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "bote-s6-cet314", "code": "CET 314", "name": "Computer Networks and Comm.", "credits": 3, "type": "fixed" },
+        { "id": "bote-s6-cet322", "code": "CET 322", "name": "Programming for the Internet", "credits": 4, "type": "fixed" },
+        { "id": "bote-s6-cet372", "code": "CET 372", "name": "Design and Dev. of Multimedia", "credits": 3, "type": "fixed" },
+        { "id": "bote-s6-htr312", "code": "HTR 312", "name": "Hist. Turk. Rep. II", "credits": 2, "type": "fixed" },
+        { "id": "bote-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "bote-s7-cet401", "code": "CET 401", "name": "Research Methods in Ed. Tech.", "credits": 3, "type": "fixed" },
+        { "id": "bote-s7-cet431", "code": "CET 431", "name": "Project Development and Management", "credits": 3, "type": "fixed" },
+        { "id": "bote-s7-cet441", "code": "CET 441", "name": "Principles of Distance Education", "credits": 3, "type": "fixed" },
+        { "id": "bote-s7-cet451", "code": "CET 451", "name": "School Experience", "credits": 4, "type": "fixed" },
+        { "id": "bote-s7-ed401", "code": "ED 401", "name": "Classroom Management", "credits": 3, "type": "fixed" }
+      ],
+      [
+        { "id": "bote-s8-cet444", "code": "CET 444", "name": "Community Service in Ed. Tech.", "credits": 3, "type": "fixed" },
+        { "id": "bote-s8-cet462", "code": "CET 462", "name": "Practice Teaching", "credits": 4, "type": "fixed" },
+        { "id": "bote-s8-cet472", "code": "CET 472", "name": "Courseware Development", "credits": 3, "type": "fixed" },
+        { "id": "bote-s8-sci", "code": "Science", "name": "Science Elective", "credits": 3, "type": "customInput" },
+        { "id": "bote-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "ed": [
+      [
+        { "id": "ed-s1-ed101", "code": "ED 101", "name": "Introduction to Education", "credits": 3, "type": "fixed" },
+        { "id": "ed-s1-ed121", "code": "ED 121", "name": "Freshman Orientation", "credits": 2, "type": "fixed" },
+        { "id": "ed-s1-ec", "code": "EC 101/102", "name": "Principles of Micro/Macro Econ.", "credits": 3, "type": "select", "options": ["EC 101", "EC 102"] },
+        { "id": "ed-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "ed-s1-math", "code": "MATH 105/106", "name": "Finite Math. / Calc. for Soc. Sci.", "credits": 4, "type": "select", "options": ["MATH 105", "MATH 106"] },
+        { "id": "ed-s1-ae", "code": "AE 111/Unr.", "name": "Advanced English / Unrestricted", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ed-s2-ed104", "code": "ED 104", "name": "Social Found. of Education", "credits": 3, "type": "fixed" },
+        { "id": "ed-s2-ed132", "code": "ED 132", "name": "Ethical Issues in Counseling", "credits": 2, "type": "fixed" },
+        { "id": "ed-s2-phil", "code": "PHIL 112/101", "name": "Intro. Philosophy / Modern Phil.", "credits": 3, "type": "select", "options": ["PHIL 112", "PHIL 101"] },
+        { "id": "ed-s2-psy101", "code": "PSY 101", "name": "Introduction to Psychology I", "credits": 3, "type": "fixed" },
+        { "id": "ed-s2-bio152", "code": "BIO 152", "name": "Introduction to Modern Biology", "credits": 3, "type": "fixed" },
+        { "id": "ed-s2-hist", "code": "HIST/HUM", "name": "History / Humanities Elective", "credits": 3, "type": "select", "options": ["HIST 105", "HIST 106", "HUM 101", "HUM 102"] }
+      ],
+      [
+        { "id": "ed-s3-ed201", "code": "ED 201", "name": "Intro. to Statistics", "credits": 4, "type": "fixed" },
+        { "id": "ed-s3-ed209", "code": "ED 209", "name": "Lifespan Development", "credits": 4, "type": "fixed" },
+        { "id": "ed-s3-ed221", "code": "ED 221", "name": "Fundamentals of Guid. & Coun.", "credits": 3, "type": "fixed" },
+        { "id": "ed-s3-psy", "code": "PSY 241/242", "name": "Social Psych. / Soc. Inf. Behavior", "credits": 3, "type": "select", "options": ["PSY 241", "PSY 242"] },
+        { "id": "ed-s3-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ed-s4-ed208", "code": "ED 208", "name": "Research Methodology", "credits": 4, "type": "fixed" },
+        { "id": "ed-s4-ed226", "code": "ED 226", "name": "Theories of Personality", "credits": 3, "type": "fixed" },
+        { "id": "ed-s4-ed252", "code": "ED 252", "name": "Educational Administration", "credits": 3, "type": "fixed" },
+        { "id": "ed-s4-spec", "code": "Spec. Elective", "name": "Specialized Elective (Comm. Serv.)", "credits": 3, "type": "customInput" },
+        { "id": "ed-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ed-s5-ed309", "code": "ED 309", "name": "Applied Research", "credits": 3, "type": "fixed" },
+        { "id": "ed-s5-ed330", "code": "ED 330", "name": "Basic Counseling Skills", "credits": 3, "type": "fixed" },
+        { "id": "ed-s5-ed370", "code": "ED 370", "name": "Program Development & Evaluation", "credits": 4, "type": "fixed" },
+        { "id": "ed-s5-cet360", "code": "CET 360", "name": "Inst. Tech. Material & Dev.", "credits": 3, "type": "fixed" },
+        { "id": "ed-s5-comp", "code": "Complementary", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep. I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ed-s6-ed328", "code": "ED 328", "name": "Understanding Maladjustment", "credits": 4, "type": "fixed" },
+        { "id": "ed-s6-ed374", "code": "ED 374", "name": "Measurement & Evaluation", "credits": 3, "type": "fixed" },
+        { "id": "ed-s6-spec", "code": "Spec. Elective", "name": "Specialized Elect. (Culture/Div.)", "credits": 3, "type": "customInput" },
+        { "id": "ed-s6-unr1", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s6-unr2", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep. II", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "ed-s7-ed401", "code": "ED 401", "name": "Classroom Management", "credits": 3, "type": "fixed" },
+        { "id": "ed-s7-ed421", "code": "ED 421", "name": "Intro. to Assessment in Counseling", "credits": 3, "type": "fixed" },
+        { "id": "ed-s7-ed425", "code": "ED 425", "name": "Group Dynamics and Counseling", "credits": 3, "type": "fixed" },
+        { "id": "ed-s7-ed477", "code": "ED 477", "name": "School Counseling Practicum I", "credits": 4, "type": "fixed" },
+        { "id": "ed-s7-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "ed-s8-ed434", "code": "ED 434", "name": "Advanced Counseling Skills", "credits": 3, "type": "fixed" },
+        { "id": "ed-s8-ed444", "code": "ED 444", "name": "Psychoeducational Consultation", "credits": 3, "type": "fixed" },
+        { "id": "ed-s8-ed478", "code": "ED 478", "name": "School Counseling Practicum II", "credits": 4, "type": "fixed" },
+        { "id": "ed-s8-comp", "code": "Complementary", "name": "Complementary Elective", "credits": 3, "type": "customInput" },
+        { "id": "ed-s8-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ]
+    ],
+    "temel": [
+      [
+        { "id": "temel-s1-pred120", "code": "PRED 120", "name": "Ethical Integrity & Orient. for Academia", "credits": 3, "type": "fixed" },
+        { "id": "temel-s1-pred107", "code": "PRED 107", "name": "Children’s Physiology, Health & Nutrition", "credits": 3, "type": "fixed" },
+        { "id": "temel-s1-ed101", "code": "ED 101", "name": "Introduction to Education", "credits": 3, "type": "fixed" },
+        { "id": "temel-s1-soc101", "code": "SOC 101", "name": "Introduction to Sociology", "credits": 3, "type": "fixed" },
+        { "id": "temel-s1-ae", "code": "AE 111/221", "name": "Critical Skills in English I", "credits": 3, "type": "customInput" },
+        { "id": "temel-s1-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s2-pred102", "code": "PRED 102", "name": "History, Phil. and Princ. of E.C.E", "credits": 4, "type": "fixed" },
+        { "id": "temel-s2-pred134", "code": "PRED 134", "name": "Art Activites for Children", "credits": 3, "type": "fixed" },
+        { "id": "temel-s2-psy101", "code": "PSY 101", "name": "Introduction to Psychology", "credits": 3, "type": "fixed" },
+        { "id": "temel-s2-ae", "code": "AE 112/222", "name": "Critical Skills in English II", "credits": 3, "type": "customInput" },
+        { "id": "temel-s2-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s3-pred203", "code": "PRED 203", "name": "Theories of Child Development I", "credits": 3, "type": "fixed" },
+        { "id": "temel-s3-pred210", "code": "PRED 210", "name": "Music & Mov. in Early Childhood", "credits": 3, "type": "fixed" },
+        { "id": "temel-s3-pred214", "code": "PRED 214", "name": "Language Dev. & Lit. in E.C.", "credits": 3, "type": "fixed" },
+        { "id": "temel-s3-tk221", "code": "TK 221", "name": "Turkish I", "credits": 2, "type": "fixed" },
+        { "id": "temel-s3-ed211", "code": "ED 211", "name": "Educational Psychology", "credits": 3, "type": "fixed" },
+        { "id": "temel-s3-ed221", "code": "ED 221", "name": "Fundamentals of Guid. & Counsel", "credits": 3, "type": "fixed" },
+        { "id": "temel-s3-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s4-pred204", "code": "PRED 204", "name": "Theories of Child Development II", "credits": 3, "type": "fixed" },
+        { "id": "temel-s4-pred212", "code": "PRED 212", "name": "Curriculum Development", "credits": 4, "type": "fixed" },
+        { "id": "temel-s4-pred218", "code": "PRED 218", "name": "Applied Child Development", "credits": 4, "type": "fixed" },
+        { "id": "temel-s4-tk222", "code": "TK 222", "name": "Turkish II", "credits": 2, "type": "fixed" },
+        { "id": "temel-s4-unr", "code": "Unrestricted", "name": "Unrestricted Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s5-pred310", "code": "PRED 310", "name": "Special Ed. in Early & Prim. Years", "credits": 3, "type": "fixed" },
+        { "id": "temel-s5-pred313", "code": "PRED 313", "name": "Early Intervention: Theory & Prac.", "credits": 3, "type": "fixed" },
+        { "id": "temel-s5-pred325", "code": "PRED 325", "name": "Developmental Exp. in Sc. & Math", "credits": 3, "type": "fixed" },
+        { "id": "temel-s5-pred330", "code": "PRED 330", "name": "Creative Drama Activities", "credits": 3, "type": "fixed" },
+        { "id": "temel-s5-pred333", "code": "PRED 333", "name": "Data Processing & Statistics in Ed.", "credits": 4, "type": "fixed" },
+        { "id": "temel-s5-htr311", "code": "HTR 311", "name": "Hist. of Turk. Rep I", "credits": 2, "type": "fixed" }
+      ],
+      [
+        { "id": "temel-s6-pred318", "code": "PRED 318", "name": "Assessment & Evaluation in E.C.E.", "credits": 3, "type": "fixed" },
+        { "id": "temel-s6-pred320", "code": "PRED 320", "name": "Research Methods", "credits": 4, "type": "fixed" },
+        { "id": "temel-s6-pred321", "code": "PRED 321", "name": "Children's Literature", "credits": 3, "type": "fixed" },
+        { "id": "temel-s6-pred348", "code": "PRED 348", "name": "Community Service", "credits": 2, "type": "fixed" },
+        { "id": "temel-s6-htr312", "code": "HTR 312", "name": "Hist. of Turk. Rep II", "credits": 2, "type": "fixed" },
+        { "id": "temel-s6-dept", "code": "Dept. Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" },
+        { "id": "temel-s6-hss", "code": "HSS Elective", "name": "HSS Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s7-pred411", "code": "PRED 411", "name": "Applied Res. in Child Dev. & Family", "credits": 4, "type": "fixed" },
+        { "id": "temel-s7-pred413", "code": "PRED 413", "name": "E.C.E. Teaching Practices I", "credits": 4, "type": "fixed" },
+        { "id": "temel-s7-pred416", "code": "PRED 416", "name": "Family Engagement in E.C.E.", "credits": 4, "type": "fixed" },
+        { "id": "temel-s7-dept", "code": "Dept. Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ],
+      [
+        { "id": "temel-s8-pred414", "code": "PRED 414", "name": "E.C.E. Teaching Practices II", "credits": 4, "type": "fixed" },
+        { "id": "temel-s8-pred422", "code": "PRED 422", "name": "Seminar on E.C.E. Practice Teaching", "credits": 4, "type": "fixed" },
+        { "id": "temel-s8-pred424", "code": "PRED 424", "name": "E.C.E. Teaching Practices", "credits": 4, "type": "fixed" },
+        { "id": "temel-s8-dept", "code": "Dept. Elective", "name": "Departmental Elective", "credits": 3, "type": "customInput" }
+      ]
+    ]
+
+   
+  }
+}
