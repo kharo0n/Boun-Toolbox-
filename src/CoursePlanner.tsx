@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './CoursePlanner.css';
 import courseData from './data/allCourses.json';
 import metadata from './data/courseMetadata.json';
-import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, matchesSearch, totalCredits,
-  relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode } from './lib/planner';
+import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, totalCredits,
+  relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode, searchScore } from './lib/planner';
 import type { Course, RawCourse } from './lib/planner';
 import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes } from './lib/registration';
 import type { RegistrationPlan } from './lib/registration';
@@ -26,19 +26,30 @@ export default function CoursePlanner() {
   const [storageError, setStorageError] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const resultsScroll = useRef(0);
   useEffect(() => {
     try { localStorage.setItem(storageKey, JSON.stringify(selectedKeys)); }
     catch { setStorageError(true); }
+  }, [selectedKeys]);
+  useLayoutEffect(() => {
+    if (resultsRef.current) resultsRef.current.scrollTop = resultsScroll.current;
   }, [selectedKeys]);
   const selected = useMemo(() => catalogue.filter(c => selectedKeys.includes(c.key)), [selectedKeys]);
   const slots = useMemo(() => selected.flatMap(courseSlots), [selected]);
   const credits = totalCredits(selected);
   const registrationPlan = useMemo(() => buildRegistrationPlan(selected, catalogue, metadata.semester), [selected]);
   const days = DAYS.filter(day => !['St', 'Su'].includes(day) || slots.some(s => s.day === day));
-  const filtered = useMemo(() => catalogue.filter(c => c.sessionType === 'lecture' && search.trim() && matchesSearch(c, search))
-    .map(c => ({ course: c, conflicts: candidateConflicts(c, catalogue, selected) }))
-    .filter(c => !noConflict || c.conflicts === 0)
-    .sort((a, b) => a.conflicts - b.conflicts || a.course.code.localeCompare(b.course.code)), [search, noConflict, selected]);
+  // Ordering depends only on the query: picking a course must not reshuffle the list under the cursor.
+  const ordered = useMemo(() => catalogue
+    .filter(c => c.sessionType === 'lecture' && search.trim())
+    .map(course => ({ course, score: searchScore(course, search) }))
+    .filter(c => c.score > 0)
+    .sort((a, b) => b.score - a.score || a.course.code.localeCompare(b.course.code))
+    .map(c => c.course), [search]);
+  const filtered = useMemo(() => ordered
+    .map(course => ({ course, conflicts: candidateConflicts(course, catalogue, selected) }))
+    .filter(c => !noConflict || c.conflicts === 0), [ordered, noConflict, selected]);
   const cellCounts = new Map<string, number>();
   slots.forEach(s => { const key = `${s.day}:${s.hour}`; cellCounts.set(key, (cellCounts.get(key) || 0) + 1); });
   const conflicts = [...cellCounts.values()].filter(n => n > 1).length;
@@ -110,7 +121,8 @@ export default function CoursePlanner() {
         <div className="search-section"><input aria-label="Ders ara" placeholder="Ders kodu, adı veya öğretim üyesi…" value={search} onChange={e => setSearch(e.target.value)} className="course-search-input" />
           <div className="quick-buttons"><button className="quick-btn" onClick={() => setSearch('TK ')}>TK</button><button className="quick-btn" onClick={() => setSearch('HTR')}>HTR</button></div></div>
         <label className="conflict-filter"><input type="checkbox" checked={noConflict} onChange={e => setNoConflict(e.target.checked)} /> Yalnızca çakışmayan dersler</label>
-        <div className="search-results-grid">{filtered.slice(0, 100).map(({ course, conflicts }) => {
+        <div className="search-results-grid" ref={resultsRef}
+          onScroll={e => { resultsScroll.current = e.currentTarget.scrollTop; }}>{filtered.slice(0, 100).map(({ course, conflicts }) => {
           const added = selectedKeys.includes(course.key), related = relatedSessions(course, catalogue);
           return <article key={course.key} className={`course-card ${added ? 'added' : ''}`}>
             <div className="card-header"><div className="course-code-title"><strong>{course.code}</strong><span className="credits">Yerel {course.credits ?? '—'} · AKTS {course.ects ?? '—'}</span></div>

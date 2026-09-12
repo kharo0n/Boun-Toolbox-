@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildCatalogue, courseSlots, defaultBundle, toggleCourse, candidateConflicts, totalCredits, matchesSearch, readSelection, courseDescriptionUrl, DAYS, HOURS } from '../src/lib/planner.ts';
+import { buildCatalogue, courseSlots, defaultBundle, toggleCourse, candidateConflicts, totalCredits, matchesSearch, searchScore, readSelection, courseDescriptionUrl, DAYS, HOURS } from '../src/lib/planner.ts';
 import type { Course } from '../src/lib/planner.ts';
 const course = (key: string, overrides: Partial<Course> = {}): Course => ({ key, code: key, name: 'Test', instructor: 'ÖZGÜR', days: ['M'], hours: [1], rooms: ['A'], sessionType: 'lecture', credits: 3, ects: 5, ...overrides });
 
@@ -66,4 +66,32 @@ test('selected lecture conflict state follows selected labs, not default labs', 
 test('internal lecture/lab clashes are included in conflict filter', () => {
   const main = course('CMPE101.01'), lab = course('LAB', { code: main.code, sessionType: 'lab' });
   assert.equal(candidateConflicts(main, [main, lab], []), 1);
+});
+
+test('course code outranks name and instructor matches', () => {
+  const mis = course('MIS125.01', { code: 'MIS 125.01', name: 'INFORMATION SYSTEMS' });
+  const econ = course('AD211.01', { code: 'AD 211.01', name: 'FINANCIAL ACCOUNTING FOR ECONOMISTS' });
+  assert.ok(searchScore(mis, 'mis') > searchScore(econ, 'mis'));
+});
+
+test('a term buried inside a word is not a match', () => {
+  const bio = course('BIO301.01', { code: 'BIO 301.01', name: 'BIOCHEMISTRY I' });
+  assert.equal(searchScore(bio, 'mis'), 0);
+  assert.equal(matchesSearch(bio, 'mis'), false);
+  assert.ok(matchesSearch(bio, 'bioche'));
+});
+
+test('scores rank exact code above prefix above partial', () => {
+  const c = course('CMPE150.01', { code: 'CMPE 150.01' });
+  assert.equal(searchScore(c, 'cmpe150.01'), 100);
+  assert.equal(searchScore(c, 'cmpe'), 90);
+  assert.equal(searchScore(c, '150'), 70);
+  assert.equal(searchScore(c, ''), 0);
+});
+
+test('name and instructor still match at a word boundary', () => {
+  const c = course('MATH101.01', { code: 'MATH 101.01', name: 'CALCULUS I', instructor: 'ÖZLEM BEYARSLAN' });
+  assert.equal(searchScore(c, 'calculus'), 40);
+  assert.equal(searchScore(c, 'beyarslan'), 30);
+  assert.equal(searchScore(c, 'ozlem'), 30);
 });

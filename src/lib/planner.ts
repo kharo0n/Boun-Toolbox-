@@ -100,12 +100,31 @@ export function totalCredits(selected: Course[]) {
     return { local: sum.local + (c.credits ?? 0), ects: sum.ects + (c.ects ?? 0) };
   }, { local: 0, ects: 0 });
 }
-export function matchesSearch(course: Course, query: string) {
-  const fold = (s: string) => s.toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const fold = (s: string) => s.toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+/** True when the term begins a word, so "mis" no longer matches "bioche(mis)try". */
+const startsWord = (text: string, term: string) => {
+  for (let i = text.indexOf(term); i >= 0; i = text.indexOf(term, i + 1)) {
+    if (i === 0 || !/[a-z0-9]/.test(text[i - 1])) return true;
+  }
+  return false;
+};
+/**
+ * How well a course answers the query; 0 means no match.
+ * The code outranks everything else, so typing a department code lists that department
+ * instead of burying it under name matches.
+ */
+export function searchScore(course: Course, query: string): number {
   const term = fold(query.trim());
-  return fold(normalizeCode(course.code)).includes(term.replace(/\s/g, '')) ||
-    [course.name, course.instructor].some(s => fold(s).includes(term));
+  if (!term) return 0;
+  const code = fold(normalizeCode(course.code)), codeTerm = term.replace(/\s/g, '');
+  if (code === codeTerm) return 100;
+  if (code.startsWith(codeTerm)) return 90;
+  if (code.includes(codeTerm)) return 70;
+  if (startsWord(fold(course.name), term)) return 40;
+  if (startsWord(fold(course.instructor), term)) return 30;
+  return 0;
 }
+export const matchesSearch = (course: Course, query: string) => searchScore(course, query) > 0;
 export function courseDescriptionUrl(code: string, semester: string) {
   const normalized = normalizeCode(code), dot = normalized.lastIndexOf('.');
   if (dot < 0) return null;
