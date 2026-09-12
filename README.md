@@ -62,6 +62,44 @@ GPA ve müfredat verisi (`public/data.json`) dönemlik açılan derslerden farkl
 
 Güncel ders verisi referans projeden kopyalanmadı; üniversitenin yayımladığı tablolardan yeniden alındı.
 
+## Kayıt Asistanı ve BUIS yardımcısı
+
+Planner'daki **🎓 Kayıt Asistanı** düğmesi, seçili dersleri BUIS'in ders ekleme
+formunun beklediği `ABBR KOD.ŞUBE` biçimine çevirir (`CMPE 150.01`). Listeyi
+kopyalayabilir veya `kayit-plani-*.json` olarak indirebilirsiniz. Panel ayrıca
+LAB/P.S. seçimi eksik kalan dersleri ve aynı dersin iki şubesinin seçildiği
+durumları uyarı olarak gösterir.
+
+`public/buis-kayit-yardimcisi.user.js`, BUIS sekmesinde çalışan bir tarayıcı
+yardımcısıdır. Tampermonkey/Violentmonkey ile kurulabilir veya doğrudan tarayıcı
+konsoluna yapıştırılabilir. Yaptığı iş:
+
+- Ders ekleme formundaki satırları bulup listeyi yazar (`abbr1/code1/section1`,
+  ASP.NET'in `ctl00$...$abbr1` biçimi ve son çare olarak tablo düzeni denenir;
+  hiçbiri tutmazsa **Alanları tanıt** ile alanlar elle gösterilebilir).
+- `scripts/quotasearch.asp` üzerinden kontenjan ve bölüm kısıtlaması gösterir.
+- **Form raporu** ile sayfanın alan yapısını döker; BUIS formu değişirse
+  desenleri güncellemek için bu çıktı kullanılır.
+
+Yardımcı kimlik bilgisi istemez, saklamaz ve hiçbir veriyi dışarı göndermez;
+yalnızca kullanıcının kendi açtığı oturumda formu doldurur. **Gönderme adımı
+kullanıcıya bırakılmıştır** — kota, onay ve önkoşul hatalarının okunması ve
+kayıt anında sunucuya otomatik istek yağdırılmaması için.
+
+### BUIS hakkında notlar (12 Eylül 2026 itibarıyla)
+
+- BUIS bir JSON API sunmuyor; `/buis/*.aspx` ekranları `__VIEWSTATE` /
+  `__EVENTVALIDATION` taşıyan klasik ASP.NET WebForms postalarıyla çalışıyor.
+  Oturumsuz `BuisDashboard.aspx` isteği `Logout.aspx`'e yönleniyor.
+- Eski `scripts/loginst.asp` girişi emekliye ayrılmış (hata sayfasına
+  yönlendiriyor); `secchaact.asp` ve `studentaction.asp` hâlâ duruyor ama geçerli
+  oturum istiyor. Bu yüzden yardımcı, kendi oturum açmak yerine kullanıcının
+  açık sekmesinde çalışır.
+- `scripts/quotasearch.asp` oturum gerektirmeden çalışıyor ve CORS başlığı
+  göndermiyor; bu yüzden kontenjan sorgusu yalnızca BUIS sayfası içinden
+  (aynı köken) yapılabiliyor.
+- Resmî ders tablosunda CRN sütunu yok; kayıt kod+şube ile yapılıyor.
+
 ## Doğrulama (12 Eylül 2026)
 
 - 20 otomatik test geçti; ESLint ve TypeScript/Vite üretim derlemesi başarılı.

@@ -576,3 +576,43 @@
   .header-left { gap: 10px; flex-wrap: wrap; }
   .card-header { gap: 8px; flex-wrap: wrap; }
 }
+
+/* ---------------------------------------------------------- Kayıt Asistanı */
+.assistant-backdrop {
+  position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 23, 42, 0.5); padding: 16px;
+}
+.assistant-panel {
+  background: #fff; border-radius: 12px; width: min(620px, 100%); max-height: 86vh; overflow-y: auto;
+  padding: 20px 22px; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+.assistant-panel header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.assistant-panel h3 { margin: 0; font-size: 1.15rem; }
+.assistant-close {
+  border: 0; background: transparent; font-size: 1.6rem; line-height: 1; cursor: pointer; color: #64748b; padding: 0 4px;
+}
+.assistant-close:hover { color: #0f172a; }
+.assistant-lead { margin: 10px 0 6px; color: #475569; font-size: 0.9rem; }
+.assistant-empty { margin: 14px 0 4px; color: #475569; }
+.assistant-list { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.assistant-list li { line-height: 1.4; }
+.assistant-list code {
+  background: #eef2ff; color: #1e293b; padding: 2px 6px; border-radius: 4px; font-weight: 600; margin-right: 6px;
+}
+.assistant-name { color: #334155; font-size: 0.88rem; }
+.assistant-list small { color: #64748b; font-size: 0.8rem; }
+.assistant-warn { color: #b45309; font-size: 0.85rem; margin: 8px 0 0; }
+.assistant-list small.assistant-warn { margin: 0; }
+.assistant-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.assistant-copied { margin: 8px 0 0; color: #15803d; font-size: 0.85rem; }
+.assistant-help { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 12px; }
+.assistant-help summary { cursor: pointer; font-weight: 600; color: #1d4ed8; }
+.assistant-help ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 0.88rem; color: #334155; }
+.assistant-note { margin: 10px 0 0; font-size: 0.82rem; color: #64748b; }
+.assistant-btn { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+.assistant-btn:hover { background: #1e40af; }
+
+@media (max-width: 640px) {
+  .assistant-panel { padding: 16px; max-height: 92vh; }
+  .assistant-actions .footer-btn { flex: 1 1 100%; }
+}

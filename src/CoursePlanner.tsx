@@ -6,6 +6,8 @@ import metadata from './data/courseMetadata.json';
 import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, matchesSearch, totalCredits,
   relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode } from './lib/planner';
 import type { Course, RawCourse } from './lib/planner';
+import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes } from './lib/registration';
+import type { RegistrationPlan } from './lib/registration';
 
 const catalogue = buildCatalogue(courseData as Record<string, RawCourse>);
 const storageKey = `boun-toolbox:planner:${metadata.semester}`;
@@ -22,6 +24,7 @@ export default function CoursePlanner() {
   const [exporting, setExporting] = useState(false);
   const [message, setMessage] = useState('');
   const [storageError, setStorageError] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     try { localStorage.setItem(storageKey, JSON.stringify(selectedKeys)); }
@@ -30,6 +33,7 @@ export default function CoursePlanner() {
   const selected = useMemo(() => catalogue.filter(c => selectedKeys.includes(c.key)), [selectedKeys]);
   const slots = useMemo(() => selected.flatMap(courseSlots), [selected]);
   const credits = totalCredits(selected);
+  const registrationPlan = useMemo(() => buildRegistrationPlan(selected, catalogue, metadata.semester), [selected]);
   const days = DAYS.filter(day => !['St', 'Su'].includes(day) || slots.some(s => s.day === day));
   const filtered = useMemo(() => catalogue.filter(c => c.sessionType === 'lecture' && search.trim() && matchesSearch(c, search))
     .map(c => ({ course: c, conflicts: candidateConflicts(c, catalogue, selected) }))
@@ -93,6 +97,7 @@ export default function CoursePlanner() {
           })}</React.Fragment>)}
         </div></div>
         <div className="calendar-footer"><button className="footer-btn clear-btn" onClick={() => setSelectedKeys([])}>🗑️ Programı Temizle</button>
+          <button className="footer-btn assistant-btn" onClick={() => setShowAssistant(true)}>🎓 Kayıt Asistanı</button>
           <div className="export-dropdown"><button className="footer-btn export-btn" disabled={exporting} onClick={() => setShowExportMenu(!showExportMenu)}>{exporting ? 'Hazırlanıyor…' : '📤 Export ▼'}</button>
             {showExportMenu && <div className="export-menu"><button onClick={() => void exportCalendar('png')}>PNG olarak kaydet</button><button onClick={() => void exportCalendar('pdf')}>PDF olarak kaydet</button></div>}
           </div></div>
@@ -128,6 +133,65 @@ export default function CoursePlanner() {
           {filtered.length > 100 && <p className="no-results">{filtered.length} sonuçtan ilk 100 gösteriliyor. Aramanızı daraltın.</p>}
         </div></aside>
     </div>
+    {showAssistant && <RegistrationAssistant plan={registrationPlan} onClose={() => setShowAssistant(false)} />}
     <div className="hss-unre-section"><a className="hss-unre-btn" href={metadata.hssUrl} target="_blank" rel="noreferrer">📚 HSS-UNRE Listesi</a></div>
+  </div>;
+}
+
+function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onClose: () => void }) {
+  const [copied, setCopied] = useState('');
+  const text = planToText(plan);
+  const duplicates = duplicateBaseCodes(plan);
+  const helperUrl = `${import.meta.env.BASE_URL}buis-kayit-yardimcisi.user.js`;
+
+  const copy = async (value: string, label: string) => {
+    try { await navigator.clipboard.writeText(value); setCopied(label); }
+    catch { setCopied('Kopyalanamadı — metni seçip elle kopyalayın.'); }
+  };
+  const download = () => {
+    const blob = new Blob([planToJson(plan)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `kayit-plani-${plan.semester.replace('/', '-')}.json`;
+    link.click(); URL.revokeObjectURL(link.href);
+  };
+
+  return <div className="assistant-backdrop" role="dialog" aria-modal="true" aria-label="Kayıt asistanı" onClick={onClose}>
+    <div className="assistant-panel" onClick={e => e.stopPropagation()}>
+      <header><h3>🎓 Kayıt Asistanı</h3><button className="assistant-close" onClick={onClose} aria-label="Kapat">×</button></header>
+
+      {!plan.entries.length && <p className="assistant-empty">Henüz ders seçmediniz. Programınızı oluşturduktan sonra buraya dönün.</p>}
+
+      {plan.entries.length > 0 && <>
+        <p className="assistant-lead">{plan.entries.length} ders · BUIS’e bu kodlarla kayıt olacaksınız.</p>
+        <ol className="assistant-list">{plan.entries.map(entry => <li key={entry.display}>
+          <code>{entry.display}</code>
+          <span className="assistant-name">{entry.name}</span>
+          {entry.sessions.map(session => <small key={session}> · {session}</small>)}
+          {entry.missingSessions.length > 0 && <small className="assistant-warn"> · {entry.missingSessions.join('/')} seçilmedi</small>}
+        </li>)}</ol>
+
+        {duplicates.length > 0 && <p className="assistant-warn">⚠️ Aynı dersin birden fazla şubesi seçili: {duplicates.join(', ')}</p>}
+        {plan.warnings.map(warning => <p key={warning} className="assistant-warn">⚠️ {warning}</p>)}
+
+        <div className="assistant-actions">
+          <button className="footer-btn" onClick={() => void copy(text, 'Ders listesi kopyalandı.')}>📋 Listeyi kopyala</button>
+          <button className="footer-btn" onClick={download}>⬇️ JSON indir</button>
+        </div>
+        {copied && <p role="status" className="assistant-copied">{copied}</p>}
+
+        <details className="assistant-help">
+          <summary>BUIS ders ekleme formunu otomatik doldur</summary>
+          <ol>
+            <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin. (Alternatif: script’i kopyalayıp BUIS sekmesinde tarayıcı konsoluna yapıştırın.)</li>
+            <li>BUIS’e kendiniz giriş yapıp ders ekleme ekranını açın; sağ üstte panel çıkar.</li>
+            <li>Yukarıdaki listeyi kopyalayıp panele yapıştırın, <strong>Formu doldur</strong>’a basın.</li>
+            <li><strong>Kontenjan kontrol</strong> ile şubelerin doluluğunu görebilirsiniz.</li>
+            <li>Formu gözden geçirip <strong>gönderme tuşuna kendiniz basın.</strong></li>
+          </ol>
+          <p className="assistant-note">Script şifrenizi istemez, saklamaz ve hiçbir veriyi dışarı göndermez; yalnızca sizin açtığınız BUIS oturumunda formu doldurur.</p>
+        </details>
+      </>}
+    </div>
   </div>;
 }
