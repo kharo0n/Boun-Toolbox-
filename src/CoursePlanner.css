@@ -535,3 +535,44 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(156, 39, 176, 0.5);
 }
+/* Keep all meetings visible, including overlaps, evenings and weekends. */
+.planner-container { min-height: 100vh; height: auto; color: #243447; }
+.planner-header { gap: 20px; flex-wrap: wrap; position: static; }
+.data-status { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; }
+.data-status a { color: #b8e8ff; }
+.planner-notice { margin: 0; padding: 10px 24px; background: #eaf3fc; font-size: .85rem; }
+.planner-layout { overflow: visible; align-items: flex-start; }
+.planner-calendar { flex: 1 1 52%; min-width: 0; }
+.calendar-scroll { overflow-x: auto; }
+.calendar-grid { overflow: visible; flex: none; grid-auto-rows: minmax(44px, auto); }
+.time-cell, .grid-cell { height: auto; min-height: 44px; box-sizing: border-box; }
+.grid-cell { display: flex; flex-direction: column; gap: 2px; padding: 2px; }
+.course-block { position: relative; inset: auto; min-height: 38px; flex-shrink: 0; padding: 5px 14px 5px 3px; overflow: visible; }
+.course-block span { font-size: .65rem; }
+.conflict-cell { background: #ffebee; outline: 1px solid #d32f2f; outline-offset: -1px; }
+.remove-x { display: block; cursor: pointer; }
+.planner-controls { min-width: 0; flex: 1 1 48%; overflow: visible; }
+.search-results-grid { grid-template-columns: minmax(0, 1fr); align-content: start; max-height: 1000px; }
+.course-card { height: auto; }
+.search-header-row { gap: 12px; flex-wrap: wrap; }
+.search-section { flex-wrap: wrap; }
+.course-search-input { min-width: 100px; }
+.resource-btn { text-decoration: none; font-size: .75rem; color: #663c00; }
+.conflict-filter { display: flex; align-items: center; gap: 8px; font-size: .85rem; }
+.session-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; font-size: .75rem; }
+.session-options label { display: flex; align-items: flex-start; gap: 6px; }
+.session-options input { flex-shrink: 0; }
+.session-options small { display: block; }
+.selected-courses { padding: 12px; font-size: .8rem; }
+.selected-courses h3 { margin: 0 0 10px; }
+.selected-course { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.selected-course button { background: transparent; color: #b71c1c; border: 0; cursor: pointer; }
+.hss-unre-section { position: static; padding: 0 20px 20px; align-self: flex-start; }
+.hss-unre-btn { text-decoration: none; }
+@media (max-width: 900px) {
+  .planner-layout { flex-direction: column; padding: 12px; }
+  .planner-calendar, .planner-controls { width: 100%; flex-basis: auto; }
+  .planner-header { padding: 14px; }
+  .header-left { gap: 10px; flex-wrap: wrap; }
+  .card-header { gap: 8px; flex-wrap: wrap; }
+}

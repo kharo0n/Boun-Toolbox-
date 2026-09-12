@@ -42,6 +42,7 @@ const GRADE_COLORS: Record<string, { bg: string; text: string }> = {
 
 
 export default function CurriculumGPA() {
+    const [loadError, setLoadError] = useState(false);
     const [appData, setAppData] = useState<AppData | null>(null);
     const [selectedDeptId, setSelectedDeptId] = useState<string | null>(null);
     const [openFaculties, setOpenFaculties] = useState<Record<string, boolean>>({});
@@ -56,7 +57,7 @@ export default function CurriculumGPA() {
     const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
-        fetch('/data.json').then(r => r.json()).then(setAppData).catch(console.error);
+        fetch(`${import.meta.env.BASE_URL}data.json`).then(r => { if (!r.ok) throw new Error('Catalogue request failed'); return r.json(); }).then(setAppData).catch(() => setLoadError(true));
     }, []);
 
     const toggleFaculty = (name: string) =>
@@ -95,9 +96,9 @@ export default function CurriculumGPA() {
 
     /* ── POOL ── */
     const addToPool = () => {
-        if (!newCode.trim()) return;
+        if (!newCode.trim() || !Number.isFinite(newCredits) || newCredits < 0 || newCredits > 10) return;
         setCoursePool(prev => [...prev, {
-            id: `pool-${Date.now()}-${Math.random()}`,
+            id: `pool-${crypto.randomUUID()}`,
             code: newCode.trim().toUpperCase(),
             grade: newGrade,
             credits: newCredits,
@@ -118,21 +119,19 @@ export default function CurriculumGPA() {
     const handleSlotDrop = (slotId: string, e: React.DragEvent) => {
         e.preventDefault();
         if (!draggedId) return;
-        setSlotAssignments(prev => ({ ...prev, [slotId]: draggedId }));
+        setSlotAssignments(prev => ({
+            ...Object.fromEntries(Object.entries(prev).filter(([, id]) => id !== draggedId)),
+            [slotId]: draggedId,
+        }));
         setDraggedId(null);
         setDragging(false);
     };
 
-    const handleSlotDragStart = (courseId: string, poolId: string) => {
-        // dragging from a filled slot back
+    const handleSlotDragStart = (poolId: string) => {
         setDraggedId(poolId);
         setDragging(true);
-        setSlotAssignments(prev => {
-            const next = { ...prev };
-            delete next[courseId];
-            return next;
-        });
     };
+    const handleDragEnd = () => { setDraggedId(null); setDragging(false); };
 
     /* ── UTILS ── */
     const getDeptName = () => {
@@ -169,6 +168,7 @@ export default function CurriculumGPA() {
             </header>
 
             <div className="curric-layout">
+                {loadError && <p role="alert">Bölüm verileri yüklenemedi. Lütfen sayfayı yenileyin.</p>}
                 {/* SIDEBAR */}
                 <aside className="curric-sidebar">
                     <h3>FAKÜLTELER</h3>
@@ -264,12 +264,21 @@ export default function CurriculumGPA() {
                                                                 onDragOver={e => e.preventDefault()}
                                                                 onDrop={e => handleSlotDrop(course.id, e)}
                                                                 draggable={!!assignedPc}
-                                                                onDragStart={assignedPc ? () => handleSlotDragStart(course.id, assignedPc.id) : undefined}
+                                                                onDragEnd={handleDragEnd}
+                                                                onDragStart={assignedPc ? () => handleSlotDragStart(assignedPc.id) : undefined}
                                                                 style={assignedPc ? assignedColorStyle : {}}
                                                             >
                                                                 {assignedPc
                                                                     ? `${assignedPc.code} [${assignedPc.grade}-${assignedPc.credits}]`
                                                                     : ''}
+                                                                {assignedPc && <button
+                                                                    type="button"
+                                                                    aria-label={`${assignedPc.code} atamasını kaldır`}
+                                                                    className="assignment-remove"
+                                                                    onClick={() => setSlotAssignments(prev => {
+                                                                        const next = { ...prev }; delete next[course.id]; return next;
+                                                                    })}
+                                                                >×</button>}
                                                             </div>
                                                         ) : (
                                                             /* FIXED COURSE BOX */
@@ -319,9 +328,9 @@ export default function CurriculumGPA() {
                                 {gradeOptions.map(g => <option key={g} value={g}>{g}</option>)}
                             </select>
                             <input
-                                type="number" min="1" max="10"
+                                type="number" min="0" max="10"
                                 value={newCredits}
-                                onChange={e => setNewCredits(parseInt(e.target.value) || 3)}
+                                onChange={e => setNewCredits(Math.min(10, Math.max(0, Number(e.target.value) || 0)))}
                                 className="pool-credits-input"
                             />
                             <button onClick={addToPool} className="pool-add-btn">+</button>

@@ -1,0 +1,357 @@
+{
+  "semester": "2026/2027-1",
+  "fetchedAt": "2026-09-12T14:19:38.059Z",
+  "sourceUrl": "https://registration.bogazici.edu.tr/BUIS/General/schedule.aspx?p=semester",
+  "recordCount": 3373,
+  "sectionCount": 3157,
+  "departmentCount": 69,
+  "scheduleWarningCount": 6,
+  "hssUrl": "https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/HSS_Courses-2026_2027_Fall_List-10_09_2026.pdf",
+  "departments": [
+    {
+      "name": "ASIAN STUDIES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ASIA&bolum=ASIAN+STUDIES",
+      "rowCount": 11
+    },
+    {
+      "name": "ASIAN STUDIES WITH THESIS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ASIA&bolum=ASIAN+STUDIES+WITH+THESIS",
+      "rowCount": 17
+    },
+    {
+      "name": "ATATURK INSTITUTE FOR MODERN TURKISH HISTORY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ATA&bolum=ATATURK+INSTITUTE+FOR+MODERN+TURKISH+HISTORY",
+      "rowCount": 62
+    },
+    {
+      "name": "BIOMEDICAL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=BM&bolum=BIOMEDICAL+ENGINEERING",
+      "rowCount": 79
+    },
+    {
+      "name": "BUSINESS INFORMATION SYSTEMS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=BIS&bolum=BUSINESS+INFORMATION+SYSTEMS",
+      "rowCount": 36
+    },
+    {
+      "name": "BUSINESS INFORMATION SYSTEMS (WITH THESIS)",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=BIS&bolum=BUSINESS+INFORMATION+SYSTEMS+%28WITH+THESIS%29",
+      "rowCount": 3
+    },
+    {
+      "name": "CHEMICAL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CHE&bolum=CHEMICAL+ENGINEERING",
+      "rowCount": 44
+    },
+    {
+      "name": "CHEMISTRY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CHEM&bolum=CHEMISTRY",
+      "rowCount": 153
+    },
+    {
+      "name": "CIVIL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CE&bolum=CIVIL+ENGINEERING",
+      "rowCount": 86
+    },
+    {
+      "name": "COGNITIVE SCIENCE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=COGS&bolum=COGNITIVE+SCIENCE",
+      "rowCount": 17
+    },
+    {
+      "name": "COMPUTATIONAL SCIENCE & ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CSE&bolum=COMPUTATIONAL+SCIENCE+%26+ENGINEERING",
+      "rowCount": 33
+    },
+    {
+      "name": "COMPUTER EDUCATION & EDUCATIONAL TECHNOLOGY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CET&bolum=COMPUTER+EDUCATION+%26+EDUCATIONAL+TECHNOLOGY",
+      "rowCount": 22
+    },
+    {
+      "name": "COMPUTER ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CMPE&bolum=COMPUTER+ENGINEERING",
+      "rowCount": 133
+    },
+    {
+      "name": "CONFERENCE INTERPRETING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=INT&bolum=CONFERENCE+INTERPRETING",
+      "rowCount": 5
+    },
+    {
+      "name": "CONSTRUCTION ENGINEERING AND MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CEM&bolum=CONSTRUCTION+ENGINEERING+AND+MANAGEMENT",
+      "rowCount": 8
+    },
+    {
+      "name": "DATA SCIENCE AND ARTIFICIAL INTELLIGENCE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=DSAI&bolum=DATA+SCIENCE+AND+ARTIFICIAL+INTELLIGENCE",
+      "rowCount": 84
+    },
+    {
+      "name": "EARLY CHILDHOOD EDUCATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PRED&bolum=EARLY+CHILDHOOD+EDUCATION",
+      "rowCount": 9
+    },
+    {
+      "name": "EARTHQUAKE ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=EQE&bolum=EARTHQUAKE+ENGINEERING",
+      "rowCount": 26
+    },
+    {
+      "name": "ECONOMICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=EC&bolum=ECONOMICS",
+      "rowCount": 64
+    },
+    {
+      "name": "ECONOMICS AND FINANCE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=EF&bolum=ECONOMICS+AND+FINANCE",
+      "rowCount": 28
+    },
+    {
+      "name": "EDUCATIONAL SCIENCES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ED&bolum=EDUCATIONAL+SCIENCES",
+      "rowCount": 28
+    },
+    {
+      "name": "EDUCATIONAL TECHNOLOGY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=CET&bolum=EDUCATIONAL+TECHNOLOGY",
+      "rowCount": 14
+    },
+    {
+      "name": "ELECTRICAL & ELECTRONICS ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=EE&bolum=ELECTRICAL+%26+ELECTRONICS+ENGINEERING",
+      "rowCount": 119
+    },
+    {
+      "name": "ENGINEERING AND TECHNOLOGY MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ETM&bolum=ENGINEERING+AND+TECHNOLOGY+MANAGEMENT",
+      "rowCount": 15
+    },
+    {
+      "name": "ENGLISH LITERATURE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LL&bolum=ENGLISH+LITERATURE",
+      "rowCount": 18
+    },
+    {
+      "name": "ENVIRONMENTAL SCIENCES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ENV&bolum=ENVIRONMENTAL+SCIENCES",
+      "rowCount": 65
+    },
+    {
+      "name": "ENVIRONMENTAL TECHNOLOGY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ENVT&bolum=ENVIRONMENTAL+TECHNOLOGY",
+      "rowCount": 8
+    },
+    {
+      "name": "EXECUTIVE MBA",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=XMBA&bolum=EXECUTIVE+MBA",
+      "rowCount": 72
+    },
+    {
+      "name": "FILM AND MEDIA STUDIES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=FILM&bolum=FILM+AND+MEDIA+STUDIES",
+      "rowCount": 15
+    },
+    {
+      "name": "FINANCIAL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=FE&bolum=FINANCIAL+ENGINEERING",
+      "rowCount": 17
+    },
+    {
+      "name": "FINE ARTS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PA&bolum=FINE+ARTS",
+      "rowCount": 53
+    },
+    {
+      "name": "FOREIGN LANGUAGE EDUCATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=FLED&bolum=FOREIGN+LANGUAGE+EDUCATION",
+      "rowCount": 76
+    },
+    {
+      "name": "GEODESY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=GED&bolum=GEODESY",
+      "rowCount": 31
+    },
+    {
+      "name": "GEOPHYSICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=GPH&bolum=GEOPHYSICS",
+      "rowCount": 16
+    },
+    {
+      "name": "GUIDANCE & PSYCHOLOGICAL COUNSELING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=GUID&bolum=GUIDANCE+%26+PSYCHOLOGICAL+COUNSELING",
+      "rowCount": 36
+    },
+    {
+      "name": "HISTORY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=HIST&bolum=HISTORY",
+      "rowCount": 107
+    },
+    {
+      "name": "HUMANITIES COURSES COORDINATOR",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=HUM&bolum=HUMANITIES+COURSES+COORDINATOR",
+      "rowCount": 11
+    },
+    {
+      "name": "INDUSTRIAL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=IE&bolum=INDUSTRIAL+ENGINEERING",
+      "rowCount": 50
+    },
+    {
+      "name": "INTERNATIONAL RELATIONS:TURKEY,EUROPE AND THE MIDDLE EAST",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=MIR&bolum=INTERNATIONAL+RELATIONS%3ATURKEY%2CEUROPE+AND+THE+MIDDLE+EAST",
+      "rowCount": 11
+    },
+    {
+      "name": "INTERNATIONAL RELATIONS:TURKEY,EUROPE AND THE MIDDLE EAST WITH THESIS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=MIR&bolum=INTERNATIONAL+RELATIONS%3ATURKEY%2CEUROPE+AND+THE+MIDDLE+EAST+WITH+THESIS",
+      "rowCount": 12
+    },
+    {
+      "name": "INTERNATIONAL TRADE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=INTT&bolum=INTERNATIONAL+TRADE",
+      "rowCount": 18
+    },
+    {
+      "name": "INTERNATIONAL TRADE MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=INTT&bolum=INTERNATIONAL+TRADE+MANAGEMENT",
+      "rowCount": 26
+    },
+    {
+      "name": "LAW PR.",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LAW&bolum=LAW+PR%2E",
+      "rowCount": 73
+    },
+    {
+      "name": "LEARNING SCIENCES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LS&bolum=LEARNING+SCIENCES",
+      "rowCount": 16
+    },
+    {
+      "name": "LINGUISTICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LING&bolum=LINGUISTICS",
+      "rowCount": 104
+    },
+    {
+      "name": "MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=AD&bolum=MANAGEMENT",
+      "rowCount": 125
+    },
+    {
+      "name": "MANAGEMENT INFORMATION SYSTEMS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=MIS&bolum=MANAGEMENT+INFORMATION+SYSTEMS",
+      "rowCount": 102
+    },
+    {
+      "name": "MATHEMATICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=MATH&bolum=MATHEMATICS",
+      "rowCount": 58
+    },
+    {
+      "name": "MATHEMATICS AND SCIENCE EDUCATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=SCED&bolum=MATHEMATICS+AND+SCIENCE+EDUCATION",
+      "rowCount": 83
+    },
+    {
+      "name": "MECHANICAL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ME&bolum=MECHANICAL+ENGINEERING",
+      "rowCount": 113
+    },
+    {
+      "name": "MOLECULAR BIOLOGY & GENETICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=BIO&bolum=MOLECULAR+BIOLOGY+%26+GENETICS",
+      "rowCount": 99
+    },
+    {
+      "name": "PHILOSOPHY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PHIL&bolum=PHILOSOPHY",
+      "rowCount": 69
+    },
+    {
+      "name": "PHYSICAL EDUCATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PE&bolum=PHYSICAL+EDUCATION",
+      "rowCount": 82
+    },
+    {
+      "name": "PHYSICS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PHYS&bolum=PHYSICS",
+      "rowCount": 87
+    },
+    {
+      "name": "POLITICAL SCIENCE&INTERNATIONAL RELATIONS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=POLS&bolum=POLITICAL+SCIENCE%26INTERNATIONAL+RELATIONS",
+      "rowCount": 54
+    },
+    {
+      "name": "PSYCHOLOGY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PSY&bolum=PSYCHOLOGY",
+      "rowCount": 55
+    },
+    {
+      "name": "SCHOOL OF FOREIGN LANGUAGES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=YADYOK&bolum=SCHOOL+OF+FOREIGN+LANGUAGES",
+      "rowCount": 156
+    },
+    {
+      "name": "SOCIOLOGY",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=SOC&bolum=SOCIOLOGY",
+      "rowCount": 38
+    },
+    {
+      "name": "SOFTWARE ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=SWE&bolum=SOFTWARE+ENGINEERING",
+      "rowCount": 27
+    },
+    {
+      "name": "SOFTWARE ENGINEERING WITH THESIS",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=SWE&bolum=SOFTWARE+ENGINEERING+WITH+THESIS",
+      "rowCount": 4
+    },
+    {
+      "name": "SUSTAINABLE TOURISM MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=TRM&bolum=SUSTAINABLE+TOURISM+MANAGEMENT",
+      "rowCount": 11
+    },
+    {
+      "name": "SYSTEMS & CONTROL ENGINEERING",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=SCO&bolum=SYSTEMS+%26+CONTROL+ENGINEERING",
+      "rowCount": 4
+    },
+    {
+      "name": "TOURISM MANAGEMENT",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=TRM&bolum=TOURISM+MANAGEMENT",
+      "rowCount": 23
+    },
+    {
+      "name": "TRANSLATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=WTR&bolum=TRANSLATION",
+      "rowCount": 7
+    },
+    {
+      "name": "TRANSLATION AND INTERPRETING STUDIES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=TR&bolum=TRANSLATION+AND+INTERPRETING+STUDIES",
+      "rowCount": 49
+    },
+    {
+      "name": "TURKISH COURSES COORDINATOR",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=TK&bolum=TURKISH+COURSES+COORDINATOR",
+      "rowCount": 60
+    },
+    {
+      "name": "TURKISH LANGUAGE & LITERATURE",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=TKL&bolum=TURKISH+LANGUAGE+%26+LITERATURE",
+      "rowCount": 71
+    },
+    {
+      "name": "UNDERGRADUATE PROGRAM IN PRESCHOOL EDUCATION",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PRSO&bolum=UNDERGRADUATE+PROGRAM+IN+PRESCHOOL+EDUCATION",
+      "rowCount": 17
+    },
+    {
+      "name": "WESTERN LANGUAGES & LITERATURES",
+      "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LL&bolum=WESTERN+LANGUAGES+%26+LITERATURES",
+      "rowCount": 49
+    }
+  ]
+}

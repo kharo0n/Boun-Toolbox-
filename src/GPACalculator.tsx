@@ -33,6 +33,8 @@ const gradePoints: Record<string, number> = {
 const gradeOptions = ['-', 'AA', 'BA', 'BB', 'CB', 'CC', 'DC', 'DD', 'FF'];
 
 export default function GPACalculator() {
+  const [loadError, setLoadError] = useState(false);
+  const [courseEdits, setCourseEdits] = useState<Record<string, Partial<Course>>>({});
   const [appData, setAppData] = useState<AppData | null>(null);
   const [selectedDeptId, setSelectedDeptId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,17 +47,10 @@ export default function GPACalculator() {
   const [newElectiveCourses, setNewElectiveCourses] = useState<Record<number, Course[]>>({});
 
   useEffect(() => {
-    fetch('/data.json')
-      .then(res => res.json())
-      .then(data => {
-        setAppData(data);
-        if (data.fakulteler && data.fakulteler.length > 0) {
-          const firstFac = data.fakulteler[0];
-          if (firstFac.bolumler.length > 0) {
-          }
-        }
-      })
-      .catch(console.error);
+    fetch(`${import.meta.env.BASE_URL}data.json`)
+      .then(res => { if (!res.ok) throw new Error('Catalogue request failed'); return res.json(); })
+      .then(setAppData)
+      .catch(() => setLoadError(true));
   }, []);
 
   const handleGradeChange = (id: string, val: string) => setGrades(prev => ({ ...prev, [id]: val }));
@@ -70,12 +65,20 @@ export default function GPACalculator() {
       return next;
     });
   };
-  const handleNameChange = (_id: string, _val: string) => { };
-  const handleCourseSelect = (_id: string, _val: string) => { };
+  const handleNameChange = (id: string, name: string) => {
+    setCourseEdits(prev => ({ ...prev, [id]: { ...prev[id], name } }));
+  };
+  const handleCourseSelect = (id: string, code: string) => {
+    setCourseEdits(prev => ({ ...prev, [id]: { ...prev[id], code } }));
+  };
+  const selectDept = (id: string) => {
+    setSelectedDeptId(id); setGrades({}); setOldGrades({}); setRepeatMode({});
+    setNewElectiveCourses({}); setCourseEdits({});
+  };
 
   const addNewElectiveCourse = (semesterIndex: number) => {
     const newCourse: Course = {
-      id: `elective-${Date.now()}-${Math.random()}`,
+      id: `elective-${crypto.randomUUID()}`,
       code: '',
       name: '',
       credits: 0,
@@ -127,7 +130,8 @@ export default function GPACalculator() {
 
     allSemesters.forEach((semester, semesterIndex) => {
       semester.forEach(c => {
-        const g = grades[c.id];
+        const currentGrade = grades[c.id];
+        const g = gradePoints[currentGrade] !== undefined ? currentGrade : repeatMode[c.id] ? oldGrades[c.id] : currentGrade;
         const p = gradePoints[g];
         if (p !== undefined) {
           totalPoints += p * c.credits;
@@ -137,7 +141,8 @@ export default function GPACalculator() {
 
       const newCourses = newElectiveCourses[semesterIndex] || [];
       newCourses.forEach(c => {
-        const g = grades[c.id];
+        const currentGrade = grades[c.id];
+        const g = gradePoints[currentGrade] !== undefined ? currentGrade : repeatMode[c.id] ? oldGrades[c.id] : currentGrade;
         const p = gradePoints[g];
         if (p !== undefined) {
           totalPoints += p * c.credits;
@@ -195,6 +200,7 @@ export default function GPACalculator() {
       </header>
 
       <div className="main-layout">
+        {loadError && <p role="alert">Bölüm verileri yüklenemedi. Lütfen sayfayı yenileyin.</p>}
         <aside className="sidebar">
           <h3>FAKÜLTELER</h3>
           <div className="faculty-list">
@@ -206,7 +212,7 @@ export default function GPACalculator() {
                     <li key={dept.id}>
                       <button
                         className={selectedDeptId === dept.id ? "active" : ""}
-                        onClick={() => { setSelectedDeptId(dept.id); setGrades({}); }}
+                        onClick={() => { selectDept(dept.id); }}
                       >
                         {dept.name}
                       </button>
@@ -231,7 +237,7 @@ export default function GPACalculator() {
                         <li key={dept.id}>
                           <button
                             className={selectedDeptId === dept.id ? "active" : ""}
-                            onClick={() => { setSelectedDeptId(dept.id); setGrades({}); }}
+                            onClick={() => { selectDept(dept.id); }}
                           >
                             {dept.name}
                           </button>
@@ -278,7 +284,7 @@ export default function GPACalculator() {
                               <div className="table-row">
                                 <div className="col-code">
                                   {course.type === 'select' ? (
-                                    <select className="clean-select" onChange={(e) => handleCourseSelect(course.id, e.target.value)}>
+                                    <select className="clean-select" value={courseEdits[course.id]?.code ?? ''} onChange={(e) => handleCourseSelect(course.id, e.target.value)}>
                                       <option value="">{course.code}</option>
                                       {course.options?.map(o => <option key={o} value={o}>{o}</option>)}
                                     </select>
@@ -286,7 +292,7 @@ export default function GPACalculator() {
                                 </div>
                                 <div className="col-name">
                                   {course.type === 'customInput' ? (
-                                    <input className="clean-input" placeholder={course.name} onChange={(e) => handleNameChange(course.id, e.target.value)} />
+                                    <input className="clean-input" value={courseEdits[course.id]?.name ?? ''} placeholder={course.name} onChange={(e) => handleNameChange(course.id, e.target.value)} />
                                   ) : course.name}
                                 </div>
                                 <div className="col-credits">{course.credits}</div>
@@ -310,7 +316,7 @@ export default function GPACalculator() {
                               </div>
                               {repeatMode[course.id] && (
                                 <div className="repeat-row">
-                                  <span className="repeat-label">Eski Not:</span>
+                                  <span className="repeat-label">Eski Not (yeni not seçilene kadar genel ortalamada):</span>
                                   <select
                                     className="grade-dropdown old-grade-dropdown"
                                     value={oldGrades[course.id] || ''}
@@ -343,6 +349,7 @@ export default function GPACalculator() {
                                 <input
                                   className="clean-input"
                                   placeholder="Ders Adı"
+                                  value={courseEdits[course.id]?.name ?? ''}
                                   onChange={(e) => handleNameChange(course.id, e.target.value)}
                                 />
                               </div>
@@ -354,7 +361,7 @@ export default function GPACalculator() {
                                   min="0"
                                   max="10"
                                   onChange={(e) => {
-                                    const newValue = parseInt(e.target.value) || 0;
+                                    const newValue = Math.min(10, Math.max(0, Number(e.target.value) || 0));
                                     setNewElectiveCourses(prev => ({
                                       ...prev,
                                       [index]: prev[index].map(c => c.id === course.id ? { ...c, credits: newValue } : c)

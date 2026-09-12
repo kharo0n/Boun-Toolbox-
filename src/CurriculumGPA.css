@@ -519,3 +519,5 @@
     background: #ccc;
     border-radius: 4px;
 }
+.elective-slot { position: relative; }
+.assignment-remove { position: absolute; right: 2px; top: 2px; border: 0; background: transparent; color: inherit; cursor: pointer; }

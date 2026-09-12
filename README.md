@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# BOUN Toolbox
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Boğaziçi Üniversitesi ders programlayıcı, GPA ve müfredat araçları. React + TypeScript + Vite.
 
-Currently, two official plugins are available:
+## Çalıştırma
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Node.js 20.19+ veya 22.12+ gerektirir.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm ci
+npm run dev
+npm test
+npm run lint
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+`dist/` statik sunucuya yüklenebilir. Göreli Vite tabanı ve hash yönlendirme sayesinde GitHub Pages alt dizinlerinde de çalışır (`/#/planner`, `/#/gpa`, `/#/curriculum`). Eski `/planner` gibi doğrudan yollar yerine hash bağlantıları kullanılır.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Resmî ders verisini güncelleme
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm run update:courses
+# İstenirse BUIS'te sunulan belirli dönem:
+npm run update:courses -- --semester 2026/2027-1
+npm test && npm run lint && npm run build
 ```
+
+Komut varsayılan dönemi BUIS'in dönem listesinden okur. Üniversitenin herkese açık `/scripts/schdepsel.asp` bölüm listesini ve `/scripts/sch.asp` ders tablolarını toplar. Kullanıcı adı, şifre, reCAPTCHA çözümü veya üçüncü taraf proxy gerekmez. Tarayıcı BUIS'e doğrudan istek atmaz; kontrol edilmiş JSON dosyası uygulama derlemesine dahil edilir.
+
+- `src/data/allCourses.json`: Dersler ve ayrı LAB/P.S. kayıtları.
+- `src/data/courseMetadata.json`: Dönem, çekim zamanı, kaynak, bölüm kapsamı, kayıt sayıları, HSS bağlantısı.
+- `scripts/update-courses.mjs`: Yeniden çalıştırılabilir veri çekici. Bölümleri sırayla okur, istekler arasında bekler; geçici hatalarda en fazla üç kez dener.
+
+Tüm bölüm sayfaları doğrulanmadan dosyalar değiştirilmez. Yanlış dönem, değişen tablo yapısı, çok küçük katalog veya aynı dönem için %20'den fazla kayıt kaybı güncellemeyi durdurur. Hata durumunda mevcut veri korunur. Yapısal olarak geçerli sıfır dersli bölümler metadata'da sıfır olarak kaydedilir. Kaynağın kendisindeki eksiklikler nedeniyle kapsamın üniversitenin yayımladığı tablolarla sınırlı olduğu unutulmamalıdır.
+
+Gün/saatler eşleşmiyorsa saat uydurulmaz; ham değer ve uyarı saklanır. Yalnız derslik sayısı uyuşmuyorsa geçerli saatler korunur, derslik boş gösterilir. BUIS'in A–E saat kodları 10–14. slotlara karşılık gelir. Bütünlük testleri ders, gün, saat ve derslik dizilerinin uyumunu denetler.
+
+Veri değişikliğinin yayına yansıması için yeniden derleme ve dağıtım gerekir. Bu depo kendi başına canlı veri çekmez veya zamanlanmış güncelleme yapmaz. Kaynak erişimini kaybederse eski veriyi yeniymiş gibi etiketlemez.
+
+## Programlayıcı davranışı
+
+- Kredi/AKTS yalnız ana derslerden bir kez hesaplanır; yeni şube seçimi aynı dersin eski şubesini değiştirir.
+- Tek LAB/P.S. varsayılan eklenir. Birden fazla kayıt varsa kullanıcı resmî bölüm bilgisine göre gereken oturumları seçer; kaynak bunların alternatif/zorunlu oluşunu her zaman açıkça belirtmediğinden tümü otomatik eklenmez.
+- Çakışma hesabı varsayılan veya seçilmiş oturumları kapsar. Henüz seçilmemiş LAB/P.S. seçenekleri kendi çakışma uyarılarını gösterir.
+- Haftanın yedi günü desteklenir; seçilen ders gerektiğinde hafta sonu sütunları açılır. 09:00–22:00 arası tüm slotlar görünür.
+- Çakışan dersler aynı hücrede üst üste örtülmeden listelenir. Takvimdeki kaldır düğmesi bütün dersi veya bütün ilgili oturumu kaldırır.
+- Saat açıklanmamış dersler seçilebilir ve krediye katılır.
+- Program, dönem anahtarıyla tarayıcıda saklanır. Sayfa yenileme seçimleri silmez.
+- PNG/PDF dışa aktarma tüm takvimi kapsar. Dışa aktarma kütüphaneleri yalnız gerektiğinde yüklenir.
+
+GPA ve müfredat verisi (`public/data.json`) dönemlik açılan derslerden farklıdır; bu çalışmada resmî müfredat doğrulaması yapılmamıştır.
+
+## Referans proje incelemesi
+
+12 Eylül 2026 kontrolü:
+
+- [kilicbaran/boun-course-planner ana dalı](https://github.com/kilicbaran/boun-course-planner/blob/main/public/data/semesters.json): son dönem **2025/2026-1**. Bu dönemin veri commit'i `8ec9b6e`, 4 Eylül 2025.
+- [Yayındaki dönem listesi](https://kilicbaran.github.io/boun-course-planner/data/semesters.json): son dönem **2025/2026-2**. `gh-pages` dalındaki son deploy commit'i `709ef11`, 8 Şubat 2026. Bahar dosyası 3.528 kayıt içeriyor.
+- [SemesterSelect.svelte](https://github.com/kilicbaran/boun-course-planner/blob/main/src/lib/SemesterSelect.svelte): site kendi statik JSON dosyalarını `fetch` ile okuyor. İncelenen dallarda ve dosya geçmişinde scraper yayımlanmamış; yazarın veri toplama yöntemini kesin söylemek mümkün değil.
+- Toolbox'ın önceki `allCourses.json` dosyası 3.362 kayıttı ve referansın bahar dosyasıyla birebir aynı değildi. Önceki dosyada çekim zamanı/dönem metadata'sı bulunmuyordu; syllabus bağlantısında 2025/2026-2 sabitlenmişti.
+- [BUIS](https://registration.bogazici.edu.tr/BUIS/General/schedule.aspx?p=semester): varsayılan dönem **2026/2027-1**. Referans projenin iki dalı da bu döneme göre güncel değil.
+
+Güncel ders verisi referans projeden kopyalanmadı; üniversitenin yayımladığı tablolardan yeniden alındı.
+
+## Doğrulama (12 Eylül 2026)
+
+- 20 otomatik test geçti; ESLint ve TypeScript/Vite üretim derlemesi başarılı.
+- `npm audit`: tüm bağımlılıklarda 0 bilinen açık (kontrol anındaki npm veritabanına göre).
+- Tarayıcıda kompakt kodla arama, tek LAB ekleme, kredi toplamı, hafta sonu görünümü, saati olmayan ders ekleme ve sayfa yenilendikten sonra programı geri yükleme kontrol edildi.
+- Üretim derlemesi `/Boun-Toolbox-/` alt dizininde çalıştırıldı; GPA katalog yüklemesi ve sayfa yenileme doğrulandı.
+- PNG/PDF indirildi; PNG'de 09:00–22:00 takvimin tamamı görsel olarak kontrol edildi. PDF dosyasının oluşumu doğrulandı.
+- GPA: AA seçimi 4.00; bölüm değişimi ek dersleri/notları sıfırlıyor. Tekrar dersin eski BB notu yeni not seçilene kadar 3.00, yeni AA seçilince 4.00 olarak hesaba katılıyor.
+- Müfredatta sürükleme başlangıcında atama silinmez; başarılı bırakmada taşınır. Atamayı kaldırmak için ayrı düğme eklendi. Bu sürükleme düzeltmesi kod incelemesiyle kontrol edildi; tam tarayıcı sürükle-bırak testi yapılmadı.
+
+Derleme, ders kataloğunun ana pakete dahil olması nedeniyle 500 kB üzeri paket uyarısı veriyor; bu bir derleme hatası değil. Mobil kırılımlar düzenlendi fakat ayrı cihaz testi yapılmadı.
+
+Canlı site: https://boun-toolbox.vercel.app. Vercel, GitHub deposunun `main` dalına bağlıdır; bu dala gönderilen değişiklikler üretim dağıtımını tetikler. Yeni ders verisinin yayınlanması için güncelleme komutundan sonra değişen JSON dosyaları da commit edilmelidir.

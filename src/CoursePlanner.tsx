@@ -1,498 +1,133 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import './CoursePlanner.css';
-import courseDataRaw from './data/allCourses.json';
+import courseData from './data/allCourses.json';
+import metadata from './data/courseMetadata.json';
+import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, matchesSearch, totalCredits,
+  relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode } from './lib/planner';
+import type { Course, RawCourse } from './lib/planner';
 
-type SessionType = 'lecture' | 'lab' | 'ps';
-
-interface RawCourse {
-  code: string;
-  name: string;
-  credits?: number;
-  ects?: number;
-  days: string[] | null;
-  hours: number[] | null;
-  instructor: string;
-  rooms?: string[];
-}
-
-interface ProcessedCourse extends RawCourse {
-  uniqueKey: string;
-  conflictCount: number;
-  sessionType: SessionType;
-}
-
-interface PlanItem {
-  uniqueId: string;
-  code: string;
-  name: string;
-  day: string;
-  startHour: number;
-  duration: number;
-  color: string;
-  instructor: string;
-  room: string;
-  sessionType: SessionType;
-}
-
-const SLOT_TO_HOUR = (slot: number) => slot + 8;
-const HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
-const DAYS_MAP: Record<string, string> = {
-  "M": "Monday", "T": "Tuesday", "W": "Wednesday", "Th": "Thursday", "F": "Friday", "St": "Saturday", "Su": "Sunday"
-};
-const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const COLORS = ["#e3f2fd", "#f3e5f5", "#e8f5e9", "#fff3e0", "#ffebee", "#e0f7fa", "#fff8e1", "#fce4ec"];
-const LAB_COLOR = "#ffcdd2"; // Light red for labs
-const PS_COLOR = "#c8e6c9"; // Light green for problem sessions
-
-const DAY_LABELS = {
-  "Monday": "M", "Tuesday": "T", "Wednesday": "W", "Thursday": "Th", "Friday": "F", "Saturday": "St", "Sunday": "Su"
-};
-
-// Helper function to detect session type from course key
-const getSessionType = (key: string): SessionType => {
-  if (key.includes(' LAB ') || key.endsWith(' LAB')) return 'lab';
-  if (key.includes(' P.S. ') || key.endsWith(' P.S.')) return 'ps';
-  return 'lecture';
-};
+const catalogue = buildCatalogue(courseData as Record<string, RawCourse>);
+const storageKey = `boun-toolbox:planner:${metadata.semester}`;
+const colors = ['#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#ffebee', '#e0f7fa', '#fff8e1', '#fce4ec'];
+const colorFor = (course: { code: string; sessionType: string }) => course.sessionType === 'lab' ? '#ffcdd2' :
+  course.sessionType === 'ps' ? '#c8e6c9' : colors[[...course.code].reduce((s, c) => s + c.charCodeAt(0), 0) % colors.length];
+const scheduleText = (course: Course) => courseSlots(course).map(s => `${DAY_LABELS[s.day]} ${s.hour}:00${s.room ? ` (${s.room})` : ''}`).join(' / ');
 
 export default function CoursePlanner() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [addedCourses, setAddedCourses] = useState<PlanItem[]>([]);
-  const [filterMode, _setFilterMode] = useState<"ALL" | "NO_CONFLICT">("ALL");
+  const [search, setSearch] = useState('');
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(() => readSelection(localStorage, storageKey, catalogue));
+  const [noConflict, setNoConflict] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [message, setMessage] = useState('');
+  const [storageError, setStorageError] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    try { localStorage.setItem(storageKey, JSON.stringify(selectedKeys)); }
+    catch { setStorageError(true); }
+  }, [selectedKeys]);
+  const selected = useMemo(() => catalogue.filter(c => selectedKeys.includes(c.key)), [selectedKeys]);
+  const slots = useMemo(() => selected.flatMap(courseSlots), [selected]);
+  const credits = totalCredits(selected);
+  const days = DAYS.filter(day => !['St', 'Su'].includes(day) || slots.some(s => s.day === day));
+  const filtered = useMemo(() => catalogue.filter(c => c.sessionType === 'lecture' && search.trim() && matchesSearch(c, search))
+    .map(c => ({ course: c, conflicts: candidateConflicts(c, catalogue, selected) }))
+    .filter(c => !noConflict || c.conflicts === 0)
+    .sort((a, b) => a.conflicts - b.conflicts || a.course.code.localeCompare(b.course.code)), [search, noConflict, selected]);
+  const cellCounts = new Map<string, number>();
+  slots.forEach(s => { const key = `${s.day}:${s.hour}`; cellCounts.set(key, (cellCounts.get(key) || 0) + 1); });
+  const conflicts = [...cellCounts.values()].filter(n => n > 1).length;
+  const toggle = (course: Course) => setSelectedKeys(keys => toggleCourse(keys, course, catalogue));
+  const remove = (course: Course) => setSelectedKeys(keys => course.sessionType === 'lecture'
+    ? keys.filter(key => !catalogue.some(c => c.key === key && normalizeCode(c.code) === normalizeCode(course.code)))
+    : keys.filter(key => key !== course.key));
 
-  // Export calendar as PNG
-  const exportAsPNG = async () => {
-    if (!calendarRef.current) return;
-    setShowExportMenu(false);
-
+  const exportCalendar = async (format: 'png' | 'pdf') => {
+    if (!calendarRef.current || exporting) return;
+    setShowExportMenu(false); setExporting(true); setMessage('');
     try {
+      const { default: html2canvas } = await import('html2canvas');
       const canvas = await html2canvas(calendarRef.current, {
-        backgroundColor: '#1a1a2e',
-        scale: 2,
+        backgroundColor: '#ffffff', scale: 2,
+        onclone: doc => {
+          const grid = doc.querySelector<HTMLElement>('.calendar-grid');
+          if (grid) { grid.style.height = 'auto'; grid.style.overflow = 'visible'; grid.style.flex = 'none'; }
+        },
       });
-      const link = document.createElement('a');
-      link.download = 'ders-programi.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch (error) {
-      console.error('PNG export failed:', error);
-      alert('PNG olarak kaydetme başarısız oldu.');
-    }
-  };
-
-  // Export calendar as PDF
-  const exportAsPDF = async () => {
-    if (!calendarRef.current) return;
-    setShowExportMenu(false);
-
-    try {
-      const canvas = await html2canvas(calendarRef.current, {
-        backgroundColor: '#1a1a2e',
-        scale: 2,
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-      });
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save('ders-programi.pdf');
-    } catch (error) {
-      console.error('PDF export failed:', error);
-      alert('PDF olarak kaydetme başarısız oldu.');
-    }
-  };
-  const allCoursesList = useMemo(() => {
-    const grouped: Record<string, ProcessedCourse> = {};
-
-    Object.entries(courseDataRaw).forEach(([key, val]) => {
-      const raw = val as RawCourse;
-      const sessionType = getSessionType(key);
-      const code = raw.code.trim();
-
-      // For LAB and P.S. entries, keep them as separate items
-      if (sessionType !== 'lecture') {
-        grouped[key] = {
-          ...raw,
-          code: code,
-          uniqueKey: key,
-          days: raw.days || [],
-          hours: raw.hours || [],
-          rooms: raw.rooms || [],
-          conflictCount: 0,
-          sessionType
-        };
-        return;
-      }
-
-      // For regular lectures, group by code
-      if (!grouped[code]) {
-        grouped[code] = {
-          ...raw,
-          code: code,
-          uniqueKey: code,
-          days: [],
-          hours: [],
-          rooms: [],
-          conflictCount: 0,
-          sessionType: 'lecture'
-        };
-      }
-
-      // Merge Schedule if exists
-      if (raw.days && raw.hours) {
-        grouped[code].days = [...(grouped[code].days || []), ...raw.days];
-        grouped[code].hours = [...(grouped[code].hours || []), ...raw.hours];
-        if (raw.rooms) {
-          grouped[code].rooms = [...(grouped[code].rooms || []), ...raw.rooms];
-        } else {
-          const emptyRooms = new Array(raw.days.length).fill("");
-          grouped[code].rooms = [...(grouped[code].rooms || []), ...emptyRooms];
-        }
-      }
-    });
-
-    return Object.values(grouped);
-  }, []);
-
-  const getConflictCount = (course: RawCourse) => {
-    if (!course.days || !course.hours) return 0;
-    let conflicts = 0;
-
-    for (let i = 0; i < course.days.length; i++) {
-      const day = DAYS_MAP[course.days[i]];
-      const hour = SLOT_TO_HOUR(course.hours[i]);
-      if (!day) continue;
-
-      const isConflict = addedCourses.some(item =>
-        item.code !== course.code && // Ignore self
-        item.day === day &&
-        hour >= item.startHour &&
-        hour < item.startHour + item.duration
-      );
-      if (isConflict) conflicts++;
-    }
-    return conflicts;
-  };
-
-
-
-  const filteredCourses = useMemo(() => {
-    let results: ProcessedCourse[] = [];
-    const lowerTerm = searchTerm.trim().toLowerCase();
-
-    if (searchTerm === "QUICK_TK") {
-      results = allCoursesList.filter(c => c.code.startsWith("TK"));
-    } else if (searchTerm === "QUICK_HTR") {
-      results = allCoursesList.filter(c => c.code.startsWith("HTR"));
-    } else if (lowerTerm.length >= 1) {
-
-      if (lowerTerm.length < 3) {
-        results = allCoursesList.filter(c => c.code.toLowerCase().includes(lowerTerm));
+      const filename = `ders-programi-${metadata.semester.replace('/', '-')}`;
+      if (format === 'png') {
+        const link = document.createElement('a'); link.download = `${filename}.png`;
+        link.href = canvas.toDataURL('image/png'); link.click();
       } else {
-        results = allCoursesList.filter(c =>
-          c.code.toLowerCase().includes(lowerTerm) ||
-          c.name.toLowerCase().includes(lowerTerm)
-        );
+        const { default: jsPDF } = await import('jspdf');
+        const pdf = new jsPDF({ orientation: canvas.width > canvas.height ? 'landscape' : 'portrait', unit: 'px', format: [canvas.width, canvas.height] });
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height); pdf.save(`${filename}.pdf`);
       }
-
-    } else {
-      return [];
-    }
-
-    // Filter out LAB/P.S. sessions from search results - they auto-add with main course
-    const lecturesOnly = results.filter(c => c.sessionType === 'lecture');
-
-    const resultsWithConflicts = lecturesOnly.map(course => ({
-      ...course,
-      conflictCount: getConflictCount(course)
-    }));
-
-
-
-    const finalResults = filterMode === "NO_CONFLICT"
-      ? resultsWithConflicts.filter(c => c.conflictCount === 0)
-      : resultsWithConflicts;
-
-    return finalResults.sort((a, b) => {
-      if (a.conflictCount !== b.conflictCount) return a.conflictCount - b.conflictCount;
-
-      const aStarts = a.code.toLowerCase().startsWith(lowerTerm);
-      const bStarts = b.code.toLowerCase().startsWith(lowerTerm);
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-
-      return a.code.localeCompare(b.code);
-    }).slice(0, 100);
-
-  }, [searchTerm, allCoursesList, addedCourses, filterMode]);
-
-  const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
-
-  const getColorForSession = (sessionType: SessionType) => {
-    if (sessionType === 'lab') return LAB_COLOR;
-    if (sessionType === 'ps') return PS_COLOR;
-    return getRandomColor();
+    } catch { setMessage('Program dışa aktarılamadı. Lütfen yeniden deneyin.'); }
+    finally { setExporting(false); }
   };
 
-  // Build URL for course description page on registration site
-  const getCourseDescriptionUrl = (code: string) => {
-    // code format: "MIS 214.01" or "BIO 106.01"
-    // URL format: course=MIS%20214&section=01&term=2025/2026-2
-    const trimmedCode = code.trim();
-    const dotIndex = trimmedCode.lastIndexOf('.');
-
-    if (dotIndex === -1) return null;
-
-    const courseWithoutSection = trimmedCode.substring(0, dotIndex); // "MIS 214"
-    const section = trimmedCode.substring(dotIndex + 1); // "01"
-    const term = "2025/2026-2"; // Current semester
-
-    const encodedCourse = encodeURIComponent(courseWithoutSection);
-    return `https://registration.bogazici.edu.tr/scripts/schedule/coursedescription.asp?course=${encodedCourse}&section=${section}&term=${term}`;
-  };
-
-  const addCourseItems = (course: ProcessedCourse, planItems: PlanItem[], color: string) => {
-    if (!course.days || !course.hours || course.days.length === 0) {
-      return false;
-    }
-
-    for (let i = 0; i < course.days.length; i++) {
-      const realDay = DAYS_MAP[course.days[i]];
-      const realHour = SLOT_TO_HOUR(course.hours[i]);
-      if (!realDay) continue;
-
-      planItems.push({
-        uniqueId: Math.random().toString(36).substr(2, 9),
-        code: course.code,
-        name: course.name,
-        day: realDay,
-        startHour: realHour,
-        duration: 1,
-        color: color,
-        instructor: course.instructor,
-        room: course.rooms ? course.rooms[i] : "",
-        sessionType: course.sessionType
-      });
-    }
-    return true;
-  };
-
-  const addCourse = (course: ProcessedCourse) => {
-    if (!course.days || !course.hours || course.days.length === 0) {
-      alert("Bu dersin tanımlı bir programı yok.");
-      return;
-    }
-
-    const newPlanItems: PlanItem[] = [];
-    const baseColor = getColorForSession(course.sessionType);
-
-    // Add the main course
-    addCourseItems(course, newPlanItems, baseColor);
-
-    // If this is a lecture, find and add related LAB/P.S. sessions
-    if (course.sessionType === 'lecture') {
-      const courseCode = course.code.trim();
-
-      // Find related LAB and P.S. sessions
-      const relatedSessions = allCoursesList.filter(c => {
-        if (c.sessionType === 'lecture') return false;
-        // Match by course code (e.g., "BIO 106.01" matches "BIO106.01 LAB 1")
-        const relatedCode = c.code.trim();
-        return relatedCode === courseCode;
-      });
-
-      // Add all related LAB/P.S. sessions
-      relatedSessions.forEach(session => {
-        const sessionColor = getColorForSession(session.sessionType);
-        addCourseItems(session, newPlanItems, sessionColor);
-      });
-    }
-
-    setAddedCourses([...addedCourses, ...newPlanItems]);
-  };
-
-  const removeCourse = (uniqueId: string) => {
-    setAddedCourses(addedCourses.filter(c => c.uniqueId !== uniqueId));
-  };
-
-  const removeCourseByCode = (code: string) => {
-    setAddedCourses(addedCourses.filter(c => c.code !== code));
-  };
-
-  const formatSchedule = (course: RawCourse) => {
-    if (!course.days || !course.hours) return "";
-    return course.days.map((d, i) => {
-      const dayName = DAYS_MAP[d];
-      const time = course.hours ? `${course.hours[i] + 8}:00` : '';
-      return `${dayName} (${time})`;
-    }).join(" / ");
-  };
-
-  return (
-    <div className="planner-container">
-      <header className="planner-header">
-        <div className="header-left">
-          <Link to="/" className="back-btn">← Ana Menü</Link>
-          <h1>📅 Course Planner</h1>
+  return <div className="planner-container">
+    <header className="planner-header"><div className="header-left">
+      <Link to="/" className="back-btn">← Ana Menü</Link><h1>📅 Course Planner</h1>
+    </div><div className="data-status"><strong>{metadata.semester} · {metadata.semester.endsWith('-1') ? 'Güz' : metadata.semester.endsWith('-2') ? 'Bahar' : 'Yaz'}</strong>
+      <span>{metadata.sectionCount} şube · Güncelleme: {new Date(metadata.fetchedAt).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}</span>
+      <a href={metadata.sourceUrl} target="_blank" rel="noreferrer">Resmî ders programı</a></div></header>
+    <div className="planner-notice">Ders saatleri değişebilir; kayıt öncesinde BUIS’i kontrol edin. Birden fazla LAB/P.S. varsa uygun oturumu seçin.</div>
+    {storageError && <p role="status" className="planner-notice">Tarayıcı kaydına erişilemiyor. Programınız bu sekme açıkken korunur.</p>}
+    {message && <p role="alert" className="planner-notice">{message}</p>}
+    <div className="planner-layout">
+      <main className="planner-calendar">
+        <div className="calendar-header-title">Haftalık program {conflicts > 0 && <span role="status">· ⚠️ {conflicts} saatte çakışma</span>}</div>
+        <div className="calendar-scroll"><div className="calendar-grid" ref={calendarRef} style={{ gridTemplateColumns: `48px repeat(${days.length}, minmax(85px, 1fr))` }}>
+          <div className="header-cell">Saat</div>{days.map(day => <div key={day} className="header-cell">{DAY_LABELS[day]}</div>)}
+          {HOURS.map(hour => <React.Fragment key={hour}><div className="time-cell">{hour}:00</div>{days.map(day => {
+            const items = slots.filter(s => s.day === day && s.hour === hour);
+            return <div key={`${day}-${hour}`} className={`grid-cell ${items.length > 1 ? 'conflict-cell' : ''}`}>
+              {items.map(s => <div key={s.key} className={`course-block ${s.sessionType}-block`} style={{ backgroundColor: colorFor(s) }} title={`${s.code} ${s.name}\n${s.instructor}\n${s.room}`}>
+                <strong>{s.code}</strong><span>{s.sessionType !== 'lecture' ? s.sessionType.toUpperCase() : ''} {s.room}</span>
+                <button className="remove-x" aria-label={`${s.code} ${s.sessionType} kaldır`} data-html2canvas-ignore onClick={() => { const course = catalogue.find(c => c.key === s.courseKey); if (course) remove(course); }}>×</button>
+              </div>)}
+            </div>;
+          })}</React.Fragment>)}
+        </div></div>
+        <div className="calendar-footer"><button className="footer-btn clear-btn" onClick={() => setSelectedKeys([])}>🗑️ Programı Temizle</button>
+          <div className="export-dropdown"><button className="footer-btn export-btn" disabled={exporting} onClick={() => setShowExportMenu(!showExportMenu)}>{exporting ? 'Hazırlanıyor…' : '📤 Export ▼'}</button>
+            {showExportMenu && <div className="export-menu"><button onClick={() => void exportCalendar('png')}>PNG olarak kaydet</button><button onClick={() => void exportCalendar('pdf')}>PDF olarak kaydet</button></div>}
+          </div></div>
+        <div className="selected-courses"><h3>Seçilen dersler ({selected.filter(c => c.sessionType === 'lecture').length})</h3>
+          {selected.filter(c => c.sessionType === 'lecture').map(c => <div key={c.key} className="selected-course"><button className="selected-code" onClick={() => setSearch(c.code)}>{c.code}</button><span>{!courseSlots(c).length ? ' · Saat açıklanmamış' : ''}</span><button onClick={() => remove(c)} aria-label={`${c.code} dersini kaldır`}>Kaldır</button></div>)}
+          {!selected.length && <p>Arama sonuçlarından ders ekleyin.</p>}
         </div>
-      </header>
-
-
-
-      <div className="planner-layout">
-        {/* LEFT: CALENDAR */}
-        <main className="planner-calendar">
-          <div className="calendar-header-title">Schedule</div>
-          <div className="calendar-grid" ref={calendarRef}>
-            <div className="header-cell time-col"></div>
-            {DAYS.map(day => (
-              <div key={day} className="header-cell day-col">{DAY_LABELS[day as keyof typeof DAY_LABELS]}</div>
-            ))}
-
-            {HOURS.map(hour => (
-              <React.Fragment key={hour}>
-                <div className="time-cell">{hour}:00</div>
-                {DAYS.map(day => (
-                  <div key={`${day}-${hour}`} className="grid-cell">
-                    {addedCourses
-                      .filter(c => c.day === day && c.startHour === hour)
-                      .map(c => (
-                        <div
-                          key={c.uniqueId}
-                          className={`course-block ${c.sessionType === 'lab' ? 'lab-block' : ''} ${c.sessionType === 'ps' ? 'ps-block' : ''}`}
-                          style={{ backgroundColor: c.color }}
-                          title={`${c.code}\n${c.name}\n${c.day} ${c.startHour}:00${c.sessionType !== 'lecture' ? ` (${c.sessionType.toUpperCase()})` : ''}`}
-                        >
-                          <div className="cb-code">
-                            {c.code}
-                            {c.sessionType === 'lab' && <span className="session-badge lab-badge">LAB</span>}
-                            {c.sessionType === 'ps' && <span className="session-badge ps-badge">P.S.</span>}
-                          </div>
-                          <button className="remove-x" onClick={() => removeCourse(c.uniqueId)}>×</button>
-                        </div>
-                      ))
-                    }
-                  </div>
-                ))}
-              </React.Fragment>
-            ))}
-          </div>
-          <div className="calendar-footer">
-            <button className="footer-btn clear-btn" onClick={() => setAddedCourses([])}>
-              🗑️ Programı Temizle
-            </button>
-            <div className="export-dropdown">
-              <button
-                className="footer-btn export-btn"
-                onClick={() => setShowExportMenu(!showExportMenu)}
-              >
-                📤 Export ▼
-              </button>
-              {showExportMenu && (
-                <div className="export-menu">
-                  <button onClick={exportAsPNG}>🖼️ PNG olarak kaydet</button>
-                  <button onClick={exportAsPDF}>📄 PDF olarak kaydet</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </main>
-
-        {/* RIGHT: SEARCH & CONTROLS */}
-        <aside className="planner-controls">
-          <div className="search-header-row">
-            <h3>Search Course</h3>
-            <span className="credit-info">Total Credit: Local(0) - ECTS(0)</span>
-          </div>
-
-          <div className="search-section">
-            <input
-              type="text"
-              placeholder="Search (e.g. MIS, CMPE)..."
-              value={searchTerm.startsWith("QUICK") ? "" : searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="course-search-input"
-            />
-            <div className="quick-buttons">
-              <button className="quick-btn" onClick={() => setSearchTerm("QUICK_TK")}>TK</button>
-              <button className="quick-btn" onClick={() => setSearchTerm("QUICK_HTR")}>HTR</button>
-            </div>
-          </div>
-
-          <div className="search-results-grid">
-            {filteredCourses.map((course) => {
-              const hasConflict = course.conflictCount > 0;
-              const isAdded = addedCourses.some(ac => ac.code === course.code);
-
-              return (
-                <div
-                  key={course.uniqueKey}
-                  className={`course-card ${isAdded ? 'added' : ''}`}
-                >
-                  <div className="card-header">
-                    <div className="course-code-title">
-                      <strong>{course.code}</strong>
-                      <span className="credits">Local {course.credits} - ECTS {course.ects}</span>
-                    </div>
-                    <div className="card-actions">
-                      <button
-                        className="resource-btn"
-                        onClick={() => {
-                          const url = getCourseDescriptionUrl(course.code);
-                          if (url) window.open(url, '_blank');
-                        }}
-                        title="Ders Detay Sayfası"
-                      >
-                        Syllabus
-                      </button>
-                      <button
-                        className={`action-btn ${isAdded ? 'added-btn' : 'add-btn'}`}
-                        onClick={() => isAdded ? removeCourseByCode(course.code) : addCourse(course)}
-                      >
-                        {isAdded ? "Added" : "Add"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="card-body">
-                    <div className="course-long-name">{course.name}</div>
-                    <div className="instructor-name">{course.instructor}</div>
-                    <div className="schedule-text">
-                      {formatSchedule(course)}
-                    </div>
-                  </div>
-
-                  {hasConflict && (
-                    <div className="conflict-warning">⚠️ Conflict</div>
-                  )}
-                </div>
-              );
-            })}
-            {filteredCourses.length === 0 && (
-              <div className="no-results">Type something to search...</div>
-
-            )}
-          </div>
-        </aside>
-
-      </div>
-
-      {/* HSS-UNRE List Button - Independent of Schedule */}
-      <div className="hss-unre-section">
-        <button
-          className="hss-unre-btn"
-          onClick={() => window.open('https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/HSS%20Courses%20-%202025_2026%20Spring%20List-12_02_2026.pdf', '_blank')}
-        >
-          📚 HSS-UNRE Listesi
-        </button>
-      </div>
+      </main>
+      <aside className="planner-controls"><div className="search-header-row"><h3>Ders ara</h3><span className="credit-info">Toplam kredi: Yerel {credits.local} · AKTS {credits.ects}</span></div>
+        <div className="search-section"><input aria-label="Ders ara" placeholder="Ders kodu, adı veya öğretim üyesi…" value={search} onChange={e => setSearch(e.target.value)} className="course-search-input" />
+          <div className="quick-buttons"><button className="quick-btn" onClick={() => setSearch('TK ')}>TK</button><button className="quick-btn" onClick={() => setSearch('HTR')}>HTR</button></div></div>
+        <label className="conflict-filter"><input type="checkbox" checked={noConflict} onChange={e => setNoConflict(e.target.checked)} /> Yalnızca çakışmayan dersler</label>
+        <div className="search-results-grid">{filtered.slice(0, 100).map(({ course, conflicts }) => {
+          const added = selectedKeys.includes(course.key), related = relatedSessions(course, catalogue);
+          return <article key={course.key} className={`course-card ${added ? 'added' : ''}`}>
+            <div className="card-header"><div className="course-code-title"><strong>{course.code}</strong><span className="credits">Yerel {course.credits ?? '—'} · AKTS {course.ects ?? '—'}</span></div>
+              <div className="card-actions"><a className="resource-btn" href={courseDescriptionUrl(course.code, metadata.semester) || metadata.sourceUrl} target="_blank" rel="noreferrer">Syllabus</a>
+                <button className={`action-btn ${added ? 'added-btn' : 'add-btn'}`} onClick={() => toggle(course)}>{added ? 'Kaldır' : 'Ekle'}</button></div></div>
+            <div className="card-body"><div className="course-long-name">{course.name}</div><div className="instructor-name">{course.instructor}</div>
+              <div className="schedule-text">{scheduleText(course) || 'Ders saati henüz açıklanmamış.'}</div>
+              {course.scheduleWarning && <div className="conflict-warning">Kaynakta saat/derslik bilgisi eksik; BUIS’ten doğrulayın.</div>}
+              {course.requiredFor && <small>Bölüm bilgisi: {course.requiredFor}</small>}
+              {related.length > 0 && <div className="session-options"><strong>LAB / P.S.</strong>{related.map(session => <label key={session.key}>
+                <input type="checkbox" disabled={!added} checked={selectedKeys.includes(session.key)} onChange={() => toggle(session)} />
+                <span>{session.sessionType.toUpperCase()} · {scheduleText(session) || 'Saat açıklanmamış'}{session.requiredFor ? ` · ${session.requiredFor}` : ''}{session.scheduleWarning ? ' · BUIS’ten doğrulayın' : ''}
+                  {candidateConflicts(session, catalogue, selected) > 0 ? ' · ⚠️ Çakışıyor' : ''}</span></label>)}
+                {!added && <small>Oturum seçmek için önce dersi ekleyin.</small>}
+                {added && (['lab', 'ps'] as const).some(type => related.some(s => s.sessionType === type) && !related.some(s => s.sessionType === type && selectedKeys.includes(s.key))) && <small className="conflict-warning">LAB/P.S. seçimi eksik; uygun oturumu seçin.</small>}
+              </div>}
+            </div>{conflicts > 0 && <div className="conflict-warning">⚠️ {conflicts} saatte çakışma</div>}
+          </article>;
+        })}{!filtered.length && <div className="no-results">{search.trim() ? 'Aramanıza uygun ders bulunamadı.' : 'Ders aramak için kod, ad veya öğretim üyesi yazın.'}</div>}
+          {filtered.length > 100 && <p className="no-results">{filtered.length} sonuçtan ilk 100 gösteriliyor. Aramanızı daraltın.</p>}
+        </div></aside>
     </div>
-  );
+    <div className="hss-unre-section"><a className="hss-unre-btn" href={metadata.hssUrl} target="_blank" rel="noreferrer">📚 HSS-UNRE Listesi</a></div>
+  </div>;
 }

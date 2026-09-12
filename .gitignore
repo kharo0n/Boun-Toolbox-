@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Incomplete course downloads
+src/data/*.json.tmp
