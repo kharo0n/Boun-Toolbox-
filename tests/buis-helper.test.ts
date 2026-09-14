@@ -419,7 +419,7 @@ test('consent helper resumes after BUIS reloads the page with the abbreviation c
 
 test('a stale or forged consent job is ignored after reload', t => {
   for (const job of [
-    { display: 'CMPE 150.01', abbr: 'CMPE', code: '150', section: '01', message: 'Hello', attempts: 1, done: [], at: Date.now() - 60000 },
+    { display: 'CMPE 150.01', abbr: 'CMPE', code: '150', section: '01', message: 'Hello', attempts: 1, done: [], at: Date.now() - 120000 },
     { display: 'CMPE 150.01', abbr: 'CMPE|.*', code: '150', section: '01', message: 'Hello', attempts: 1, done: [], at: Date.now() },
   ]) {
     const f = consentFixture(t, consentPage(), w => w.sessionStorage.setItem('boun-toolbox:buis-helper:consent-job', JSON.stringify(job)));

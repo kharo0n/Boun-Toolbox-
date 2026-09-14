@@ -123,7 +123,7 @@ ve çerçeve kabuğunu kapsar. Lint ve üretim derlemesi başarılı.
 3. Kısaltma listesi: rakam içermeyen, ilk kelimesi, parantez içi veya değeri
    kısaltmaya eşit tek seçenek. Ders listesi: `CMPE 150.01` biçimini içeren tek
    liste ve tam şube. Şubeler listeleniyor ama istenen yoksa durur.
-4. Seçimden sonra sayfa yenilenirse iş `sessionStorage`'da 20 saniye bekler; dört
+4. Seçimden sonra sayfa yenilenirse iş `sessionStorage`'da 60 saniye bekler (yer imiyle açıldıysa bu sürede yer imine yeniden basılmalı); dört
    seçimden sonra durur. Mesaj alanı doluysa üzerine yazmaz; düğmeye basmaz.
 5. **Form raporu** açılır listeler için seçenek sayısını ve ilk üç etiketin
    biçimini (harf → A, rakam → 9) ekler; ders veya not metni koymaz.

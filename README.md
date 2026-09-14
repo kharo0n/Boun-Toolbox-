@@ -70,10 +70,15 @@ bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
 programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
 doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js` sürüm 1.3.0, kullanıcının açık BUIS
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.3.1, kullanıcının açık BUIS
 sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir; 1.3.0'dan sonra
 `@updateURL` ile canlı siteden güncellenir, daha eski kurulumlar bir kez elle
 güncellenmelidir. **Quick Add ve consent formları kapalı olduğundan canlı uyumluluk henüz doğrulanmadı.**
+Eklenti kurmadan kullanmak için Kayıt Asistanı bir **yer imi** (bookmarklet) verir:
+yer imleri çubuğuna sürüklenir, BUIS ekranında basılınca aynı script'i canlı siteden
+yükler. Course List Preparation aynı kökenli `#ifCPL` çerçevesinde olduğundan script
+o çerçeveye eklenir; BUIS `script-src` CSP göndermediği için yükleme engellenmez.
+Sayfa her yenilendiğinde yer imine yeniden basılmalıdır.
 Kayıt Asistanı'nda bölüm/düzey seçilebilir ve ders başına consent mesajı yazılabilir;
 ikisi de **Planı kopyala** JSON'una eklenir.
 
@@ -109,7 +114,7 @@ gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
   **consent gerekiyor / boş yer / dolu / bölüme açık değil** der. Sonuç,
   öğrencinin ders alabileceğine dair onay değildir.
 - **Consent isteği**, Consent Requests ekranında kısaltmayı ve şubeyi seçip
-  Toolbox'ta yazılan mesajı boş alana yazar. Seçim sayfayı yenilerse 20 saniye
+  Toolbox'ta yazılan mesajı boş alana yazar. Seçim sayfayı yenilerse 60 saniye
   içinde kaldığı yerden sürer, dört denemeden sonra durur. Hiçbir düğmeye
   basmaz: BUIS aynı şubeye en fazla 2, toplam 10 derse istek kabul ediyor.
   [Consent deneme sayfası](https://boun-toolbox.vercel.app/buis-consent-demo.html).

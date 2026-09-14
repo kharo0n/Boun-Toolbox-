@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BOUN Toolbox — BUIS Kayıt Yardımcısı
 // @namespace    https://github.com/kharo0n/Boun-Toolbox-
-// @version      1.3.0
+// @version      1.3.1
 // @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar, kontenjan ve consent durumunu gösterir, consent formunu mesajınla doldurur. Ders eklemeyi tek tıkla veya seçtiğin saatte bir kez gönderir; consent isteğini göndermeyi sana bırakır.
 // @match        https://registration.boun.edu.tr/*
 // @match        https://registration.bogazici.edu.tr/*
@@ -667,7 +667,7 @@
   // BUIS: choose the abbreviation, then the course, write the message, submit.
   // Each choice may post the page back, so the job survives a reload for a few seconds.
   // Nothing here clicks a button: every request uses one of the student's limited attempts.
-  var CONSENT_STEP_MS = 20000, consentTimer = null;
+  var CONSENT_STEP_MS = 60000, consentTimer = null;
   function visibleControl(node) {
     return node.isConnected && !panel.contains(node) && !node.matches(':disabled') && node.getClientRects().length > 0 && getComputedStyle(node).visibility === 'visible';
   }

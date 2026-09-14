@@ -163,3 +163,16 @@ export function consentIssues(plan: RegistrationPlan, messages: Record<string, s
   }
   return issues;
 }
+
+/**
+ * A bookmark that opens the BUIS helper without a userscript manager. Course List Preparation lives in
+ * the same-origin `#ifCPL` frame, so the script is added there when it exists. BUIS sends no script-src CSP.
+ */
+export function helperBookmarklet(scriptUrl: string) {
+  const source = `(function(){var u=${JSON.stringify(scriptUrl)}+'?b='+Date.now();` +
+    `var f=document.getElementById('ifCPL'),d=null;try{d=f&&f.contentDocument}catch(e){}` +
+    `var t=d&&d.body?d:document,w=t.defaultView;` +
+    `if(w.__bounToolboxHelper){w.__bounToolboxHelper.open();return}` +
+    `var s=t.createElement('script');s.src=u;t.body.appendChild(s)})()`;
+  return `javascript:${source}`;
+}

@@ -121,3 +121,25 @@ test('consent issues flag empty messages and more courses than BUIS allows', () 
   assert.match(issues[1], /HIST 100\.01 için consent mesajı boş/);
   assert.deepEqual(consentIssues(result, {}), []);
 });
+
+test('bookmarklet adds the helper to the BUIS registration frame, or reopens a loaded one', async () => {
+  const { JSDOM } = await import('jsdom');
+  const { helperBookmarklet } = await import('../src/lib/registration.ts');
+  const code = helperBookmarklet('https://boun-toolbox.vercel.app/buis-kayit-yardimcisi.user.js');
+  assert.match(code, /^javascript:\(function\(\)\{/);
+  const run = (w: Window) => (w as unknown as { eval: (source: string) => void }).eval(decodeURIComponent(code.slice('javascript:'.length)));
+
+  const framed = new JSDOM('<iframe id="ifCPL"></iframe>', { url: 'https://registration.boun.edu.tr/buis/manage/ObikasASPFrame.aspx', runScripts: 'outside-only' });
+  const inner = framed.window.document.querySelector('iframe')!.contentDocument!;
+  run(framed.window as unknown as Window);
+  assert.match(inner.querySelector('script')!.src, /^https:\/\/boun-toolbox\.vercel\.app\/buis-kayit-yardimcisi\.user\.js\?b=\d+$/);
+  assert.equal(framed.window.document.querySelectorAll('body > script').length, 0);
+
+  const plain = new JSDOM('<p>Consent Requests</p>', { url: 'https://registration.boun.edu.tr/scripts/consent.asp', runScripts: 'outside-only' });
+  let opened = 0;
+  (plain.window as unknown as { __bounToolboxHelper: object }).__bounToolboxHelper = { open: () => opened++ };
+  run(plain.window as unknown as Window);
+  assert.equal(opened, 1);
+  assert.equal(plain.window.document.querySelectorAll('script').length, 0);
+  framed.window.close(); plain.window.close();
+});

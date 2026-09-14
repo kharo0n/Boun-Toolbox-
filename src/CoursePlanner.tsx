@@ -6,7 +6,7 @@ import metadata from './data/courseMetadata.json';
 import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, totalCredits,
   relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode, searchScore } from './lib/planner';
 import type { Course, RawCourse } from './lib/planner';
-import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes, consentTemplate, consentIssues, CONSENT_MESSAGE_LIMIT } from './lib/registration';
+import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes, consentTemplate, consentIssues, helperBookmarklet, CONSENT_MESSAGE_LIMIT } from './lib/registration';
 import type { RegistrationEntry, RegistrationPlan, StudentProfile, StudentLevel } from './lib/registration';
 
 const catalogue = buildCatalogue(courseData as Record<string, RawCourse>);
@@ -161,6 +161,17 @@ export default function CoursePlanner() {
   </div>;
 }
 
+/** React refuses javascript: URLs in JSX, so the draggable bookmark receives its href after mount. */
+function HelperBookmark({ code, onCopy }: { code: string; onCopy: () => void }) {
+  const link = useRef<HTMLAnchorElement>(null);
+  useEffect(() => { link.current?.setAttribute('href', code); }, [code]);
+  return <span className="assistant-bookmark">
+    <a ref={link} className="assistant-bookmark-link" title="Yer imleri çubuğuna sürükleyin"
+      onClick={e => e.preventDefault()}>🎓 BUIS Yardımcısı</a>
+    <button type="button" className="assistant-consent-toggle" onClick={onCopy}>Kodu kopyala</button>
+  </span>;
+}
+
 function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onClose: () => void }) {
   const [copied, setCopied] = useState('');
   const [profile, setProfile] = useState<StudentProfile | null>(() => readJson(profileKey, isProfile, null));
@@ -176,6 +187,7 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
   const duplicates = duplicateBaseCodes(plan);
   const issues = consentIssues(plan, messages);
   const helperUrl = `${import.meta.env.BASE_URL}buis-kayit-yardimcisi.user.js`;
+  const bookmarklet = helperBookmarklet(new URL(helperUrl, window.location.href).href);
   const setDepartment = (department: string) => setProfile(department ? { department, level: profile?.level || 'UNDERGRADUATE' } : null);
   const setLevel = (level: StudentLevel) => setProfile(profile && { ...profile, level });
   const toggleConsent = (entry: RegistrationEntry) => setMessages(current => {
@@ -253,7 +265,13 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
           <summary>BUIS kayıt yardımcısını kullan</summary>
           <p className="assistant-note">Yardımcı canlı BUIS formunda henüz denenmedi. Form tanınmazsa panelden “Form raporu” alıp paylaşın.</p>
           <ol>
-            <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin (1.3.0). Eski sürüm yüklüyse aynı bağlantıdan güncelleyin.</li>
+            <li>Yardımcıyı açmanın iki yolu var:
+              <ul>
+                <li><strong>Eklentisiz:</strong> aşağıdaki düğmeyi yer imleri çubuğuna sürükleyin (çubuk gizliyse Ctrl/Cmd+Shift+B). BUIS’te ekran açıkken bu yer imine basın; sayfa yenilendikçe yeniden basın.
+                  <HelperBookmark code={bookmarklet} onCopy={() => void copy(bookmarklet, 'Yer imi kodu kopyalandı. Yeni yer imi ekleyip adres alanına yapıştırın.')} /></li>
+                <li><strong>Tampermonkey / Violentmonkey:</strong> <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> kurun (1.3.1); BUIS’te her sayfada kendiliğinden açılır. Chrome’da çalışmazsa eklentinin ayrıntılarından “Kullanıcı komut dosyalarına izin ver”i açın.</li>
+              </ul>
+            </li>
             <li><strong>Planı kopyala</strong> ile planı alın ve BUIS’te sağ üstteki panele yapıştırın. Plan saklanır; kayıt açılmadan, giriş sayfasında da yapabilirsiniz.</li>
             <li><strong>Kontenjan kontrol</strong>: bölümünüzü seçtiyseniz her ders için consent gerekip gerekmediğini ve boş yeri gösterir.</li>
             <li>Kayıt açılınca <strong>Course List Preparation</strong>’da <strong>Formu doldur</strong>’a basın: bütün dersler yazılır, siz BUIS’in <strong>Quick Add</strong> düğmesine basarsınız. Form satırları yetmezse Quick Add’den sonra yeniden <strong>Formu doldur</strong>; listenizde görünen dersler atlanır.</li>

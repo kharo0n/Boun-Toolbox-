@@ -622,3 +622,7 @@
 .assistant-consent-toggle { margin-left: 8px; border: 1px solid #cbd5e1; background: #fff; color: #1d4ed8; border-radius: 6px; padding: 2px 8px; font-size: 0.78rem; cursor: pointer; }
 .assistant-consent-toggle[aria-pressed="true"] { color: #b45309; }
 .assistant-consent { display: block; width: 100%; box-sizing: border-box; margin: 6px 0 4px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: 0.85rem/1.4 system-ui, sans-serif; resize: vertical; }
+.assistant-help ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+.assistant-bookmark { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 6px 0 2px; }
+.assistant-bookmark-link { display: inline-block; padding: 6px 12px; border-radius: 999px; background: #0d3b66; color: #fff !important; font-weight: 600; text-decoration: none; cursor: grab; }
+.assistant-bookmark .assistant-consent-toggle { margin-left: 0; }
