@@ -11,14 +11,6 @@
   --border-light: rgba(0, 0, 0, 0.08);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-}
 
 /* --- 2. MAIN CONTAINER --- */
 .app-container {
@@ -516,4 +508,35 @@ body {
     flex-direction: column;
     gap: 15px;
   }
+}
+/* --- 10. TOOLBOX DESIGN (shared nav above, light page header) --- */
+.app-container { background: var(--bt-bg); }
+.top-header {
+  top: var(--bt-nav-h); padding: 12px 0; color: var(--bt-text);
+  background: var(--bt-surface); border-bottom: 1px solid var(--bt-border); box-shadow: none;
+}
+.header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; gap: 16px; }
+.title-group h1 { font-size: 1.45rem; letter-spacing: -0.2px; color: var(--bt-text); }
+.title-group span { color: var(--bt-muted); opacity: 1; }
+.search-box { background: var(--bt-surface-2); border: 1px solid var(--bt-border-strong); color: var(--bt-text); backdrop-filter: none; }
+.search-box::placeholder { color: var(--bt-muted); }
+.search-box:focus { outline: none; background: #fff; border-color: var(--bt-blue-500); box-shadow: 0 0 0 3px rgba(29, 116, 216, 0.15); }
+.total-gpa-card { background: var(--bt-navy-700); border: 0; backdrop-filter: none; box-shadow: var(--bt-shadow); }
+.gpa-label { color: rgba(255, 255, 255, 0.75); }
+.gpa-value { color: #fff; text-shadow: none; }
+.main-layout { margin: 20px auto 40px; gap: 24px; }
+.sidebar { border-radius: var(--bt-radius); border-color: var(--bt-border); box-shadow: var(--bt-shadow); position: sticky; top: calc(var(--bt-nav-h) + 90px); }
+.sidebar h3 { letter-spacing: 0.4px; text-transform: none; font-size: 0.95rem; color: var(--bt-text); }
+.gpa-empty { text-align: center; padding: 56px 24px; border: 1px dashed var(--bt-border-strong); border-radius: var(--bt-radius); background: var(--bt-surface); color: var(--bt-text-2); }
+.gpa-empty span { font-size: 2.4rem; }
+.gpa-empty h2 { margin: 8px 0 6px; font-size: 1.3rem; color: var(--bt-text); }
+.gpa-empty p { margin: 0 auto; max-width: 460px; }
+@media (max-width: 900px) {
+  .top-header { position: static; }
+  .header-content { align-items: stretch; }
+  .logo-section { justify-content: space-between; }
+  .header-right-area { width: 100%; gap: 12px; }
+  .search-box { flex: 1; width: auto; min-width: 0; }
+  .sidebar { position: static; }
+  .main-layout { margin-top: 12px; padding: 0 12px; }
 }

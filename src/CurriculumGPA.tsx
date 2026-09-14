@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import SiteNav from './components/SiteNav';
 import './CurriculumGPA.css';
 
 interface Course {
@@ -65,6 +65,8 @@ export default function CurriculumGPA() {
 
     const selectDept = (id: string) => {
         setSelectedDeptId(id);
+        // On a phone the faculty list sits above the curriculum; bring the chosen programme into view.
+        if (window.matchMedia('(max-width: 900px)').matches) window.setTimeout(() => document.querySelector('.curric-grid-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
         setGrades({});
         setSlotAssignments({});
     };
@@ -154,11 +156,11 @@ export default function CurriculumGPA() {
 
     return (
         <div className="curric-container">
+            <SiteNav />
             {/* HEADER */}
             <header className="curric-header">
                 <div className="curric-header-left">
-                    <Link to="/gpa" className="curric-back-btn">← GPA Hesaplayıcı</Link>
-                    <h1>📋 Curriculum GPA</h1>
+                    <h1>Curriculum GPA</h1>
                     {selectedDeptId && <span className="curric-dept-name">{getDeptName()}</span>}
                 </div>
                 <div className="curric-gpa-card">
@@ -171,7 +173,7 @@ export default function CurriculumGPA() {
                 {loadError && <p role="alert">Bölüm verileri yüklenemedi. Lütfen sayfayı yenileyin.</p>}
                 {/* SIDEBAR */}
                 <aside className="curric-sidebar">
-                    <h3>FAKÜLTELER</h3>
+                    <h3>Fakülteler</h3>
                     <input
                         className="curric-search"
                         placeholder="Bölüm Ara..."
@@ -224,7 +226,7 @@ export default function CurriculumGPA() {
                     {!selectedDeptId ? (
                         <div className="curric-placeholder">
                             <span>📋</span>
-                            <p>Sol taraftan bir bölüm seçin</p>
+                            <p>Fakülte listesinden bölümünü seç; müfredatın burada açılır.</p>
                         </div>
                     ) : !currentProgram || currentProgram.length === 0 ? (
                         <div className="curric-placeholder"><p>Bu bölümün programı henüz eklenmemiştir.</p></div>
@@ -312,7 +314,7 @@ export default function CurriculumGPA() {
 
                 {/* COURSES PANEL */}
                 <aside className="courses-panel">
-                    <h3>COURSES</h3>
+                    <h3>Ders havuzu</h3>
 
                     {/* Add Course Form */}
                     <div className="pool-form">

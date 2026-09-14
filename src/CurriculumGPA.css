@@ -521,3 +521,25 @@
 }
 .elective-slot { position: relative; }
 .assignment-remove { position: absolute; right: 2px; top: 2px; border: 0; background: transparent; color: inherit; cursor: pointer; }
+
+/* ── TOOLBOX DESIGN (shared nav above, light page header) ── */
+.curric-container { height: 100vh; min-height: 0; background: var(--bt-bg); font-family: var(--bt-font); }
+.curric-header { position: static; color: var(--bt-text); background: var(--bt-surface); border-bottom: 1px solid var(--bt-border); box-shadow: none; padding: 12px 20px; }
+.curric-header h1 { font-size: 1.45rem; letter-spacing: -0.2px; }
+.curric-dept-name { color: var(--bt-muted); border-left-color: var(--bt-border-strong); }
+.curric-gpa-card { background: var(--bt-navy-700); border: 0; box-shadow: var(--bt-shadow); }
+.curric-gpa-label { color: rgba(255, 255, 255, 0.75); }
+.curric-gpa-value { color: #fff; text-shadow: none; }
+.curric-layout { height: auto; flex: 1; min-height: 0; }
+.curric-sidebar h3, .courses-panel h3 { text-transform: none; letter-spacing: 0.3px; font-size: 0.9rem; color: var(--bt-text); }
+.curric-grid-area { background: var(--bt-bg); }
+.curric-placeholder { color: var(--bt-muted); text-align: center; padding: 24px; }
+@media (max-width: 900px) {
+  .curric-container { height: auto; min-height: 100vh; }
+  .curric-header { flex-wrap: wrap; gap: 10px; }
+  .curric-header-left { flex-wrap: wrap; gap: 8px 14px; }
+  .curric-layout { flex-direction: column; overflow: visible; }
+  .curric-sidebar, .courses-panel { width: 100%; max-height: none; border-right: 0; border-left: 0; border-bottom: 1px solid var(--bt-border); }
+  .curric-grid-area { overflow: visible; padding: 12px; }
+  .curric-placeholder { height: auto; }
+}

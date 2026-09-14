@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import SiteNav from './components/SiteNav';
 import './GPACalculator.css';
 
 
@@ -73,6 +73,8 @@ export default function GPACalculator() {
   };
   const selectDept = (id: string) => {
     setSelectedDeptId(id); setGrades({}); setOldGrades({}); setRepeatMode({});
+    // On a phone the faculty list sits above the curriculum; bring the chosen programme into view.
+    if (window.matchMedia('(max-width: 900px)').matches) window.setTimeout(() => document.querySelector('.content-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     setNewElectiveCourses({}); setCourseEdits({});
   };
 
@@ -171,28 +173,26 @@ export default function GPACalculator() {
 
   return (
     <div className="app-container">
+      <SiteNav />
       <header className="top-header">
         <div className="header-content">
           <div className="logo-section">
-            <Link to="/" className="back-btn">← Ana Menü</Link>
             <div className="title-group">
-              <h1>🧮 BOUN GPA</h1>
+              <h1>GPA Hesaplayıcı</h1>
               <span>{selectedDeptName || "Bölüm Seçiniz"}</span>
             </div>
-            <Link to="/curriculum" className="curriculum-nav-btn">
-              📋 Curriculum GPA
-            </Link>
           </div>
           <div className="header-right-area">
             <input
               className="search-box"
               type="text"
-              placeholder="Bölüm Ara..."
+              placeholder="Bölüm ara…"
+              aria-label="Bölüm ara"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div className="total-gpa-card">
-              <div className="gpa-label">Overall Gpa</div>
+              <div className="gpa-label">Genel GPA</div>
               <div className="gpa-value">{totalGPA}</div>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function GPACalculator() {
       <div className="main-layout">
         {loadError && <p role="alert">Bölüm verileri yüklenemedi. Lütfen sayfayı yenileyin.</p>}
         <aside className="sidebar">
-          <h3>FAKÜLTELER</h3>
+          <h3>Fakülteler</h3>
           <div className="faculty-list">
             {searchTerm ? (
               <ul className="dept-list">
@@ -253,8 +253,10 @@ export default function GPACalculator() {
 
         <main className="content-area">
           {!selectedDeptId ? (
-            <div style={{ textAlign: 'center', marginTop: '50px', color: '#666' }}>
-              <h2>Lütfen sol taraftan bir bölüm seçiniz.</h2>
+            <div className="gpa-empty">
+              <span aria-hidden="true">🧮</span>
+              <h2>Bölümünü seç</h2>
+              <p>Fakülte listesinden bölümünü seçtiğinde müfredatın dönem dönem gelir; notlarını girdikçe ortalaman hesaplanır.</p>
             </div>
           ) : (
             <>
