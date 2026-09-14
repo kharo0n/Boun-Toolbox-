@@ -1,9 +1,9 @@
 {
   "semester": "2026/2027-1",
-  "fetchedAt": "2026-09-12T14:19:38.059Z",
+  "fetchedAt": "2026-09-14T11:31:23.444Z",
   "sourceUrl": "https://registration.bogazici.edu.tr/BUIS/General/schedule.aspx?p=semester",
-  "recordCount": 3373,
-  "sectionCount": 3157,
+  "recordCount": 3376,
+  "sectionCount": 3159,
   "departmentCount": 69,
   "scheduleWarningCount": 6,
   "hssUrl": "https://mediastore.cc.bogazici.edu.tr/web/userfiles/files/HSS_Courses-2026_2027_Fall_List-10_09_2026.pdf",
@@ -21,7 +21,7 @@
     {
       "name": "ATATURK INSTITUTE FOR MODERN TURKISH HISTORY",
       "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=ATA&bolum=ATATURK+INSTITUTE+FOR+MODERN+TURKISH+HISTORY",
-      "rowCount": 62
+      "rowCount": 63
     },
     {
       "name": "BIOMEDICAL ENGINEERING",
@@ -221,7 +221,7 @@
     {
       "name": "LAW PR.",
       "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=LAW&bolum=LAW+PR%2E",
-      "rowCount": 73
+      "rowCount": 74
     },
     {
       "name": "LEARNING SCIENCES",
@@ -346,7 +346,7 @@
     {
       "name": "UNDERGRADUATE PROGRAM IN PRESCHOOL EDUCATION",
       "url": "https://registration.bogazici.edu.tr/scripts/sch.asp?donem=2026/2027-1&kisaadi=PRSO&bolum=UNDERGRADUATE+PROGRAM+IN+PRESCHOOL+EDUCATION",
-      "rowCount": 17
+      "rowCount": 18
     },
     {
       "name": "WESTERN LANGUAGES & LITERATURES",

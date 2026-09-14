@@ -377,7 +377,7 @@
       4
     ],
     "rooms": [
-      "NH 201",
+      "M 2230",
       "M 2170",
       "M 2170"
     ],
@@ -4665,21 +4665,9 @@
     "ects": 10,
     "instructor": "BERNA YAZICI",
     "sessionType": "lecture",
-    "days": [
-      "M",
-      "M",
-      "M"
-    ],
-    "hours": [
-      6,
-      7,
-      8
-    ],
-    "rooms": [
-      "ATA SEM",
-      "ATA SEM",
-      "ATA SEM"
-    ],
+    "days": [],
+    "hours": [],
+    "rooms": [],
     "requiredFor": ""
   },
   "ATA579.01": {
@@ -4763,6 +4751,30 @@
       "ATA SEM",
       "ATA SEM",
       "ATA SEM"
+    ],
+    "requiredFor": ""
+  },
+  "ATA689.01": {
+    "code": "ATA 689.01",
+    "name": "SP.TOP IN MODERN TURKISH HISTORY",
+    "credits": 3,
+    "ects": 9,
+    "instructor": "BERNA YAZICI",
+    "sessionType": "lecture",
+    "days": [
+      "M",
+      "M",
+      "M"
+    ],
+    "hours": [
+      6,
+      7,
+      8
+    ],
+    "rooms": [
+      "",
+      "",
+      ""
     ],
     "requiredFor": ""
   },
@@ -21640,7 +21652,7 @@
     "name": "APPLIED RESEARCH",
     "credits": 3,
     "ects": 6,
-    "instructor": "GAMZE İNAN",
+    "instructor": "BURAK AYDIN",
     "sessionType": "lecture",
     "days": [
       "T",
@@ -21854,7 +21866,7 @@
       8
     ],
     "rooms": [
-      "EF 302",
+      "EF 116",
       "EF 06",
       "EF 06"
     ],
@@ -26167,7 +26179,7 @@
   },
   "EQE682.01": {
     "code": "EQE 682.01",
-    "name": "SPECIAL TOPICS DSGN OF STRUCTURAL WITH PASSIVE&CONTEMPORARY SYSTEMS",
+    "name": "SPECIAL TOPICS DSGN OF STRUCTURAL WITH PASSIVE AND CONTROL SYSTEMS",
     "credits": 3,
     "ects": 7,
     "instructor": "MUSTAFA ÖZDER ERDİK",
@@ -28132,7 +28144,7 @@
     "name": "SPECIAL TOPICS ADVANCED GRAPHIC NOVEL&COMICS",
     "credits": 3,
     "ects": 5,
-    "instructor": "STAFF STAFF",
+    "instructor": "MEHMET EMİN ADANALI",
     "sessionType": "lecture",
     "days": [],
     "hours": [],
@@ -35484,8 +35496,8 @@
       3
     ],
     "rooms": [
-      "NH 405",
-      "NH 405"
+      "İB 204",
+      "İB 204"
     ],
     "requiredFor": ""
   },
@@ -35748,8 +35760,8 @@
     "rooms": [
       "EF 101",
       "ALH",
-      "EF 04",
-      "EF 04"
+      "NH 404",
+      "NH 404"
     ],
     "requiredFor": ""
   },
@@ -35775,8 +35787,8 @@
     "rooms": [
       "EF 101",
       "ALH",
-      "EF 04",
-      "EF 04"
+      "NH 404",
+      "NH 404"
     ],
     "requiredFor": ""
   },
@@ -35803,7 +35815,7 @@
       "EF 101",
       "EF 101",
       "ALH",
-      "EF 302"
+      "NH 404"
     ],
     "requiredFor": ""
   },
@@ -39142,7 +39154,7 @@
     "name": "P.S.",
     "credits": null,
     "ects": null,
-    "instructor": "MUSTAFA AKGÜN",
+    "instructor": "ALİ EMRAH BOZBAYINDIR",
     "sessionType": "ps",
     "days": [],
     "hours": [],
@@ -39250,7 +39262,7 @@
     "name": "P.S.",
     "credits": null,
     "ects": null,
-    "instructor": "HÜSEYİN OKTAY ALTUN",
+    "instructor": "HASAN BASRİ BÜLBÜL",
     "sessionType": "ps",
     "days": [],
     "hours": [],
@@ -39747,6 +39759,18 @@
       "EF 106",
       "EF 106"
     ],
+    "requiredFor": ""
+  },
+  "LAW343.01 P.S. 1": {
+    "code": "LAW 343.01",
+    "name": "P.S.",
+    "credits": null,
+    "ects": null,
+    "instructor": "MUSTAFA AKGÜN",
+    "sessionType": "ps",
+    "days": [],
+    "hours": [],
+    "rooms": [],
     "requiredFor": ""
   },
   "LAW348.01": {
@@ -45745,16 +45769,16 @@
     "name": "P.S.",
     "credits": null,
     "ects": null,
-    "instructor": "MARIA DOLORES ALVAREZ",
+    "instructor": "STAFF STAFF",
     "sessionType": "ps",
     "days": [
-      "T"
+      "W"
     ],
     "hours": [
-      6
+      4
     ],
     "rooms": [
-      "ET 01"
+      "İB 201"
     ],
     "requiredFor": "TRM"
   },
@@ -47461,10 +47485,10 @@
       4
     ],
     "rooms": [
-      "",
-      "",
-      "",
-      ""
+      "NB Z10",
+      "NB Z10",
+      "NB Z10",
+      "NB Z10"
     ],
     "requiredFor": ""
   },
@@ -47608,7 +47632,7 @@
     "name": "CHORAL TECHNIQUES",
     "credits": 2,
     "ects": 4,
-    "instructor": "BAŞAK DOĞAN YARANGÜMELİOĞLU",
+    "instructor": "BAŞAK DOĞAN",
     "sessionType": "lecture",
     "days": [
       "T",
@@ -52924,7 +52948,7 @@
     "rooms": [
       "İB 312",
       "İB 312",
-      "İB 204"
+      "İB 301"
     ],
     "requiredFor": ""
   },
@@ -53936,6 +53960,42 @@
     ],
     "requiredFor": ""
   },
+  "PRED413.03": {
+    "code": "PRED 413.03",
+    "name": "EARLY CHILDHOOD EDUCATION TEACHING PRACTICES I",
+    "credits": 4,
+    "ects": 8,
+    "instructor": "AYŞE ÇOBANOĞLU",
+    "sessionType": "lecture",
+    "days": [
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "T",
+      "T"
+    ],
+    "hours": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      3,
+      4
+    ],
+    "rooms": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "requiredFor": ""
+  },
   "PRED416.01": {
     "code": "PRED 416.01",
     "name": "FAMILY ENGAGEMENT IN EARLY CHILDHOOD EDUCATION",
@@ -54015,9 +54075,21 @@
     "ects": 8,
     "instructor": "AYŞE ÇOBANOĞLU",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      2,
+      3,
+      4
+    ],
+    "rooms": [
+      "ET B407",
+      "ET B407",
+      "ET B407"
+    ],
     "requiredFor": ""
   },
   "PRED521.01": {
@@ -54027,9 +54099,21 @@
     "ects": 8,
     "instructor": "ZEYNEP BERNA ERDİLLER YATMAZ",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      5,
+      6,
+      7
+    ],
+    "rooms": [
+      "ET B407",
+      "ET B407",
+      "ET B407"
+    ],
     "requiredFor": ""
   },
   "PRED690.01": {
@@ -55573,8 +55657,8 @@
       "Th"
     ],
     "hours": [
-      7,
-      8,
+      3,
+      4,
       3,
       4
     ],
@@ -55688,9 +55772,9 @@
       "Th"
     ],
     "hours": [
-      4,
-      5,
-      6,
+      1,
+      2,
+      3,
       1,
       2
     ],
@@ -55890,12 +55974,12 @@
     "days": [
       "T",
       "T",
-      "W"
+      "T"
     ],
     "hours": [
+      2,
       3,
-      4,
-      2
+      4
     ],
     "rooms": [
       "EF 304",
@@ -56415,14 +56499,14 @@
       "W"
     ],
     "hours": [
-      1,
-      2,
-      3
+      4,
+      5,
+      6
     ],
     "rooms": [
-      "EF 03",
-      "EF 03",
-      "EF 03"
+      "EF 302",
+      "EF 302",
+      "EF 302"
     ],
     "requiredFor": ""
   },
@@ -56577,9 +56661,15 @@
     "ects": 3,
     "instructor": "OĞUZ KÖKLÜ",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "T"
+    ],
+    "hours": [
+      9
+    ],
+    "rooms": [
+      ""
+    ],
     "requiredFor": ""
   },
   "SCED610.01": {
@@ -60003,9 +60093,18 @@
     "ects": 3,
     "instructor": "ŞERİFE SEDA YÜCEKURT ÜNLÜ",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      1,
+      2
+    ],
+    "rooms": [
+      "KP 02",
+      "KP 02"
+    ],
     "requiredFor": ""
   },
   "TK221.46": {
@@ -60015,9 +60114,18 @@
     "ects": 3,
     "instructor": "ŞERİFE SEDA YÜCEKURT ÜNLÜ",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      3,
+      4
+    ],
+    "rooms": [
+      "KP 02",
+      "KP 02"
+    ],
     "requiredFor": ""
   },
   "TK221.47": {
@@ -60090,9 +60198,18 @@
     "ects": 3,
     "instructor": "HÜLYA BULUT",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      5,
+      6
+    ],
+    "rooms": [
+      "KP 02",
+      "KP 02"
+    ],
     "requiredFor": ""
   },
   "TK221.51": {
@@ -60102,9 +60219,18 @@
     "ects": 3,
     "instructor": "HÜLYA BULUT",
     "sessionType": "lecture",
-    "days": [],
-    "hours": [],
-    "rooms": [],
+    "days": [
+      "Th",
+      "Th"
+    ],
+    "hours": [
+      7,
+      8
+    ],
+    "rooms": [
+      "KP 02",
+      "KP 02"
+    ],
     "requiredFor": ""
   },
   "TK221.52": {
