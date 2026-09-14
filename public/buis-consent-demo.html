@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BOUN Toolbox · Consent denemesi</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183047;font:16px/1.55 system-ui,sans-serif}main{max-width:1050px;margin:40px auto;padding:24px 390px 24px 24px}h1{font-size:28px;line-height:1.2}a{color:#165b94}.badge{color:#8a5300;background:#fff0cf;display:inline-block;border-radius:8px;padding:6px 12px}form,.card{background:white;border:1px solid #d9e2ed;border-radius:12px;padding:18px;margin:20px 0}label{display:block;margin:10px 0 4px;font-weight:600}select,textarea{width:100%;padding:8px;border:1px solid #bbc9d9;border-radius:5px;font:inherit}textarea{min-height:130px}button{cursor:pointer;border:0;border-radius:7px;background:#0d3b66;color:white;padding:10px 14px;margin:4px 0}button.secondary{background:#e9eff5;color:#234}output{display:block;white-space:pre-wrap}.hint{font-size:13px;color:#4b5e71}@media(max-width:780px){main{margin:15px auto;padding:16px}#btbx{position:relative!important;inset:auto!important;width:calc(100% - 32px)!important;max-height:none!important;margin:16px}}
+</style>
+</head><body><main>
+<a href="./#/planner">← Programlayıcı</a>
+<p class="badge">Deneme ortamı · Gerçek consent isteği gönderilmez</p>
+<h1>Consent formunu mesajınla doldur</h1>
+<p>Bu örnek, kayıt yardımcısının consent adımını çalıştırır. Kılavuzdaki akışa göre hazırlandı; gerçek BUIS ekranının kopyası değildir ve BUIS’e bağlanmaz.</p>
+<ol><li>Örnek planı yükle.</li><li>Yardımcıda <strong>Consent isteği</strong> bölümünü aç.</li><li><strong>Consent doldur · CMPE 150.01</strong>’e bas: kısaltma ve şube seçilir, mesaj yazılır.</li><li>Yardımcı göndermez. Mesajı okuyup <strong>Submit</strong>’e sen basarsın.</li></ol>
+<button type="button" id="load">Örnek planı yükle</button>
+<button type="button" id="reset" class="secondary">Denemeyi sıfırla</button>
+<form id="consent-form" method="post" action="/buis-consent-demo.html">
+<h2>Consent Requests</h2>
+<label for="abbr">Course abbreviation</label>
+<select id="abbr" name="abbr"><option value="">Select</option><option>CMPE</option><option>HIST</option><option>MATH</option></select>
+<label for="course">Course</label>
+<select id="course" name="course"><option value="">Select abbreviation first</option></select>
+<label for="message">Comments/Message to Instructor</label>
+<textarea id="message" name="message"></textarea>
+<button type="submit" id="submit">Submit</button>
+</form>
+<div class="card"><h2>Deneme sonucu</h2><output id="result" role="status">Henüz gönderim yok.</output></div>
+<p class="hint">Gerçek consent ekranı kayıt döneminde açılır. Alan yapısı farklıysa yardımcı seçim yapmadan durur; o ekranda panelden “Form raporu” alıp paylaşın.</p>
+</main>
+<script>
+const courses={CMPE:['CMPE 150.01 - INTRODUCTION TO COMPUTING','CMPE 150.02 - INTRODUCTION TO COMPUTING'],HIST:['HIST 105.01 - HISTORY OF TURKISH REPUBLIC I'],MATH:['MATH 101.01 - CALCULUS I','MATH 101.02 - CALCULUS I']};
+const abbr=document.querySelector('#abbr'),course=document.querySelector('#course'),consentForm=document.querySelector('#consent-form');
+abbr.addEventListener('change',()=>{
+ course.replaceChildren(new Option('Select course',''),...(courses[abbr.value]||[]).map((label,i)=>new Option(label,abbr.value+'-'+(i+1))));
+});
+consentForm.addEventListener('submit',event=>{
+ event.preventDefault();
+ document.querySelector('#result').textContent='Deneme gönderimi\nDers: '+(course.selectedOptions[0]?.textContent||'-')+'\nMesaj:\n'+document.querySelector('#message').value+'\nGerçek consent isteği yapılmadı.';
+});
+document.querySelector('#load').addEventListener('click',()=>{
+ const input=document.querySelector('#btbx textarea'); if(!input)return;
+ input.value=JSON.stringify({source:'boun-toolbox',version:1,semester:'2026/2027-1',student:{department:'CIVIL ENGINEERING',level:'UNDERGRADUATE'},courses:[
+  {abbr:'CMPE',code:'150',section:'01',message:'Dear Professor,\n\nI would like to take CMPE 150.01 (Introduction to Computing) this semester and kindly request your consent. I am an undergraduate student in Civil Engineering.\n\nThank you for your consideration.\nBest regards,'},
+  {abbr:'MATH',code:'101',section:'02',message:'Dear Professor,\n\nI would like to take MATH 101.02 (Calculus I) this semester and kindly request your consent.\n\nBest regards,'}]},null,2);
+ input.dispatchEvent(new Event('input',{bubbles:true}));
+ input.dispatchEvent(new Event('change',{bubbles:true}));
+ const details=Array.from(document.querySelectorAll('#btbx details')).find(d=>d.querySelector('summary')?.textContent==='Consent isteği'); if(details)details.open=true;
+});
+document.querySelector('#reset').addEventListener('click',()=>{
+ consentForm.reset(); abbr.dispatchEvent(new Event('change')); document.querySelector('#result').textContent='Henüz gönderim yok.';
+});
+</script><script src="./buis-kayit-yardimcisi.user.js"></script>
+</body></html>

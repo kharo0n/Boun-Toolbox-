@@ -616,3 +616,9 @@
   .assistant-panel { padding: 16px; max-height: 92vh; }
   .assistant-actions .footer-btn { flex: 1 1 100%; }
 }
+.assistant-profile { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 0; }
+.assistant-profile label { display: grid; gap: 4px; font-size: 0.82rem; color: #475569; flex: 1 1 200px; }
+.assistant-profile select { padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; max-width: 100%; }
+.assistant-consent-toggle { margin-left: 8px; border: 1px solid #cbd5e1; background: #fff; color: #1d4ed8; border-radius: 6px; padding: 2px 8px; font-size: 0.78rem; cursor: pointer; }
+.assistant-consent-toggle[aria-pressed="true"] { color: #b45309; }
+.assistant-consent { display: block; width: 100%; box-sizing: border-box; margin: 6px 0 4px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: 0.85rem/1.4 system-ui, sans-serif; resize: vertical; }

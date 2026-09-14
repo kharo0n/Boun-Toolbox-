@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         BOUN Toolbox — BUIS Kayıt Yardımcısı
 // @namespace    https://github.com/kharo0n/Boun-Toolbox-
-// @version      1.2.0
-// @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar, kontenjanları kontrol eder. Tek tıkla veya seçtiğin saatte bir kez gönderir.
+// @version      1.3.0
+// @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar, kontenjan ve consent durumunu gösterir, consent formunu mesajınla doldurur. Ders eklemeyi tek tıkla veya seçtiğin saatte bir kez gönderir; consent isteğini göndermeyi sana bırakır.
 // @match        https://registration.boun.edu.tr/*
 // @match        https://registration.bogazici.edu.tr/*
+// @updateURL    https://boun-toolbox.vercel.app/buis-kayit-yardimcisi.user.js
+// @downloadURL  https://boun-toolbox.vercel.app/buis-kayit-yardimcisi.user.js
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -13,10 +15,12 @@
  * Bu script yalnızca SENİN tarayıcında, SENİN açtığın BUIS oturumunda çalışır.
  * Kullanıcı adı/şifre istemez, saklamaz, hiçbir yere göndermez.
  * Seçtiğin Quick Add düğmesine tek tıkla veya kurduğun saatte bir kez basar.
+ * Consent formunda yalnızca ders seçer ve mesajı yazar; göndermez.
  */
 (function () {
   'use strict';
-  var isDemo = ['localhost', '127.0.0.1', 'boun-toolbox.vercel.app'].includes(location.hostname) && location.pathname === '/buis-helper-demo.html';
+  var isDemo = ['localhost', '127.0.0.1', 'boun-toolbox.vercel.app'].includes(location.hostname) &&
+    ['/buis-helper-demo.html', '/buis-consent-demo.html'].includes(location.pathname);
   if (!isDemo && (location.protocol !== 'https:' || !['registration.boun.edu.tr', 'registration.bogazici.edu.tr'].includes(location.hostname))) return;
   if (window.__bounToolboxHelper) { window.__bounToolboxHelper.open(); return; }
 
@@ -24,6 +28,9 @@
   if (document.querySelector('iframe#ifCPL')) return;
 
   var STORE_KEY = 'boun-toolbox:buis-helper:v2:' + location.pathname.toLowerCase();
+  // Quick Add posts to another page and consent lives on its own screen, so the plan is shared across paths.
+  var PLAN_KEY = 'boun-toolbox:buis-helper:plan';
+  var CONSENT_JOB_KEY = 'boun-toolbox:buis-helper:consent-job';
   var QUOTA_URL = '/scripts/quotasearch.asp';
 
   // ---------------------------------------------------------------- yardımcılar
@@ -46,6 +53,17 @@
   function writeStore(patch) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(Object.assign(readStore(), patch))); } catch (e) { /* özel mod */ }
   }
+  function readPlan() {
+    try {
+      var shared = localStorage.getItem(PLAN_KEY);
+      if (typeof shared === 'string') return shared;
+    } catch (e) { /* özel mod */ }
+    var legacy = readStore().plan;
+    return typeof legacy === 'string' ? legacy : '';
+  }
+  function writePlan(value) {
+    try { localStorage.setItem(PLAN_KEY, value); } catch (e) { /* özel mod */ }
+  }
 
   /** Form değerini yazar; değişim olaylarıyla erken gönderim tetiklemez. */
   function setValue(node, value) {
@@ -64,9 +82,18 @@
   }
 
   // ------------------------------------------------------- plan girdisini okuma
+  var LEVELS = ['UNDERGRADUATE', 'GRADUATE'];
+  var MESSAGE_LIMIT = 2000;
+  function parseStudent(value) {
+    if (value === undefined || value === null) return null;
+    if (typeof value !== 'object' || typeof value.department !== 'string' || !value.department.trim() ||
+      value.department.length > 120 || !LEVELS.includes(value.level)) throw new Error('Öğrenci bölümü/düzeyi geçersiz.');
+    return { department: value.department.trim(), level: value.level };
+  }
+
   /** Hem Toolbox JSON'unu hem de düz "CMPE 150.01" listesini kabul eder. */
   function parsePlan(text) {
-    var trimmed = (text || '').trim(), source, semester;
+    var trimmed = (text || '').trim(), source, semester, student = null;
     if (!trimmed) return { courses: [], error: 'Önce programı yapıştır.' };
     try {
       if (trimmed.charAt(0) === '{') {
@@ -74,22 +101,24 @@
         if (payload.source !== 'boun-toolbox' || payload.version !== 1 || !Array.isArray(payload.courses)) throw new Error('Toolbox JSON biçimi tanınmadı.');
         if (!/^\d{4}\/\d{4}-[123]$/.test(payload.semester || '')) throw new Error('Dönem bilgisi geçersiz.');
         semester = payload.semester;
+        student = parseStudent(payload.student);
         source = payload.courses.map(function (c) {
           if (!c || !['abbr', 'code', 'section'].every(function (key) { return typeof c[key] === 'string'; })) throw new Error('Geçersiz ders kaydı.');
-          return c.abbr + ' ' + c.code + '.' + c.section;
+          if (c.message !== undefined && (typeof c.message !== 'string' || c.message.length > MESSAGE_LIMIT)) throw new Error('Consent mesajı geçersiz: ' + c.abbr + ' ' + c.code);
+          return { line: c.abbr + ' ' + c.code + '.' + c.section, message: (c.message || '').trim() };
         });
-      } else source = trimmed.split(/[\n,;]+/).filter(function (line) { return line.trim(); });
+      } else source = trimmed.split(/[\n,;]+/).filter(function (line) { return line.trim(); }).map(function (line) { return { line: line, message: '' }; });
       if (!source.length || source.length > 50) throw new Error('Liste 1–50 ders içermeli.');
       var seen = new Set();
-      var courses = source.map(function (line) {
-        var match = /^([A-Za-z]{1,6})\s*(\d{2,3}[A-Za-z]?)\s*[.\-/]\s*(\d{1,2})$/.exec(line.trim());
-        if (!match || Number(match[3]) === 0) throw new Error('Geçersiz ders: ' + line);
+      var courses = source.map(function (item) {
+        var match = /^([A-Za-z]{1,6})\s*(\d{2,3}[A-Za-z]?)\s*[.\-/]\s*(\d{1,2})$/.exec(item.line.trim());
+        if (!match || Number(match[3]) === 0) throw new Error('Geçersiz ders: ' + item.line);
         var abbr = match[1].toUpperCase(), code = match[2].toUpperCase(), section = match[3].padStart(2, '0');
         if (seen.has(abbr + code)) throw new Error('Aynı ders iki kez yazılmış: ' + abbr + code);
         seen.add(abbr + code);
-        return { abbr: abbr, code: code, section: section, display: abbr + ' ' + code + '.' + section };
+        return { abbr: abbr, code: code, section: section, display: abbr + ' ' + code + '.' + section, message: item.message };
       });
-      return { courses: courses, semester: semester };
+      return { courses: courses, semester: semester, student: student };
     } catch (error) { return { courses: [], error: error.message }; }
   }
 
@@ -122,18 +151,56 @@
     }
     return true;
   }
+  function attrSelector(attr, value) { return '[' + attr + '="' + String(value).replace(/["\\]/g, '\\$&') + '"]'; }
+  function single(selector) {
+    try { var matches = document.querySelectorAll(selector); return matches.length === 1 ? matches[0] : null; } catch (e) { return null; }
+  }
+  /** "abbr1", "ctl00$abbr01", "txtAbbr1_x" → the last number and what surrounds it. */
+  function numbering(node) {
+    for (var attr of ['name', 'id']) {
+      var value = node.getAttribute(attr), match = value && /^(.*?)(\d+)(\D*)$/.exec(value);
+      if (match) return { attr: attr, prefix: match[1], number: Number(match[2]), width: match[2].length, suffix: match[3] };
+    }
+    return null;
+  }
+  /** Teach mode maps one row; the rest follow its numbering or, failing that, its table layout. */
+  function expandTaught(first) {
+    var keys = ['abbr', 'code', 'section'], rows = [first];
+    var parts = keys.map(function (key) { return numbering(first[key]); });
+    if (parts.every(function (part) { return part && part.number === parts[0].number; })) {
+      for (var n = parts[0].number + 1; rows.length < 50; n++) {
+        var next = { index: String(rows.length + 1) };
+        keys.forEach(function (key, i) {
+          var part = parts[i];
+          next[key] = single(attrSelector(part.attr, part.prefix + String(n).padStart(part.width, '0') + part.suffix));
+        });
+        if (!keys.every(function (key) { return next[key]; }) || !validRows(rows.concat([next]))) break;
+        rows.push(next);
+      }
+      if (rows.length > 1) return rows;
+    }
+    var tr = first.abbr.closest('tr');
+    if (!tr || !tr.contains(first.code) || !tr.contains(first.section)) return rows;
+    var fieldsOf = function (row) { return Array.from(row.querySelectorAll('input[type="text"], input:not([type]), select')).filter(editable); };
+    var base = fieldsOf(tr), positions = keys.map(function (key) { return base.indexOf(first[key]); });
+    for (var sibling = tr.nextElementSibling; sibling && rows.length < 50; sibling = sibling.nextElementSibling) {
+      var fields = fieldsOf(sibling);
+      if (fields.length !== base.length) break;
+      var candidate = { index: String(rows.length + 1), abbr: fields[positions[0]], code: fields[positions[1]], section: fields[positions[2]] };
+      if (!validRows(rows.concat([candidate]))) break;
+      rows.push(candidate);
+    }
+    return rows;
+  }
   function findRows() {
     var taught = readStore().selectors;
-    if (taught) {
-      try {
-        var resolved = { index: '1' };
-        for (var key of ['abbr', 'code', 'section']) {
-          var matches = document.querySelectorAll(taught[key]);
-          if (matches.length !== 1) return [];
-          resolved[key] = matches[0];
-        }
-        return validRows([resolved]) ? [resolved] : [];
-      } catch (e) { return []; }
+    if (taught && typeof taught === 'object') {
+      var first = { index: '1' };
+      for (var key of ['abbr', 'code', 'section']) {
+        first[key] = typeof taught[key] === 'string' ? single(taught[key]) : null;
+        if (!first[key]) return [];
+      }
+      return validRows([first]) ? expandTaught(first) : [];
     }
     var byForm = new Map(), ambiguous = false;
     candidateFields().forEach(function (node) {
@@ -184,6 +251,48 @@
     };
   }
 
+  function normalizeDepartment(name) { return String(name || '').toUpperCase().replace(/&/g, ' AND ').replace(/[^A-Z0-9]/g, ''); }
+
+  /**
+   * Applies the student's own department row first, then the ALL row, as BUIS quota tables read.
+   * Without a department it can only say whether any row asks for consent.
+   */
+  function evaluateQuota(quota, student) {
+    var rows = quota.rows.map(function (row) {
+      return Object.assign({}, row, { kind: /consent/i.test(row.quota) ? 'consent' : /unlimited/i.test(row.quota) ? 'unlimited' : 'number' });
+    });
+    var result = { verdict: 'unknown', rows: rows, consentRows: rows.filter(function (row) { return row.kind === 'consent'; }) };
+    if (!student) { if (result.consentRows.length) result.verdict = 'consent-rows'; return result; }
+    var fits = function (row) { var status = row.status.toUpperCase(); return status === 'ALL' || status === student.level; };
+    var exactFirst = function (a, b) { return (b.status.toUpperCase() === student.level) - (a.status.toUpperCase() === student.level); };
+    var own = rows.filter(function (row) { return fits(row) && normalizeDepartment(row.department) === normalizeDepartment(student.department); }).sort(exactFirst);
+    var general = rows.filter(function (row) { return fits(row) && row.department.toUpperCase() === 'ALL'; }).sort(exactFirst);
+    var row = own[0] || general[0];
+    if (!row) { if (rows.length) result.verdict = 'not-listed'; return result; }
+    result.row = row;
+    if (row.kind === 'consent') result.verdict = 'consent';
+    else if (row.kind === 'unlimited') result.verdict = 'open';
+    else {
+      var limit = Number(row.quota), current = Number(row.current);
+      if (Number.isFinite(limit) && Number.isFinite(current)) { result.left = limit - current; result.verdict = current >= limit ? 'full' : 'open'; }
+    }
+    return result;
+  }
+  function quotaLine(course, quota, student) {
+    var result = evaluateQuota(quota, student), base = course.display + ' — ';
+    var where = result.row ? ' (' + result.row.department + ' / ' + result.row.status + ')' : '';
+    var restriction = quota.restriction ? ' · sadece: ' + quota.restriction : '';
+    if (result.verdict === 'consent') return { kind: 'warn', text: '🔒 ' + base + 'consent gerekiyor' + where + restriction };
+    if (result.verdict === 'full') return { kind: 'err', text: '⛔ ' + base + 'kontenjan dolu ' + result.row.current + '/' + result.row.quota + where + '; consent isteyebilirsin' + restriction };
+    if (result.verdict === 'not-listed') return { kind: 'err', text: '🚫 ' + base + 'bölümüne kontenjan görünmüyor; consent gerekebilir' + restriction };
+    if (result.verdict === 'open') {
+      return { kind: 'ok', text: '✅ ' + base + (result.row.kind === 'unlimited' ? 'sınırsız' : 'boş yer ' + result.left + ' (' + result.row.current + '/' + result.row.quota + ')') + where + restriction };
+    }
+    var detail = result.rows.map(function (row) { return row.department + ' ' + row.current + '/' + row.quota; }).join(' · ');
+    return { kind: 'warn', text: base + 'kapasite ' + (quota.capacity || '?') + (detail ? ' · ' + detail : '') + restriction +
+      (result.consentRows.length ? ' · 🔒 bazı bölümler için consent gerekiyor; Toolbox’ta bölümünü seçersen netleşir' : '') };
+  }
+
   function fetchQuota(course, semester) {
     if (isDemo) return Promise.reject(new Error('Deneme sayfası BUIS’e sorgu göndermez.'));
     var body = new URLSearchParams({ abbr: course.abbr, code: course.code, section: course.section });
@@ -219,7 +328,9 @@
     '#btbx .log{margin-top:10px;border-top:1px solid #e6e9ee;padding-top:8px;font-size:12px}',
     '#btbx .log div{padding:3px 0;border-bottom:1px solid #f2f4f7}',
     '#btbx .ok{color:#14622f}#btbx .warn{color:#8a5300}#btbx .err{color:#a11}',
-    '#btbx .hint{color:#5a6472;font-size:11.5px;margin-top:8px}'
+    '#btbx .hint{color:#5a6472;font-size:11.5px;margin-top:8px}',
+    '#btbx details{margin-top:10px}#btbx summary{cursor:pointer;font-weight:600;color:#0d3b66}',
+    '#btbx .consent-list .row{align-items:center}#btbx .consent-list code{flex:1 1 100%;font-size:12px}'
   ].join('') });
   document.head.appendChild(style);
 
@@ -241,6 +352,8 @@
   var teachBtn = el('button', { className: 'act ghost', textContent: 'Alanları tanıt' });
   var reportBtn = el('button', { className: 'act ghost', textContent: 'Form raporu' });
   var closeBtn = el('button', { textContent: '×', title: 'Kapat' });
+  var copyOutput = el('textarea', { readOnly: true, hidden: true, ariaLabel: 'Kopyalanacak consent mesajı' });
+  var consentList = el('div', { className: 'consent-list' });
 
   var panel = el('div', { id: 'btbx' }, [
     el('header', {}, [el('span', { textContent: 'BOUN Toolbox · Kayıt Yardımcısı' }), closeBtn]),
@@ -255,6 +368,9 @@
         el('label', {}, ['Gönderim zamanı (Türkiye, UTC+3)', sendAt]),
         el('div', { className: 'row' }, [armBtn, cancelBtn]), timerStatus,
         el('div', { className: 'hint', textContent: 'Açık ve tanınmış form gerektirir. Bu sekmeyi görünür, bilgisayarı uyanık tut. Yenileme veya sekmeyi gizleme zamanlamayı iptal eder. BUIS yanıt süresi garanti edilemez.' })]),
+      el('details', {}, [el('summary', { textContent: 'Consent isteği' }),
+        el('div', { className: 'hint', textContent: 'Consent Requests ekranını aç, dersin düğmesine bas: ders seçilir ve Toolbox’ta yazdığın mesaj alana yazılır. Göndermeyi sen yaparsın; aynı şubeye en fazla 2, toplam 10 derse istek hakkın var.' }),
+        consentList, copyOutput]),
       reportOutput,
       log,
       el('div', { className: 'hint', textContent: 'Gönderme tuşuna basmadan önce formu gözden geçir. Şifre/token toplanmaz. Kontenjan sorgusu ve seçtiğin ekleme işlemi yalnız BUIS’e gönderilir.' })
@@ -262,9 +378,8 @@
   ]);
   document.body.appendChild(panel);
 
-  var saved = readStore().plan;
-  if (typeof saved === 'string') input.value = saved;
-  input.addEventListener('change', function () { writeStore({ plan: input.value }); });
+  input.value = readPlan();
+  input.addEventListener('change', function () { writePlan(input.value); });
 
   function say(message, kind) {
     log.insertBefore(el('div', { className: kind || '', textContent: message }), log.firstChild);
@@ -325,6 +440,19 @@
     if (options.length !== 1) throw new Error('Seçenek bulunamadı veya belirsiz: ' + desired);
     return options[0].value;
   }
+  var FAILURE_TEXT = /couldn'?t be added|could not be added|cannot be added|you cannot take/i;
+  /** Plan sections already printed on the page, i.e. the student's current course list. Dropdown text is not a list entry. */
+  function listedCourses(courses) {
+    var copy = document.body.cloneNode(true);
+    copy.querySelectorAll('#btbx,script,style,select,textarea').forEach(function (node) { node.remove(); });
+    // textContent glues neighbouring cells ("1CMPE 150.01INTRO"); join text nodes with spaces instead.
+    var walker = document.createTreeWalker(copy, NodeFilter.SHOW_TEXT), parts = [];
+    while (walker.nextNode()) parts.push(walker.currentNode.nodeValue);
+    var text = courseText(parts.join(' '));
+    return courses.filter(function (course) {
+      return new RegExp('(^|[^A-Z0-9])' + course.abbr + course.code + '\\.0*' + Number(course.section) + '(?!\\d)').test(text);
+    });
+  }
   function prepareForm(writeValues) {
     clearLog(); invalidate();
     if (pageBlocked()) { say('BUIS kayıt servisi kapalı veya oturum açılmamış. Form açılınca yeniden dene.', 'warn'); return; }
@@ -332,13 +460,19 @@
     if (parsed.error) { say(parsed.error, 'err'); return; }
     var rows = findRows();
     if (!rows.length) { say('Tek ve doğrulanabilir ders formu bulunamadı. Alanları tanıt veya form raporunu paylaş.', 'err'); return; }
-    if (parsed.courses.length > rows.length) { say('Liste forma sığmıyor; hiçbir alan değiştirilmedi. Listeyi bu formun satır sayısına göre böl.', 'err'); return; }
+    // After a Quick Add the page lists what was added; only the rest is written. An error page skips nothing,
+    // because its message may quote the very course that failed.
+    var failureShown = FAILURE_TEXT.test(pageText());
+    var listed = failureShown ? [] : listedCourses(parsed.courses);
+    var pending = parsed.courses.filter(function (course) { return !listed.includes(course); });
+    if (!pending.length) { say('Plandaki bütün dersler listende görünüyor. Kontrol edip Send to Approval’a geçebilirsin.', 'ok'); return; }
+    var batch = pending.slice(0, rows.length), later = pending.slice(rows.length);
     var form = rows[0].abbr.form, values = [];
     try {
       if (actionUrl(form).origin !== location.origin) throw new Error('Form hedefi BUIS ile aynı kökende değil.');
       rows.forEach(function (row, index) {
         ['abbr', 'code', 'section'].forEach(function (key) {
-          var node = row[key], course = parsed.courses[index];
+          var node = row[key], course = batch[index];
           if (!course) { if (node.value.trim()) throw new Error('Liste dışındaki satırda mevcut ders var; önce BUIS formunu kontrol et.'); return; }
           var value = optionValue(node, course[key]);
           if (node.maxLength > 0 && value.length > node.maxLength) throw new Error('Değer alan sınırını aşıyor: ' + course.display);
@@ -350,7 +484,7 @@
     if (writeValues) values.forEach(function (entry) { setValue(entry.node, entry.value); flash(entry.node); });
     lastFill = { filled: writeValues, desired: values, controls: snapshotControls(form), form: form, action: form.action, method: form.method, target: form.target, enctype: form.enctype, input: input.value, rows: rows,
       values: rows.flatMap(function (row) { return ['abbr', 'code', 'section'].map(function (key) { return { node: row[key], value: row[key].value }; }); }) };
-    writeStore({ plan: input.value });
+    writePlan(input.value);
     submitTargets = Array.from(form.querySelectorAll('input[type="submit"], input[type="button"], button')).filter(function (node) {
       return !panel.contains(node) && node.form === form && ['submit', 'button'].includes(node.type) && !node.matches(':disabled') && node.getClientRects().length && getComputedStyle(node).visibility === 'visible' && ADD_LABEL.test(label(node)) &&
         !node.hasAttribute('formaction') && !node.hasAttribute('formmethod') && !node.hasAttribute('formtarget');
@@ -358,7 +492,11 @@
     submitChoice.replaceChildren(el('option', { value: '', textContent: 'BUIS ders ekleme düğmesini seç' }));
     submitTargets.forEach(function (target, index) { submitChoice.appendChild(el('option', { value: String(index), textContent: label(target.node) + ' (' + (target.node.id || target.node.name || index + 1) + ')' })); });
     submitChoice.disabled = !submitTargets.length;
-    say(parsed.courses.length + (writeValues ? ' ders forma yazıldı. Gönderme yapılmadı.' : ' ders için form tanındı; alanlar değiştirilmedi. Kredi/tekrar seçeneklerini BUIS’te kontrol et.'), 'ok');
+    var names = function (courses) { return courses.map(function (course) { return course.display; }).join(', '); };
+    if (failureShown) say('BUIS bir dersin eklenemediğini yazıyor; mesajı oku. Bu turda hiçbir ders atlanmadı.', 'warn');
+    if (listed.length) say('Listende zaten görünen dersler atlandı: ' + names(listed), 'warn');
+    if (later.length) say('Form ' + rows.length + ' satırlık; sonraki tura kalan: ' + names(later) + '. Quick Add’den sonra yeniden "Formu doldur"a bas.', 'warn');
+    say(batch.length + (writeValues ? ' ders forma yazıldı: ' + names(batch) + '. Gönderme yapılmadı.' : ' ders için form tanındı; alanlar değiştirilmedi. Kredi/tekrar seçeneklerini BUIS’te kontrol et.'), 'ok');
     say(submitTargets.length ? 'Listeyi kontrol edip doğru BUIS ders ekleme düğmesini seç.' : 'Ders ekleme düğmesi doğrulanamadı; BUIS’in kendi düğmesini kullan.', 'warn');
   }
   fillBtn.addEventListener('click', function () { prepareForm(true); });
@@ -383,13 +521,13 @@
     say('Kontenjanlar sorgulanıyor…');
 
     // Sunucuyu yormamak için sırayla ve aralıklı sorgula.
+    if (!parsed.student) say('Toolbox’ta bölümünü seçmediğin için consent/kontenjan kararı kesinleşmeyecek; tüm bölüm satırları gösterilecek.', 'warn');
+
     parsed.courses.reduce(function (chain, course) {
       return chain.then(function () {
         return fetchQuota(course, parsed.semester).then(function (quota) {
-          var label = course.display || (course.abbr + ' ' + course.code + '.' + course.section);
-          var detail = quota.rows.map(function (r) { return r.department + ' ' + r.current + '/' + r.quota; }).join(' · ');
-          say(label + ' — kapasite ' + (quota.capacity || '?') + (detail ? ' · ' + detail : '') +
-              (quota.restriction ? ' · sadece: ' + quota.restriction : ''), 'warn');
+          var line = quotaLine(course, quota, parsed.student);
+          say(line.text, line.kind);
         }).catch(function (error) {
           say((course.display || course.abbr) + ' kontenjanı alınamadı: ' + error.message, 'err');
         }).then(function () {
@@ -472,9 +610,8 @@
     say('Sırayla tıkla: ' + labels[fields[0]], 'warn');
 
     function selectorFor(node) {
-      if (node.id) return '#' + CSS.escape(node.id);
-      if (node.name) return '[name="' + CSS.escape(node.name) + '"]';
-      return null;
+      var selector = node.id ? attrSelector('id', node.id) : node.name ? attrSelector('name', node.name) : null;
+      return selector && single(selector) === node ? selector : null;
     }
     function onPick(event) {
       var node = event.target;
@@ -482,20 +619,30 @@
       if (panel.contains(node)) return;
       event.preventDefault(); event.stopImmediatePropagation();
       var selector = selectorFor(node);
-      if (!selector) { say('Bu alanın id/name değeri yok, seçilemedi.', 'err'); return; }
+      if (!selector) { say('Bu alanın benzersiz id/name değeri yok, seçilemedi.', 'err'); return; }
       if (Object.values(picked).includes(selector)) { say('Aynı alan iki kez seçilemez.', 'err'); return; }
-      if (step && document.querySelector(picked.abbr)?.form !== node.form) { say('Alanlar aynı formda olmalı.', 'err'); return; }
+      if (step && single(picked.abbr)?.form !== node.form) { say('Alanlar aynı formda olmalı.', 'err'); return; }
       picked[fields[step]] = selector;
       flash(node);
       step++;
       if (step < fields.length) { say('Şimdi: ' + labels[fields[step]], 'warn'); return; }
       document.removeEventListener('click', onPick, true);
       writeStore({ selectors: picked });
-      say('Alanlar kaydedildi. Artık "Formu doldur" çalışacak.', 'ok');
+      var count = findRows().length;
+      say('Alanlar kaydedildi: ' + count + ' ders satırı bulundu.' + (count > 1 ? ' Artık "Formu doldur" çalışacak.' : ' Diğer satırlar bulunamadı; listeyi tek ders olarak kullanabilirsin.'), count > 1 ? 'ok' : 'warn');
     }
     cancelTeaching = function () { document.removeEventListener('click', onPick, true); };
     document.addEventListener('click', onPick, true);
   });
+
+  /** Letters → A, digits → 9: shows how option labels are built without copying course or grade text. */
+  function labelShape(text) { return text.replace(/\s+/g, ' ').trim().replace(/\p{L}/gu, 'A').replace(/\d/g, '9').slice(0, 40); }
+  function describeField(node) {
+    var parts = [node.tagName.toLowerCase(), node.type || '', node.name || '', node.id || ''];
+    if (node instanceof HTMLSelectElement) parts.push(node.options.length + ' seçenek: ' + Array.from(node.options).slice(0, 3).map(function (option) { return labelShape(option.textContent); }).join(' / '));
+    if (node.getAttribute('onchange')) parts.push('onchange');
+    return parts.join('|');
+  }
 
   reportBtn.addEventListener('click', function () {
     clearLog();
@@ -505,11 +652,10 @@
       forms: Array.prototype.slice.call(document.forms).map(function (form) {
         return {
           action: actionUrl(form).origin + actionUrl(form).pathname, method: form.method,
-          fields: Array.prototype.slice.call(form.elements).slice(0, 80).map(function (node) {
-            return [node.tagName.toLowerCase(), node.type || '', node.name || '', node.id || ''].join('|');
-          })
+          fields: Array.prototype.slice.call(form.elements).filter(function (node) { return !panel.contains(node); }).slice(0, 80).map(describeField)
         };
-      })
+      }),
+      outsideForms: Array.from(document.querySelectorAll('input, select, textarea, button')).filter(function (node) { return !node.form && !panel.contains(node); }).slice(0, 40).map(describeField)
     };
     var text = JSON.stringify(report, null, 2);
     reportOutput.hidden = false; reportOutput.value = text;
@@ -517,12 +663,160 @@
     say(document.forms.length + ' form, ' + findRows().length + ' ders satırı tespit edildi.');
   });
 
-  closeBtn.addEventListener('click', function () { if (cancelTeaching) cancelTeaching(); invalidate(); panel.style.display = 'none'; });
+  // ------------------------------------------------------------------ consent
+  // BUIS: choose the abbreviation, then the course, write the message, submit.
+  // Each choice may post the page back, so the job survives a reload for a few seconds.
+  // Nothing here clicks a button: every request uses one of the student's limited attempts.
+  var CONSENT_STEP_MS = 20000, consentTimer = null;
+  function visibleControl(node) {
+    return node.isConnected && !panel.contains(node) && !node.matches(':disabled') && node.getClientRects().length > 0 && getComputedStyle(node).visibility === 'visible';
+  }
+  function squash(text) { return String(text || '').toUpperCase().replace(/\s+/g, ''); }
+  /** "Select CMPE 150 . 01" → "SELECT CMPE150.01": joins a course code but keeps word boundaries. */
+  function courseText(text) {
+    return String(text || '').toUpperCase().replace(/\s+/g, ' ').replace(/([A-Z])\s+(?=\d)/g, '$1').replace(/(\d)\s*\.\s*(?=\d)/g, '$1.');
+  }
+  function pageText() {
+    var copy = document.body.cloneNode(true);
+    copy.querySelectorAll('#btbx,script,style').forEach(function (node) { node.remove(); });
+    return copy.textContent;
+  }
+  function readJob() {
+    try {
+      var job = JSON.parse(sessionStorage.getItem(CONSENT_JOB_KEY) || 'null'), age = job && Date.now() - job.at;
+      var valid = job && /^[A-Z]{1,6}$/.test(job.abbr) && /^\d{2,3}[A-Z]?$/.test(job.code) && /^\d{2}$/.test(job.section) &&
+        job.display === job.abbr + ' ' + job.code + '.' + job.section && typeof job.message === 'string' && job.message.length <= MESSAGE_LIMIT &&
+        Number.isInteger(job.attempts) && Array.isArray(job.done) && age >= 0 && age < CONSENT_STEP_MS;
+      return valid ? job : null;
+    } catch (e) { return null; }
+  }
+  function saveJob(job) {
+    try {
+      if (job) sessionStorage.setItem(CONSENT_JOB_KEY, JSON.stringify(Object.assign({}, job, { at: Date.now() })));
+      else sessionStorage.removeItem(CONSENT_JOB_KEY);
+    } catch (e) { /* özel mod */ }
+  }
+  function stopConsent(message, kind) {
+    if (consentTimer !== null) clearTimeout(consentTimer);
+    consentTimer = null; saveJob(null);
+    if (message) say(message, kind);
+  }
+  function selectsWith(test) {
+    return Array.from(document.querySelectorAll('select')).filter(visibleControl).map(function (select) {
+      return { select: select, options: Array.from(select.options).filter(function (option) { return !option.disabled && test(option); }) };
+    }).filter(function (match) { return match.options.length; });
+  }
+  function abbrChoice(job) {
+    var matches = selectsWith(function (option) {
+      var label = option.textContent.replace(/\s+/g, ' ').trim();
+      if (/\d/.test(label)) return false; // course lists carry numbers; abbreviation lists do not
+      var token = (/^[A-Za-z]{1,6}(?![A-Za-z0-9])/.exec(label) || [''])[0].toUpperCase();
+      var bracketed = (/\(\s*([A-Za-z]{1,6})\s*\)$/.exec(label) || ['', ''])[1].toUpperCase();
+      return token === job.abbr || bracketed === job.abbr || squash(option.value) === job.abbr;
+    });
+    if (matches.length > 1) return { error: job.abbr + ' birden fazla listede var; kısaltmayı kendin seç.' };
+    if (!matches.length) return {};
+    return matches[0].options.length === 1 ? { select: matches[0].select, option: matches[0].options[0] } : { error: job.abbr + ' kısaltması listede birden fazla kez geçiyor; kendin seç.' };
+  }
+  function courseChoice(job) {
+    var course = new RegExp('(^|[^A-Z0-9])' + job.abbr + job.code + '(?![A-Z0-9])');
+    var sections = new RegExp('(^|[^A-Z0-9])' + job.abbr + job.code + '\\.\\d');
+    var exact = new RegExp('(^|[^A-Z0-9])' + job.abbr + job.code + '\\.0*' + Number(job.section) + '(?!\\d)');
+    var text = function (option) { return courseText(option.textContent) + ' | ' + courseText(option.value); };
+    var matches = selectsWith(function (option) { return course.test(text(option)); });
+    if (matches.length > 1) return { error: job.display + ' birden fazla listede var; dersi kendin seç.' };
+    if (!matches.length) return {};
+    var options = matches[0].options, exactOptions = options.filter(function (option) { return exact.test(text(option)); });
+    if (exactOptions.length === 1) return { select: matches[0].select, option: exactOptions[0] };
+    var listsSections = options.some(function (option) { return sections.test(text(option)); });
+    if (!listsSections && options.length === 1) return { select: matches[0].select, option: options[0] };
+    return { error: listsSections ? job.display + ' şubesi listede yok; başka şube istiyorsan kendin seç.' : job.display + ' için birden fazla seçenek var; kendin seç.' };
+  }
+  /** Returns false once BUIS has ignored or undone the selections a few times, so a reload loop stops. */
+  function choose(job, step, select, option) {
+    job.attempts += 1; job.done = (job.done || []).concat([step]);
+    if (job.attempts > 4) return false;
+    saveJob(job);
+    option.selected = true;
+    select.dispatchEvent(new Event('change', { bubbles: true })); // BUIS may reload here to list the courses
+    return true;
+  }
+  function runConsent(job, deadline) {
+    if (consentTimer !== null) { clearTimeout(consentTimer); consentTimer = null; }
+    var text = pageText();
+    if (/not\s+open|currently\s+closed/i.test(text)) return stopConsent('Consent ekranı kapalı görünüyor; açıldığında yeniden dene.', 'warn');
+    if (!/consent/i.test(text) || findRows().length || Array.from(document.querySelectorAll('input[type="password"]')).some(visibleControl)) {
+      return stopConsent('Bu sayfa Consent Requests ekranı değil. BUIS’te Course List Preparation → Consent Requests’i aç.', 'err');
+    }
+    var waitFor = function (reason) {
+      if (Date.now() > deadline) return stopConsent(reason, 'err');
+      saveJob(job);
+      consentTimer = setTimeout(function () { runConsent(job, deadline); }, 250);
+    };
+    var course = courseChoice(job);
+    if (course.error) return stopConsent(course.error, 'err');
+    if (!course.option) {
+      var abbr = abbrChoice(job);
+      if (abbr.error) return stopConsent(abbr.error, 'err');
+      if (!abbr.option) return stopConsent(job.abbr + ' kısaltması consent listesinde yok; bu ders consent almıyor olabilir.', 'err');
+      // Even an already selected abbreviation is announced once, in case the course list loads on change.
+      if ((!abbr.option.selected || !(job.done || []).includes('abbr')) && !choose(job, 'abbr', abbr.select, abbr.option)) {
+        return stopConsent('BUIS seçimleri kabul etmedi; dersi kendin seç.', 'err');
+      }
+      return waitFor(job.display + ' ders listesinde çıkmadı; dersi kendin seç.');
+    }
+    if (!course.option.selected && !choose(job, 'course', course.select, course.option)) return stopConsent('BUIS seçimleri kabul etmedi; dersi kendin seç.', 'err');
+    var areas = Array.from(document.querySelectorAll('textarea')).filter(function (node) { return visibleControl(node) && !node.readOnly; });
+    if (areas.length > 1) return stopConsent('Birden fazla mesaj alanı var; mesajı kopyalayıp kendin yapıştır.', 'err');
+    if (!areas.length) return waitFor('Mesaj alanı bulunamadı; mesajı kopyalayıp kendin yapıştır.');
+    var area = areas[0];
+    if (!job.message) return stopConsent(job.display + ' seçildi. Toolbox’ta mesaj yazmadığın için alan boş kaldı.', 'warn');
+    if (area.maxLength > 0 && job.message.length > area.maxLength) return stopConsent('Mesaj BUIS’in ' + area.maxLength + ' karakter sınırını aşıyor; Toolbox’ta kısalt.', 'err');
+    if (area.value.trim() && area.value.trim() !== job.message) return stopConsent(job.display + ' seçildi; mesaj alanı dolu olduğu için üzerine yazmadım.', 'warn');
+    area.value = job.message;
+    flash(area); area.focus();
+    if (area.scrollIntoView) area.scrollIntoView({ block: 'center' });
+    stopConsent(job.display + ' seçildi, mesajın yazıldı. Hocanın notunu okuyup göndermeyi sen yap.', 'ok');
+  }
+  function copyMessage(course) {
+    var fallback = function () {
+      copyOutput.hidden = false; copyOutput.value = course.message; copyOutput.select();
+      say('Pano izni yok; mesaj alttaki kutuda seçili, Ctrl/Cmd+C ile kopyala.', 'warn');
+    };
+    try {
+      navigator.clipboard.writeText(course.message).then(function () { say(course.display + ' mesajı panoya kopyalandı.', 'ok'); }, fallback);
+    } catch (e) { fallback(); }
+  }
+  function renderConsent() {
+    var parsed = parsePlan(input.value), courses = parsed.error ? [] : parsed.courses.filter(function (course) { return course.message; });
+    consentList.replaceChildren();
+    if (!courses.length) {
+      consentList.appendChild(el('div', { className: 'hint', textContent: 'Toolbox’ta consent mesajı yazdığın dersler burada çıkar.' }));
+      return;
+    }
+    courses.forEach(function (course) {
+      consentList.appendChild(el('div', { className: 'row' }, [
+        el('code', { textContent: course.display }),
+        el('button', { className: 'act', textContent: 'Consent doldur · ' + course.display, onclick: function () {
+          clearLog(); stopConsent();
+          runConsent({ display: course.display, abbr: course.abbr, code: course.code, section: course.section, message: course.message, attempts: 0, done: [] }, Date.now() + 8000);
+        } }),
+        el('button', { className: 'act ghost', textContent: 'Mesajı kopyala · ' + course.display, onclick: function () { copyMessage(course); } })
+      ]));
+    });
+  }
+  input.addEventListener('input', renderConsent);
+  renderConsent();
+
+  closeBtn.addEventListener('click', function () { if (cancelTeaching) cancelTeaching(); stopConsent(); invalidate(); panel.style.display = 'none'; });
 
   window.__bounToolboxHelper = {
     open: function () { panel.style.display = 'block'; },
-    parsePlan: parsePlan, findRows: findRows, parseQuota: parseQuota, parseSendTime: parseSendTime
+    parsePlan: parsePlan, findRows: findRows, parseQuota: parseQuota, parseSendTime: parseSendTime,
+    evaluateQuota: evaluateQuota, quotaLine: quotaLine
   };
   if (pageBlocked()) say('BUIS kayıt servisi kapalı veya giriş gerekiyor. Kapalı ekranı aşmak için istek gönderilmez.', 'warn');
   say('Hazır. Programı yapıştır ve "Formu doldur"a bas.', 'ok');
+  var pendingConsent = readJob();
+  if (pendingConsent) { say('Consent adımı sürüyor: ' + pendingConsent.display); runConsent(pendingConsent, Date.now() + 8000); }
 })();

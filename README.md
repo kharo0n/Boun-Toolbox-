@@ -70,9 +70,12 @@ bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
 programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
 doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js` sürüm 1.2.0, kullanıcının açık BUIS
-sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir. Mevcut kurulumu
-yeni dosyayla güncellemek gerekir. **Quick Add formu kapalı olduğundan canlı ders ekleme uyumluluğu henüz doğrulanmadı.**
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.3.0, kullanıcının açık BUIS
+sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir; 1.3.0'dan sonra
+`@updateURL` ile canlı siteden güncellenir, daha eski kurulumlar bir kez elle
+güncellenmelidir. **Quick Add ve consent formları kapalı olduğundan canlı uyumluluk henüz doğrulanmadı.**
+Kayıt Asistanı'nda bölüm/düzey seçilebilir ve ders başına consent mesajı yazılabilir;
+ikisi de **Planı kopyala** JSON'una eklenir.
 
 **Formu tanı → Quick Add düğmesini seç → Kontrol kutusunu işaretle → Doldur ve
 gönder** ile bütün ders alanları yazılıp düğmeye bir kez basılır. **Saatli gönderim**,
@@ -83,11 +86,17 @@ gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
 
 [BUIS ve İTÜ incelemesi, kurulum ve doğrulama sınırları](docs/buis-registration.md).
 
-- **Formu doldur**, bilinen ad desenleriyle tek formdaki ders alanlarını arar.
-  Tablo düzeninden tahmin yapmaz. Bulamazsa **Alanları tanıt** ile aynı formun
-  üç ayrı alanı seçilebilir (bu yöntem bir satır içindir).
-- Geçersiz satır, yinelenen ders, yetersiz satır veya mevcut farklı değer varsa
-  tüm doldurma durur. Liste sessizce kısaltılmaz, mevcut dersler ezilmez.
+- **Formu doldur**, bilinen ad desenleriyle (`abbr1`, `code1`, `section1`) tek
+  formdaki ders alanlarını arar ve tek tıkla bütün dersleri yazar. Kendiliğinden
+  tablo düzeninden tahmin yapmaz. Bulamazsa **Alanları tanıt** ile ilk satırın
+  üç alanı seçilir; diğer satırlar alan numarasından (`…1` → `…2`), numara yoksa
+  aynı tablodaki sonraki satırlardan bulunur.
+- Plan formdaki satırlardan uzunsa sığan dersler yazılır, kalanlar adıyla
+  bildirilir. Quick Add sonrası sayfada listede görünen şubeler (açılır liste
+  metni hariç) bir sonraki **Formu doldur**'da atlanır. Sayfada "couldn't be
+  added" gibi bir hata yazıyorsa hiçbir ders atlanmaz.
+- Geçersiz satır, yinelenen ders veya mevcut farklı değer varsa tüm doldurma
+  durur; mevcut dersler ezilmez.
 - Doldurma sırasında değişim olayları üretilmez; böylece alanlara değer yazmak
   kendi başına ASP.NET AutoPostBack tetiklemez.
 - Kullanıcı tanınan **ders ekleme düğmesini** listeden seçer, ardından **Formu
@@ -96,7 +105,14 @@ gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
   gerekir. İşlemin başarı durumu BUIS yanıtından kullanıcı tarafından okunur.
 - **Kontenjan kontrol**, dönemli JSON gerektirir. `/scripts/quotasearch.asp`
   sorgularını sırayla yapar; yanıt giriş/hata sayfasıysa kontenjanmış gibi
-  göstermez. Sonuç, öğrencinin ders alabileceğine dair onay değildir.
+  göstermez. Bölüm seçildiyse önce bölümün, yoksa `ALL` satırını okuyup
+  **consent gerekiyor / boş yer / dolu / bölüme açık değil** der. Sonuç,
+  öğrencinin ders alabileceğine dair onay değildir.
+- **Consent isteği**, Consent Requests ekranında kısaltmayı ve şubeyi seçip
+  Toolbox'ta yazılan mesajı boş alana yazar. Seçim sayfayı yenilerse 20 saniye
+  içinde kaldığı yerden sürer, dört denemeden sonra durur. Hiçbir düğmeye
+  basmaz: BUIS aynı şubeye en fazla 2, toplam 10 derse istek kabul ediyor.
+  [Consent deneme sayfası](https://boun-toolbox.vercel.app/buis-consent-demo.html).
 - **Form raporu**, planı silmeden ayrı alana yazılır. URL sorgu parametreleri,
   alan değerleri, parolalar, çerezler ve gizli form değerleri rapora alınmaz.
 

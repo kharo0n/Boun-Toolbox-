@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseCourseCode, buildRegistrationPlan, planToText, planToJson, planByDepartment, duplicateBaseCodes } from '../src/lib/registration.ts';
+import { parseCourseCode, buildRegistrationPlan, planToText, planToJson, planByDepartment, duplicateBaseCodes, consentTemplate, consentIssues, titleCase, CONSENT_COURSE_LIMIT } from '../src/lib/registration.ts';
 import type { Course } from '../src/lib/planner.ts';
 
 const course = (key: string, overrides: Partial<Course> = {}): Course => ({
@@ -86,4 +86,38 @@ test('groups the plan by department', () => {
   const b = course('CMPE160.01', { code: 'CMPE 160.01' });
   const c = course('MATH101.01', { code: 'MATH 101.01' });
   assert.deepEqual(planByDepartment(plan([a, b, c])).map(([dept, list]) => [dept, list.length]), [['CMPE', 2], ['MATH', 1]]);
+});
+
+test('plan JSON carries the student profile and only non-empty consent messages', () => {
+  const result = plan([course('CMPE150.01', { code: 'CMPE 150.01' }), course('MATH101.02', { code: 'MATH 101.02' })]);
+  const payload = JSON.parse(planToJson(result, {
+    student: { department: 'COMPUTER ENGINEERING', level: 'UNDERGRADUATE' },
+    messages: { 'CMPE 150.01': '  Dear Professor  ', 'MATH 101.02': '   ', 'PHYS 101.01': 'not in plan' },
+  }));
+  assert.deepEqual(payload.student, { department: 'COMPUTER ENGINEERING', level: 'UNDERGRADUATE' });
+  assert.equal(payload.courses[0].message, 'Dear Professor');
+  assert.equal('message' in payload.courses[1], false);
+  assert.equal(payload.courses.length, 2);
+  assert.equal('student' in JSON.parse(planToJson(result)), false);
+});
+
+test('consent template names the course and, when known, the student’s program', () => {
+  const [entry] = plan([course('CMPE150.01', { code: 'CMPE 150.01', name: 'INTRODUCTION TO COMPUTING' })]).entries;
+  const text = consentTemplate(entry, { department: 'POLITICAL SCIENCE&INTERNATIONAL RELATIONS', level: 'UNDERGRADUATE' });
+  assert.match(text, /take CMPE 150\.01 \(Introduction to Computing\)/);
+  assert.match(text, /an undergraduate student in Political Science & International Relations\./);
+  assert.doesNotMatch(consentTemplate(entry, null), /student in/);
+  assert.equal(titleCase('CALCULUS II FOR THE SCIENCES'), 'Calculus II for the Sciences');
+});
+
+test('consent issues flag empty messages and more courses than BUIS allows', () => {
+  const entries = Array.from({ length: CONSENT_COURSE_LIMIT + 1 }, (_, i) => course(`HIST${100 + i}.01`, { code: `HIST ${100 + i}.01` }));
+  const result = plan(entries);
+  const messages = Object.fromEntries(result.entries.map(e => [e.display, 'Hello']));
+  messages['HIST 100.01'] = ' ';
+  const issues = consentIssues(result, messages);
+  assert.equal(issues.length, 2);
+  assert.match(issues[0], /en fazla 10 derse/);
+  assert.match(issues[1], /HIST 100\.01 için consent mesajı boş/);
+  assert.deepEqual(consentIssues(result, {}), []);
 });

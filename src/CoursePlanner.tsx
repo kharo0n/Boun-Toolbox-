@@ -6,11 +6,22 @@ import metadata from './data/courseMetadata.json';
 import { buildCatalogue, courseSlots, DAYS, DAY_LABELS, HOURS, totalCredits,
   relatedSessions, candidateConflicts, toggleCourse, readSelection, courseDescriptionUrl, normalizeCode, searchScore } from './lib/planner';
 import type { Course, RawCourse } from './lib/planner';
-import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes } from './lib/registration';
-import type { RegistrationPlan } from './lib/registration';
+import { buildRegistrationPlan, planToText, planToJson, duplicateBaseCodes, consentTemplate, consentIssues, CONSENT_MESSAGE_LIMIT } from './lib/registration';
+import type { RegistrationEntry, RegistrationPlan, StudentProfile, StudentLevel } from './lib/registration';
 
 const catalogue = buildCatalogue(courseData as Record<string, RawCourse>);
 const storageKey = `boun-toolbox:planner:${metadata.semester}`;
+const profileKey = 'boun-toolbox:registration-profile';
+const consentKey = `boun-toolbox:consent:${metadata.semester}`;
+const departmentNames = [...new Set(metadata.departments.map(d => d.name))].sort((a, b) => a.localeCompare(b));
+function readJson<T>(key: string, valid: (value: unknown) => value is T, fallback: T): T {
+  try { const value: unknown = JSON.parse(localStorage.getItem(key) || 'null'); return valid(value) ? value : fallback; }
+  catch { return fallback; }
+}
+const isProfile = (value: unknown): value is StudentProfile => !!value && typeof value === 'object' &&
+  departmentNames.includes((value as StudentProfile).department) && ['UNDERGRADUATE', 'GRADUATE'].includes((value as StudentProfile).level);
+const isMessages = (value: unknown): value is Record<string, string> => !!value && typeof value === 'object' && !Array.isArray(value) &&
+  Object.values(value).every(message => typeof message === 'string');
 const colors = ['#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#ffebee', '#e0f7fa', '#fff8e1', '#fce4ec'];
 const colorFor = (course: { code: string; sessionType: string }) => course.sessionType === 'lab' ? '#ffcdd2' :
   course.sessionType === 'ps' ? '#c8e6c9' : colors[[...course.code].reduce((s, c) => s + c.charCodeAt(0), 0) % colors.length];
@@ -152,16 +163,34 @@ export default function CoursePlanner() {
 
 function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onClose: () => void }) {
   const [copied, setCopied] = useState('');
+  const [profile, setProfile] = useState<StudentProfile | null>(() => readJson(profileKey, isProfile, null));
+  const [messages, setMessages] = useState<Record<string, string>>(() => readJson(consentKey, isMessages, {}));
+  useEffect(() => {
+    try { if (profile) localStorage.setItem(profileKey, JSON.stringify(profile)); else localStorage.removeItem(profileKey); } catch { /* özel mod */ }
+  }, [profile]);
+  useEffect(() => {
+    try { localStorage.setItem(consentKey, JSON.stringify(messages)); } catch { /* özel mod */ }
+  }, [messages]);
   const text = planToText(plan);
+  const json = planToJson(plan, { messages, student: profile });
   const duplicates = duplicateBaseCodes(plan);
+  const issues = consentIssues(plan, messages);
   const helperUrl = `${import.meta.env.BASE_URL}buis-kayit-yardimcisi.user.js`;
+  const setDepartment = (department: string) => setProfile(department ? { department, level: profile?.level || 'UNDERGRADUATE' } : null);
+  const setLevel = (level: StudentLevel) => setProfile(profile && { ...profile, level });
+  const toggleConsent = (entry: RegistrationEntry) => setMessages(current => {
+    const next = { ...current };
+    if (Object.hasOwn(next, entry.display)) delete next[entry.display];
+    else next[entry.display] = consentTemplate(entry, profile);
+    return next;
+  });
 
   const copy = async (value: string, label: string) => {
     try { await navigator.clipboard.writeText(value); setCopied(label); }
     catch { setCopied('Kopyalanamadı — metni seçip elle kopyalayın.'); }
   };
   const download = () => {
-    const blob = new Blob([planToJson(plan)], { type: 'application/json' });
+    const blob = new Blob([json], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `kayit-plani-${plan.semester.replace('/', '-')}.json`;
@@ -176,18 +205,45 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
 
       {plan.entries.length > 0 && <>
         <p className="assistant-lead">{plan.entries.length} ders · BUIS ders ekleme ekranı için hazırlanan plan.</p>
-        <ol className="assistant-list">{plan.entries.map(entry => <li key={entry.display}>
-          <code>{entry.display}</code>
-          <span className="assistant-name">{entry.name}</span>
-          {entry.sessions.map(session => <small key={session}> · {session}</small>)}
-          {entry.missingSessions.length > 0 && <small className="assistant-warn"> · {entry.missingSessions.join('/')} seçilmedi</small>}
-        </li>)}</ol>
+        <div className="assistant-profile">
+          <label>Bölümün
+            <select value={profile?.department || ''} onChange={e => setDepartment(e.target.value)}>
+              <option value="">Seçilmedi</option>
+              {departmentNames.map(name => <option key={name} value={name}>{name}</option>)}
+            </select>
+          </label>
+          <label>Düzey
+            <select value={profile?.level || 'UNDERGRADUATE'} disabled={!profile} onChange={e => setLevel(e.target.value as StudentLevel)}>
+              <option value="UNDERGRADUATE">Lisans</option>
+              <option value="GRADUATE">Lisansüstü</option>
+            </select>
+          </label>
+        </div>
+        <p className="assistant-note">BUIS’teki yardımcı kontenjan tablosunu bu bölüme göre okuyup her ders için “consent gerekiyor / boş yer var / dolu” der.</p>
+
+        <ol className="assistant-list">{plan.entries.map(entry => {
+          const marked = Object.hasOwn(messages, entry.display);
+          return <li key={entry.display}>
+            <code>{entry.display}</code>
+            <span className="assistant-name">{entry.name}</span>
+            {entry.sessions.map(session => <small key={session}> · {session}</small>)}
+            {entry.missingSessions.length > 0 && <small className="assistant-warn"> · {entry.missingSessions.join('/')} seçilmedi</small>}
+            <button type="button" className="assistant-consent-toggle" aria-pressed={marked} onClick={() => toggleConsent(entry)}>
+              {marked ? '✉️ Consent mesajını kaldır' : '✉️ Consent mesajı ekle'}
+            </button>
+            {marked && <textarea className="assistant-consent" rows={6} maxLength={CONSENT_MESSAGE_LIMIT} value={messages[entry.display]}
+              aria-label={`${entry.display} consent mesajı`} onChange={e => setMessages(current => ({ ...current, [entry.display]: e.target.value }))} />}
+          </li>;
+        })}</ol>
+        {Object.keys(messages).some(display => plan.entries.some(e => e.display === display)) &&
+          <p className="assistant-note">Şablonu kendine göre düzenle: neden bu dersi istediğini ve adını ekle. Kısa “consent pls” yerine düzgün bir istek yazman tavsiye ediliyor.</p>}
 
         {duplicates.length > 0 && <p className="assistant-warn">⚠️ Aynı dersin birden fazla şubesi seçili: {duplicates.join(', ')}</p>}
         {plan.warnings.map(warning => <p key={warning} className="assistant-warn">⚠️ {warning}</p>)}
+        {issues.map(issue => <p key={issue} className="assistant-warn">⚠️ {issue}</p>)}
 
         <div className="assistant-actions">
-          <button className="footer-btn" onClick={() => void copy(planToJson(plan), 'Dönemli kayıt planı kopyalandı.')}>📋 Planı kopyala</button>
+          <button className="footer-btn" onClick={() => void copy(json, 'Dönemli kayıt planı kopyalandı.')}>📋 Planı kopyala</button>
           <button className="footer-btn" onClick={() => void copy(text, 'Ders listesi kopyalandı.')}>📋 Listeyi kopyala</button>
           <button className="footer-btn" onClick={download}>⬇️ JSON indir</button>
         </div>
@@ -195,17 +251,18 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
 
         <details className="assistant-help">
           <summary>BUIS kayıt yardımcısını kullan</summary>
-          <p className="assistant-note">BUIS’te Quick Add formu açıldığında tek tıkla veya seçtiğiniz saatte gönderebilirsiniz. Canlı form şu an kapalı; gerçek kayıt uyumluluğu henüz doğrulanmadı.</p>
+          <p className="assistant-note">Yardımcı canlı BUIS formunda henüz denenmedi. Form tanınmazsa panelden “Form raporu” alıp paylaşın.</p>
           <ol>
-            <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin. (Alternatif: script’i kopyalayıp BUIS sekmesinde tarayıcı konsoluna yapıştırın.)</li>
-            <li>BUIS’e kendiniz giriş yapıp ders ekleme ekranını açın; sağ üstte panel çıkar.</li>
-            <li><strong>Planı kopyala</strong> ile dönemli planı alın. BUIS’te <strong>Course List Preparation</strong> içindeki yardımcıya yapıştırıp <strong>Formu tanı</strong>’ya basın.</li>
-            <li><strong>Kontenjan kontrol</strong> ile şubelerin doluluğunu görebilirsiniz.</li>
-            <li><strong>Quick Add</strong> düğmesini seçin. Dönemi, listeyi ve BUIS’in kredi/tekrar seçeneklerini kontrol edip kutuyu işaretleyin. <strong>Doldur ve gönder</strong> tüm satırları yazıp düğmeye bir kez basar.</li>
-            <li>İsterseniz <strong>Saatli gönderim</strong> bölümünden Türkiye saatini seçip başlatın. Form açık, sekme görünür olmalı; sayfa yenilenirse zamanlama iptal olur.</li>
+            <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin (1.3.0). Eski sürüm yüklüyse aynı bağlantıdan güncelleyin.</li>
+            <li><strong>Planı kopyala</strong> ile planı alın ve BUIS’te sağ üstteki panele yapıştırın. Plan saklanır; kayıt açılmadan, giriş sayfasında da yapabilirsiniz.</li>
+            <li><strong>Kontenjan kontrol</strong>: bölümünüzü seçtiyseniz her ders için consent gerekip gerekmediğini ve boş yeri gösterir.</li>
+            <li>Kayıt açılınca <strong>Course List Preparation</strong>’da <strong>Formu doldur</strong>’a basın: bütün dersler yazılır, siz BUIS’in <strong>Quick Add</strong> düğmesine basarsınız. Form satırları yetmezse Quick Add’den sonra yeniden <strong>Formu doldur</strong>; listenizde görünen dersler atlanır.</li>
+            <li>İsterseniz Quick Add düğmesini seçip kontrol kutusunu işaretleyerek <strong>Doldur ve gönder</strong> veya <strong>Saatli gönderim</strong> kullanın.</li>
+            <li>Consent için <strong>Consent Requests</strong> ekranını açın, paneldeki <strong>Consent isteği</strong> bölümünden dersin düğmesine basın: ders seçilir, mesajınız yazılır, göndermeyi siz yaparsınız. Onay 24 saat geçerlidir; onaylanan dersi listenize ekleyin.</li>
             <li>BUIS sonucunu kontrol edin. <strong>Send to Approval</strong> danışman onayı için ayrı işlemdir.</li>
           </ol>
-          <p><a href={`${import.meta.env.BASE_URL}buis-helper-demo.html`} target="_blank" rel="noreferrer">Hızlı gönderimi örnek formda dene →</a></p>
+          <p><a href={`${import.meta.env.BASE_URL}buis-helper-demo.html`} target="_blank" rel="noreferrer">Hızlı gönderimi örnek formda dene →</a>{' · '}
+            <a href={`${import.meta.env.BASE_URL}buis-consent-demo.html`} target="_blank" rel="noreferrer">Consent doldurmayı dene →</a></p>
           <p className="assistant-note">Yardımcı şifrenizi toplamaz. Kontenjan sorgusu ve seçtiğiniz ders ekleme işlemi kendi BUIS oturumunuzdan BUIS’e gönderilir. LAB/P.S. seçimleri programlama amaçlıdır; BUIS’te ayrıca işlem gerekebilir.</p>
         </details>
       </>}

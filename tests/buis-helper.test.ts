@@ -6,13 +6,14 @@ import { JSDOM } from 'jsdom';
 const script = readFileSync(new URL('../public/buis-kayit-yardimcisi.user.js', import.meta.url), 'utf8');
 const row = (n: number) => `<input name="abbr${n}"><input name="code${n}"><input name="section${n}">`;
 const form = (fields = row(1), buttons = '<button id="delete">Delete</button><button id="add">Quick Add</button>') => `<form method="post" action="/fixture-add.aspx">${fields}${buttons}</form>`;
-function fixture(t: TestContext, html = form(), saved = '{}') {
+function fixture(t: TestContext, html = form(), saved = '{}', setup: (w: JSDOM['window']) => void = () => {}) {
   // Synthetic form, no BUIS session or network. Layout is mocked because jsdom has none.
   const dom = new JSDOM(html, { url: 'https://registration.boun.edu.tr/buis/Fixture.aspx?token=URL_SECRET', runScripts: 'outside-only', pretendToBeVisual: true });
   t.after(() => dom.window.close());
   const w = dom.window;
   Object.defineProperty(w.HTMLElement.prototype, 'getClientRects', { value() { return this.hidden || this.style.display === 'none' ? [] : [{}]; } });
   w.localStorage.setItem('boun-toolbox:buis-helper:v2:/buis/fixture.aspx', saved);
+  setup(w);
   let submissions = 0, networkCalls = 0;
   w.fetch = () => { networkCalls++; throw new Error('Network forbidden in fixture'); };
   w.HTMLFormElement.prototype.submit = () => { throw new Error('Raw submit must never be used'); };
@@ -67,9 +68,68 @@ for (const input of ['CMPE 150.01\ninvalid', 'CMPE 150.01\nCMPE 150.02', 'CMPE 1
   });
 }
 
-test('over-capacity plan is not partially filled', t => {
+const log = (f: ReturnType<typeof fixture>) => f.d.querySelector('#btbx .log')!.textContent!;
+
+test('a plan longer than the form fills the rows it has and names the rest', t => {
   const f = fixture(t); f.fill('CMPE 150.01\nMATH 101.01');
+  assert.equal(f.field('abbr1').value, 'CMPE');
+  assert.match(log(f), /sonraki tura kalan: MATH 101\.01/);
+  assert.equal(f.submissions(), 0);
+});
+
+test('sections already on the course list are skipped, so the next round writes the rest', t => {
+  const f = fixture(t, '<table><tr><td>CMPE 150 . 01</td><td>INTRODUCTION TO COMPUTING</td></tr></table>' + form(row(1) + row(2)));
+  f.fill('CMPE 150.01\nMATH 101.01\nPHYS 101.02');
+  assert.equal(f.field('abbr1').value, 'MATH');
+  assert.equal(f.field('abbr2').value, 'PHYS');
+  assert.match(log(f), /zaten görünen dersler atlandı: CMPE 150\.01/);
+});
+
+test('another section, a dropdown entry or an error message is not mistaken for a listed course', t => {
+  for (const page of ['<p>CMPE 150.02</p>', '<select><option>CMPE 150.01 AA</option></select>', "<p>CMPE 150.01 course couldn't be added to your list</p>"]) {
+    const f = fixture(t, page + form(row(1)));
+    f.fill('CMPE 150.01');
+    assert.equal(f.field('abbr1').value, 'CMPE', page);
+  }
+});
+
+test('nothing is written when every planned section is already listed', t => {
+  const f = fixture(t, '<p>CMPE150.01</p><p>MATH 101.1</p>' + form(row(1) + row(2)));
+  f.fill('CMPE 150.01\nMATH 101.01');
   assert.equal(f.field('abbr1').value, '');
+  assert.match(log(f), /bütün dersler listende/);
+});
+
+function teach(f: ReturnType<typeof fixture>, nodes: HTMLElement[]) {
+  f.button('Alanları tanıt').click();
+  for (const node of nodes) node.dispatchEvent(new f.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+}
+
+test('teach mode follows the numbering of the taught row to fill every row', t => {
+  const rows = [1, 2, 3].map(n => `<input name="ctl00$txtKisa${n}"><input name="ctl00$txtNo${n}"><input name="ctl00$txtSube${n}">`).join('');
+  const f = fixture(t, form(rows));
+  const nodes = ['ctl00$txtKisa1', 'ctl00$txtNo1', 'ctl00$txtSube1'].map(name => f.field(name));
+  teach(f, nodes);
+  assert.match(log(f), /3 ders satırı bulundu/);
+  f.fill('CMPE 150.01\nMATH 101.02\nEC 101.01');
+  assert.equal(f.field('ctl00$txtKisa3').value, 'EC');
+  assert.equal(f.field('ctl00$txtSube2').value, '02');
+});
+
+test('teach mode falls back to the table layout when later rows have no names', t => {
+  const f = fixture(t, form('<table><tr><td><input id="k"></td><td><input id="n"></td><td><input id="s"></td></tr><tr><td><input></td><td><input></td><td><input></td></tr><tr><td colspan="3">Not a row</td></tr></table>'));
+  teach(f, ['k', 'n', 's'].map(id => f.d.getElementById(id)!));
+  assert.match(log(f), /2 ders satırı bulundu/);
+  f.fill('CMPE 150.01\nMATH 101.02');
+  const inputs = f.d.querySelectorAll<HTMLInputElement>('form tr:nth-child(2) input');
+  assert.deepEqual(Array.from(inputs).map(i => i.value), ['MATH', '101', '02']);
+});
+
+test('plan is shared across BUIS pages so it survives the Quick Add post', t => {
+  const f = fixture(t, form(), '{"plan":"OLD 101.01"}', w => w.localStorage.setItem('boun-toolbox:buis-helper:plan', 'CMPE 150.01'));
+  assert.equal(f.input.value, 'CMPE 150.01');
+  const legacy = fixture(t, form(), '{"plan":"MATH 101.01"}');
+  assert.equal(legacy.input.value, 'MATH 101.01');
 });
 
 test('occupied field anywhere prevents all writes', t => {
@@ -264,4 +324,153 @@ test('unknown origin cannot install the helper outside the explicit demo page', 
   t.after(() => dom.window.close());
   dom.window.eval(script);
   assert.equal(dom.window.document.querySelector('#btbx'), null);
+});
+
+// ------------------------------------------------------------------ quota and consent verdicts
+const quotaPage = (name: string) => readFileSync(new URL(`./fixtures/quota-${name}.html`, import.meta.url), 'utf8');
+
+test('real BUIS quota tables resolve to a verdict for the student’s department', t => {
+  const f = fixture(t), helper = f.w.__bounToolboxHelper;
+  const verdict = (page: string, department: string | null, level = 'UNDERGRADUATE') =>
+    helper.evaluateQuota(helper.parseQuota(quotaPage(page)), department ? { department, level } : null);
+  assert.equal(verdict('CMPE150', 'COMPUTER ENGINEERING').verdict, 'consent');
+  const civil = verdict('CMPE150', 'CIVIL ENGINEERING');
+  assert.equal(civil.verdict, 'open'); assert.equal(civil.row.kind, 'unlimited');
+  assert.equal(verdict('CMPE150', 'COMPUTER ENGINEERING', 'GRADUATE').verdict, 'not-listed');
+  assert.equal(verdict('CMPE150', null).verdict, 'consent-rows');
+  const history = verdict('HIST105', 'HISTORY');
+  assert.equal(history.verdict, 'open'); assert.equal(history.left, 4);
+  assert.equal(verdict('HIST105', 'POLITICAL SCIENCE & INTERNATIONAL RELATIONS').verdict, 'open');
+  assert.equal(verdict('HIST105', 'MANAGEMENT').verdict, 'not-listed');
+  assert.equal(verdict('PSY101', 'COMPUTER ENGINEERING').verdict, 'open');
+  assert.equal(verdict('PSY101', null).verdict, 'unknown');
+});
+
+test('department row wins over ALL, and a filled numeric quota reads as full', t => {
+  const f = fixture(t), helper = f.w.__bounToolboxHelper;
+  const quota = { capacity: '40', restriction: null, rows: [
+    { department: 'ALL', status: 'ALL', quota: '30', current: '2' },
+    { department: 'ECONOMICS', status: 'ALL', quota: '5', current: '5' },
+    { department: 'ECONOMICS', status: 'UNDERGRADUATE', quota: 'Consent Of Instructor', current: '0' },
+  ] };
+  assert.equal(helper.evaluateQuota(quota, { department: 'ECONOMICS', level: 'UNDERGRADUATE' }).verdict, 'consent');
+  assert.equal(helper.evaluateQuota(quota, { department: 'ECONOMICS', level: 'GRADUATE' }).verdict, 'full');
+  assert.equal(helper.evaluateQuota(quota, { department: 'HISTORY', level: 'GRADUATE' }).verdict, 'open');
+  assert.match(helper.quotaLine({ display: 'EC 101.01' }, quota, { department: 'ECONOMICS', level: 'GRADUATE' }).text, /dolu 5\/5.*consent isteyebilirsin/);
+});
+
+test('plan carries the student profile and consent messages, and rejects bad ones', t => {
+  const f = fixture(t), parse = f.w.__bounToolboxHelper.parsePlan;
+  const plan = (extra: object, course: object = {}) => JSON.stringify({ source: 'boun-toolbox', version: 1, semester: '2026/2027-1', ...extra,
+    courses: [{ abbr: 'CMPE', code: '150', section: '01', ...course }] });
+  const ok = parse(plan({ student: { department: 'CIVIL ENGINEERING', level: 'UNDERGRADUATE' } }, { message: '  Dear Professor  ' }));
+  assert.equal(JSON.stringify(ok.student), '{"department":"CIVIL ENGINEERING","level":"UNDERGRADUATE"}');
+  assert.equal(ok.courses[0].message, 'Dear Professor');
+  assert.match(parse(plan({ student: { department: 'CE', level: 'PHD' } })).error, /bölümü\/düzeyi/);
+  assert.match(parse(plan({}, { message: 'x'.repeat(2001) })).error, /Consent mesajı/);
+  assert.match(parse(plan({}, { message: 42 })).error, /Consent mesajı/);
+});
+
+// ------------------------------------------------------------------ consent form
+const consentPlan = JSON.stringify({ source: 'boun-toolbox', version: 1, semester: '2026/2027-1', courses: [
+  { abbr: 'CMPE', code: '150', section: '01', message: 'Dear Professor, I kindly request your consent.' },
+  { abbr: 'MATH', code: '101', section: '02' },
+] });
+const consentPage = (extra = '') => `<h2>Consent Requests</h2><form method="post" action="/scripts/consentsend.asp">
+  <select name="abbr"><option value="">--</option><option>CMPE</option><option>MATH</option></select>
+  <select name="course"><option value="">--</option></select>
+  <textarea name="msg"></textarea><button id="send">Submit</button><button id="cancel">Cancel Request</button></form>${extra}`;
+const courses: Record<string, string[]> = { CMPE: ['CMPE 150.01 - INTRODUCTION TO COMPUTING', 'CMPE 150.02 - INTRODUCTION TO COMPUTING'], MATH: ['MATH 101.02 - CALCULUS I'] };
+function consentFixture(t: TestContext, html = consentPage(), setup: (w: JSDOM['window']) => void = () => {}) {
+  const f = fixture(t, html, '{}', setup);
+  let clicks = 0;
+  f.d.querySelectorAll('form button').forEach(b => b.addEventListener('click', () => clicks++));
+  const abbr = f.d.querySelector<HTMLSelectElement>('[name="abbr"]'), course = f.d.querySelector<HTMLSelectElement>('[name="course"]');
+  abbr?.addEventListener('change', () => { // BUIS-like dependent list, filled without a reload
+    course!.innerHTML = '<option value="">--</option>' + (courses[abbr.value] || []).map((label, i) => `<option value="${i + 1}">${label}</option>`).join('');
+  });
+  f.setPlan(consentPlan);
+  const area = () => f.d.querySelector<HTMLTextAreaElement>('[name="msg"]')!;
+  return { ...f, abbr, course, area, clicks: () => clicks, wait: (ms = 700) => new Promise(resolve => f.w.setTimeout(resolve, ms)) };
+}
+
+test('consent helper picks the abbreviation, the exact section and writes the message without sending', async t => {
+  const f = consentFixture(t);
+  assert.throws(() => f.button('Consent doldur · MATH 101.02'), /Missing helper button/); // no message, no button
+  f.button('Consent doldur · CMPE 150.01').click();
+  await f.wait();
+  assert.equal(f.abbr!.value, 'CMPE');
+  assert.equal(f.course!.selectedOptions[0].textContent, 'CMPE 150.01 - INTRODUCTION TO COMPUTING');
+  assert.equal(f.area().value, 'Dear Professor, I kindly request your consent.');
+  assert.equal(f.clicks(), 0);
+  assert.equal(f.submissions(), 0);
+  assert.equal(f.w.sessionStorage.getItem('boun-toolbox:buis-helper:consent-job'), null);
+});
+
+test('consent helper resumes after BUIS reloads the page with the abbreviation chosen', async t => {
+  const job = { display: 'CMPE 150.01', abbr: 'CMPE', code: '150', section: '01', message: 'Hello', attempts: 1, done: ['abbr'] };
+  const page = consentPage().replace('<option>CMPE</option>', '<option selected>CMPE</option>')
+    .replace('<option value="">--</option></select>\n  <textarea', '<option value="">--</option><option value="9">CMPE 150.01 - INTRO</option></select>\n  <textarea');
+  const f = consentFixture(t, page, w => w.sessionStorage.setItem('boun-toolbox:buis-helper:consent-job', JSON.stringify({ ...job, at: Date.now() })));
+  assert.equal(f.course!.value, '9');
+  assert.equal(f.area().value, 'Hello');
+  assert.equal(f.clicks(), 0);
+});
+
+test('a stale or forged consent job is ignored after reload', t => {
+  for (const job of [
+    { display: 'CMPE 150.01', abbr: 'CMPE', code: '150', section: '01', message: 'Hello', attempts: 1, done: [], at: Date.now() - 60000 },
+    { display: 'CMPE 150.01', abbr: 'CMPE|.*', code: '150', section: '01', message: 'Hello', attempts: 1, done: [], at: Date.now() },
+  ]) {
+    const f = consentFixture(t, consentPage(), w => w.sessionStorage.setItem('boun-toolbox:buis-helper:consent-job', JSON.stringify(job)));
+    assert.equal(f.abbr!.value, '');
+    assert.equal(f.area().value, '');
+  }
+});
+
+test('a page that keeps undoing the selection stops after a few attempts', t => {
+  const job = { display: 'CMPE 150.01', abbr: 'CMPE', code: '150', section: '01', message: 'Hello', attempts: 4, done: ['abbr', 'course', 'abbr', 'course'], at: Date.now() };
+  const page = consentPage().replace('<option value="">--</option></select>\n  <textarea', '<option value="">--</option><option value="9">CMPE 150.01 - INTRO</option></select>\n  <textarea');
+  const f = consentFixture(t, page, w => w.sessionStorage.setItem('boun-toolbox:buis-helper:consent-job', JSON.stringify(job)));
+  assert.equal(f.area().value, '');
+  assert.match(log(f), /seçimleri kabul etmedi/);
+});
+
+test('consent helper refuses unclear choices and never overwrites a typed message', async t => {
+  const missingSection = consentFixture(t);
+  courses.CMPE.splice(0, 1);
+  t.after(() => courses.CMPE.unshift('CMPE 150.01 - INTRODUCTION TO COMPUTING'));
+  missingSection.button('Consent doldur · CMPE 150.01').click();
+  await missingSection.wait();
+  assert.equal(missingSection.course!.value, '');
+  assert.equal(missingSection.area().value, '');
+  assert.match(log(missingSection), /şubesi listede yok/);
+
+  const typed = consentFixture(t);
+  typed.area().value = 'My own words';
+  courses.CMPE.unshift('CMPE 150.01 - INTRODUCTION TO COMPUTING');
+  typed.button('Consent doldur · CMPE 150.01').click();
+  await typed.wait();
+  courses.CMPE.shift();
+  assert.equal(typed.area().value, 'My own words');
+  assert.match(log(typed), /üzerine yazmadım/);
+});
+
+test('consent helper does nothing on the Quick Add screen or a closed consent page', t => {
+  const quickAdd = consentFixture(t, '<p>Consent Requests</p>' + form(row(1) + '<select name="rcourse1"><option>CMPE 150.01</option><option>CMPE</option></select>'));
+  quickAdd.button('Consent doldur · CMPE 150.01').click();
+  assert.match(log(quickAdd), /Consent Requests ekranı değil/);
+  assert.equal(quickAdd.field('rcourse1').selectedIndex, 0);
+  const closed = consentFixture(t, consentPage('<p>Consent Entry Is Not Open !</p>'));
+  closed.button('Consent doldur · CMPE 150.01').click();
+  assert.equal(closed.abbr!.value, '');
+  assert.match(log(closed), /kapalı/);
+});
+
+test('form report shows how dropdown labels are built without their text', t => {
+  const f = consentFixture(t);
+  f.button('Form raporu').click();
+  const report = f.d.querySelector<HTMLTextAreaElement>('[aria-label="Form raporu"]')!.value;
+  assert.match(report, /select\|select-one\|abbr\|\|3 seçenek: -- \/ AAAA \/ AAAA/);
+  assert.doesNotMatch(report, /CMPE|Dear Professor/);
 });

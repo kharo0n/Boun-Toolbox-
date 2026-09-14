@@ -86,9 +86,58 @@ kesin alınacağı garanti edilemez.
 seçeneği değişikliği, çift gönderim, zamanlama, iptal, saat kayması, kapalı servis
 ve çerçeve kabuğunu kapsar. Lint ve üretim derlemesi başarılı.
 
+## Yardımcı 1.3.0 ve consent (14 Eylül 2026 akşamı)
+
+### Kaynaklar
+
+- [Akademik takvim](https://akademiktakvim.bogazici.edu.tr/): kayıt sistemi
+  **15 Eylül 10:00**'da açılır; consent öğrenciye **17 Eylül 14:00**'te,
+  öğretim elemanına 21:00'de, kayıt öğrenciye 23:59'da kapanır.
+- Resmî kılavuz, consent: Course List Preparation altındaki **Consent Requests**
+  ekranında önce ders kısaltması, sonra ders seçilir, "Comments/Message to
+  Instructor" yazılıp gönderilir. En fazla 10 ders, aynı şubeye dönem başına en
+  fazla 2 istek. Öğretim elemanı istekleri numara, bölüm, statü, GPA, dönem ve
+  istek tarihiyle görür; Approve/Reject/Shortlist yapar. Onay 24 saat geçerlidir,
+  dersi listeye otomatik eklemez. Bir şube eklenince aynı dersin diğer istekleri
+  düşer.
+- [enescakir/registration-bot](https://github.com/enescakir/registration-bot)
+  (2019, eski sistem): Quick Add için `POST /scripts/studentaction.asp` ve
+  `abbr1`, `code1`, `section1`, `rnc1` (`N`/`NC`), `rcourse1`, `B1=Quick Add`;
+  hata metni "course couldn't be added to your list". 14 Eylül'de oturumsuz
+  `studentaction.asp` ve `secchaact.asp` hâlâ oturum süresi doldu sayfasına
+  yönleniyor; BUIS çerçevesi de aynı `/scripts/loginst.asp` sistemini açıyor.
+  Canlı formun hâlâ bu adları kullandığı doğrulanmadı. Botun README'si hesabın
+  askıya alınabileceği uyarısını taşır; bu yardımcı istek üretmez, sayfadaki
+  düğmeyi kullanıcı adına yalnız bir kez ve seçildiğinde tetikler.
+- `quotasearch.asp` oturumsuz yanıt verir ve CORS başlığı yoktur; Toolbox sitesi
+  sorgulayamaz, BUIS sekmesindeki yardımcı sorgular. 14 Eylül'de 2026/2027-1 için
+  bütün "Current" değerleri 0'dı. Örnek yanıtlar `tests/fixtures/` altındadır;
+  bölüm adları `courseMetadata.json` bölüm listesiyle eşleşir. Öğrenci tarafı
+  consent ekranının adresi ve alanları açık kaynakta bulunamadı.
+
+### Consent adımı nasıl çalışır
+
+1. Planda mesajı olan her ders için panelde **Consent doldur** düğmesi çıkar.
+2. Sayfada "consent" yazısı yoksa, Quick Add alanları veya parola alanı varsa,
+   ya da "not open / currently closed" yazıyorsa hiçbir seçim yapılmaz.
+3. Kısaltma listesi: rakam içermeyen, ilk kelimesi, parantez içi veya değeri
+   kısaltmaya eşit tek seçenek. Ders listesi: `CMPE 150.01` biçimini içeren tek
+   liste ve tam şube. Şubeler listeleniyor ama istenen yoksa durur.
+4. Seçimden sonra sayfa yenilenirse iş `sessionStorage`'da 20 saniye bekler; dört
+   seçimden sonra durur. Mesaj alanı doluysa üzerine yazmaz; düğmeye basmaz.
+5. **Form raporu** açılır listeler için seçenek sayısını ve ilk üç etiketin
+   biçimini (harf → A, rakam → 9) ekler; ders veya not metni koymaz.
+
+`/buis-consent-demo.html`, kılavuzdaki akışa göre hazırlanmış sentetik bir
+consent formunda aynı yardımcıyı çalıştırır. Otomatik testler 94'e çıktı:
+gerçek kontenjan HTML'leriyle karar, satır taşması ve listede görünen dersleri
+atlama, numaralı ve tablo düzenli alan eşleme, consent seçimi, sayfa yenilemesi,
+eskimiş/sahte iş, belirsiz şube, dolu mesaj alanı ve kapalı ekran.
+
 ## Açık kalan doğrulama
 
-Kayıt formu açıldığında alan adları, çok satırlı Quick Add yapısı ve form hedefi
+Kayıt formu ve Consent Requests ekranı açıldığında alan adları, Quick Add satır
+sayısı, consent listelerinin yenilenme davranışı ve form hedefi **Form raporu** ile
 incelenmeli. İşlem sonucunun nasıl gösterildiği ve varsa ders başına hata kodları
 henüz bilinmiyor; otomatik başarı yorumlama veya hataya göre tekrar deneme
 uygulanmadı. Oturumun açık olması, kayıt servisinin açık olduğu anlamına gelmez.

@@ -90,13 +90,18 @@ export function planToText(plan: RegistrationPlan) {
   return plan.entries.map(e => e.display).join('\n');
 }
 
-/** The payload the BUIS helper script reads. */
-export function planToJson(plan: RegistrationPlan) {
+/** The payload the BUIS helper script reads. Messages are keyed by `display` and only sent when non-empty. */
+export function planToJson(plan: RegistrationPlan, options: { messages?: Record<string, string>; student?: StudentProfile | null } = {}) {
+  const messages = options.messages || {};
   return JSON.stringify({
     source: 'boun-toolbox',
     version: 1,
     semester: plan.semester,
-    courses: plan.entries.map(({ abbr, code, section, display, name }) => ({ abbr, code, section, display, name })),
+    ...(options.student?.department ? { student: options.student } : {}),
+    courses: plan.entries.map(({ abbr, code, section, display, name }) => {
+      const message = Object.hasOwn(messages, display) ? messages[display].trim().slice(0, CONSENT_MESSAGE_LIMIT) : '';
+      return { abbr, code, section, display, name, ...(message ? { message } : {}) };
+    }),
   }, null, 2);
 }
 
@@ -117,4 +122,44 @@ export function duplicateBaseCodes(plan: RegistrationPlan) {
     counts.set(key, (counts.get(key) || 0) + 1);
   }
   return [...counts].filter(([, n]) => n > 1).map(([code]) => code);
+}
+
+export type StudentLevel = 'UNDERGRADUATE' | 'GRADUATE';
+/** The helper reads a course's quota table with this: own department row first, then ALL. */
+export interface StudentProfile { department: string; level: StudentLevel }
+/** BUIS accepts consent requests for at most this many courses per registration period. */
+export const CONSENT_COURSE_LIMIT = 10;
+export const CONSENT_MESSAGE_LIMIT = 2000;
+
+const SMALL_WORDS = new Set(['AND', 'OF', 'FOR', 'IN', 'TO', 'THE', 'WITH', '&']);
+/** COMPUTER ENGINEERING → Computer Engineering; keeps roman numerals such as II. */
+export function titleCase(text: string) {
+  return text.replace(/\s*&\s*/g, ' & ').trim().split(/\s+/).map((word, i) => {
+    if (/^[IVX]+$/.test(word)) return word;
+    if (i > 0 && SMALL_WORDS.has(word.toUpperCase())) return word.toLowerCase();
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }).join(' ');
+}
+
+export function consentTemplate(entry: RegistrationEntry, student?: StudentProfile | null) {
+  const course = entry.name ? `${entry.display} (${titleCase(entry.name)})` : entry.display;
+  const who = student?.department
+    ? ` I am ${student.level === 'GRADUATE' ? 'a graduate' : 'an undergraduate'} student in ${titleCase(student.department)}.`
+    : '';
+  return `Dear Professor,\n\nI would like to take ${course} this semester and kindly request your consent.${who}\n\nThank you for your consideration.\nBest regards,`;
+}
+
+/** Problems that would make BUIS refuse, or the helper skip, a consent request. */
+export function consentIssues(plan: RegistrationPlan, messages: Record<string, string>) {
+  const marked = plan.entries.filter(entry => Object.hasOwn(messages, entry.display));
+  const issues: string[] = [];
+  if (marked.length > CONSENT_COURSE_LIMIT) {
+    issues.push(`BUIS en fazla ${CONSENT_COURSE_LIMIT} derse consent isteği kabul ediyor; ${marked.length} ders işaretli.`);
+  }
+  for (const entry of marked) {
+    const text = messages[entry.display].trim();
+    if (!text) issues.push(`${entry.display} için consent mesajı boş.`);
+    else if (text.length > CONSENT_MESSAGE_LIMIT) issues.push(`${entry.display} consent mesajı ${CONSENT_MESSAGE_LIMIT} karakteri aşıyor.`);
+  }
+  return issues;
 }
