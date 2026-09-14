@@ -25,7 +25,7 @@ const tools = [
 const steps = [
   { title: 'Programını kur', text: 'Ders Programı’nda dersleri ekle, çakışma ve eksik LAB/P.S. uyarılarını temizle.' },
   { title: 'Planı kopyala', text: 'Kayıt Asistanı’nda bölümünü seç, istersen consent mesajı yaz, “Planı kopyala”ya bas.' },
-  { title: 'BUIS’te doldur', text: 'Yer imi veya Tampermonkey ile yardımcıyı aç: “Formu doldur”, sonra BUIS’in Quick Add düğmesi.' },
+  { title: 'BUIS’te doldur', text: 'Yer imi veya Tampermonkey ile yardımcıyı aç: “Formu doldur”, sonra Quick Add. Form satırı yetmezse kalanlar kendiliğinden eklenir.' },
 ];
 
 export default function Home() {

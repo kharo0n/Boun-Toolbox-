@@ -166,13 +166,17 @@ export function consentIssues(plan: RegistrationPlan, messages: Record<string, s
 
 /**
  * A bookmark that opens the BUIS helper without a userscript manager. Course List Preparation lives in
- * the same-origin `#ifCPL` frame, so the script is added there when it exists. BUIS sends no script-src CSP.
+ * the same-origin `#ifCPL` frame, so the script is added there when it exists, and added again each time
+ * that frame reloads (Quick Add rounds, consent postbacks). BUIS sends no script-src CSP.
  */
 export function helperBookmarklet(scriptUrl: string) {
-  const source = `(function(){var u=${JSON.stringify(scriptUrl)}+'?b='+Date.now();` +
+  const source = `(function(){var u=${JSON.stringify(scriptUrl)};` +
+    `function add(t,show){var w=t.defaultView;if(w.__bounToolboxHelper){if(show)w.__bounToolboxHelper.open();return}` +
+    `if(t.querySelector('script[data-btbx]'))return;var s=t.createElement('script');s.src=u+'?b='+Date.now();` +
+    `s.setAttribute('data-btbx','1');t.body.appendChild(s)}` +
     `var f=document.getElementById('ifCPL'),d=null;try{d=f&&f.contentDocument}catch(e){}` +
-    `var t=d&&d.body?d:document,w=t.defaultView;` +
-    `if(w.__bounToolboxHelper){w.__bounToolboxHelper.open();return}` +
-    `var s=t.createElement('script');s.src=u;t.body.appendChild(s)})()`;
+    `if(d&&d.body){add(d,1);if(!f.hasAttribute('data-btbx')){f.setAttribute('data-btbx','1');` +
+    `f.addEventListener('load',function(){try{if(f.contentDocument&&f.contentDocument.body)add(f.contentDocument,0)}catch(e){}})}}` +
+    `else add(document,1)})()`;
   return `javascript:${source}`;
 }

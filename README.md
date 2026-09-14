@@ -70,7 +70,7 @@ bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
 programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
 doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js` sürüm 1.3.1, kullanıcının açık BUIS
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.4.0, kullanıcının açık BUIS
 sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir; 1.3.0'dan sonra
 `@updateURL` ile canlı siteden güncellenir, daha eski kurulumlar bir kez elle
 güncellenmelidir. **Quick Add ve consent formları kapalı olduğundan canlı uyumluluk henüz doğrulanmadı.**
@@ -78,7 +78,7 @@ Eklenti kurmadan kullanmak için Kayıt Asistanı bir **yer imi** (bookmarklet) 
 yer imleri çubuğuna sürüklenir, BUIS ekranında basılınca aynı script'i canlı siteden
 yükler. Course List Preparation aynı kökenli `#ifCPL` çerçevesinde olduğundan script
 o çerçeveye eklenir; BUIS `script-src` CSP göndermediği için yükleme engellenmez.
-Sayfa her yenilendiğinde yer imine yeniden basılmalıdır.
+Çerçeve yenilendikçe script kendiliğinden yeniden eklenir; başka sayfaya geçilirse yer imine yeniden basılmalıdır.
 Kayıt Asistanı'nda bölüm/düzey seçilebilir ve ders başına consent mesajı yazılabilir;
 ikisi de **Planı kopyala** JSON'una eklenir.
 
@@ -97,7 +97,13 @@ gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
   üç alanı seçilir; diğer satırlar alan numarasından (`…1` → `…2`), numara yoksa
   aynı tablodaki sonraki satırlardan bulunur.
 - Plan formdaki satırlardan uzunsa sığan dersler yazılır, kalanlar adıyla
-  bildirilir. Quick Add sonrası sayfada listede görünen şubeler (açılır liste
+  bildirilir. **Tur tur ekleme** (varsayılan açık): kullanıcı Quick Add'e bir kez
+  basınca (kendisi veya **Doldur ve gönder** ile) iş `sessionStorage`'a yazılır;
+  yenilenen sayfada listede görünen şubeler sayılır ve kalanlar aynı düğmeyle
+  gönderilir. Her ders otomatik olarak en fazla bir kez gönderilir; hata metni,
+  ilerleme olmaması, değişen plan/düğme, 3 dakikayı aşan bekleme veya 12 tur
+  sınırı işi durdurur. Yer imi, `#ifCPL` çerçevesi yenilendikçe script'i yeniden
+  ekler. Quick Add sonrası sayfada listede görünen şubeler (açılır liste
   metni hariç) bir sonraki **Formu doldur**'da atlanır. Sayfada "couldn't be
   added" gibi bir hata yazıyorsa hiçbir ders atlanmaz.
 - Geçersiz satır, yinelenen ders veya mevcut farklı değer varsa tüm doldurma

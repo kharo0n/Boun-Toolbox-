@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         BOUN Toolbox — BUIS Kayıt Yardımcısı
 // @namespace    https://github.com/kharo0n/Boun-Toolbox-
-// @version      1.3.1
-// @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar, kontenjan ve consent durumunu gösterir, consent formunu mesajınla doldurur. Ders eklemeyi tek tıkla veya seçtiğin saatte bir kez gönderir; consent isteğini göndermeyi sana bırakır.
+// @version      1.4.0
+// @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar (satır yetmezse tur tur hepsini ekler), kontenjan ve consent durumunu gösterir, consent formunu mesajınla doldurur. Ders eklemeyi tek tıkla veya seçtiğin saatte bir kez gönderir; consent isteğini göndermeyi sana bırakır.
 // @match        https://registration.boun.edu.tr/*
 // @match        https://registration.bogazici.edu.tr/*
 // @updateURL    https://boun-toolbox.vercel.app/buis-kayit-yardimcisi.user.js
@@ -31,6 +31,8 @@
   // Quick Add posts to another page and consent lives on its own screen, so the plan is shared across paths.
   var PLAN_KEY = 'boun-toolbox:buis-helper:plan';
   var CONSENT_JOB_KEY = 'boun-toolbox:buis-helper:consent-job';
+  var QUICK_JOB_KEY = 'boun-toolbox:buis-helper:quickadd-job';
+  var AUTO_CONTINUE_KEY = 'boun-toolbox:buis-helper:auto-continue';
   var QUOTA_URL = '/scripts/quotasearch.asp';
 
   // ---------------------------------------------------------------- yardımcılar
@@ -342,6 +344,9 @@
   var inspectBtn = el('button', { className: 'act ghost', textContent: 'Formu tanı' });
   var quickBtn = el('button', { className: 'act', textContent: 'Doldur ve gönder', disabled: true });
   var reviewed = el('input', { type: 'checkbox', ariaLabel: 'Dönem, ders listesi, kredi ve tekrar seçeneklerini kontrol ettim' });
+  var autoContinue = el('input', { type: 'checkbox', ariaLabel: 'Form satırı yetmezse kalan dersleri Quick Add sonrası kendiliğinden ekle' });
+  try { autoContinue.checked = localStorage.getItem(AUTO_CONTINUE_KEY) !== 'off'; } catch (e) { autoContinue.checked = true; }
+  autoContinue.addEventListener('change', function () { try { localStorage.setItem(AUTO_CONTINUE_KEY, autoContinue.checked ? 'on' : 'off'); } catch (e) { /* özel mod */ } });
   var sendAt = el('input', { type: 'datetime-local', step: '1', ariaLabel: 'Gönderim zamanı (Türkiye)' });
   var armBtn = el('button', { className: 'act', textContent: 'Saatli gönderimi başlat', disabled: true });
   var cancelBtn = el('button', { className: 'act ghost', textContent: 'Zamanlamayı iptal et', disabled: true });
@@ -363,6 +368,7 @@
       el('div', { className: 'row' }, [teachBtn, reportBtn]),
       el('div', { className: 'row' }, [submitChoice, submitBtn]),
       el('label', { className: 'hint' }, [reviewed, ' Dönem, ders listesi, kredi ve tekrar seçeneklerini kontrol ettim.']),
+      el('label', { className: 'hint' }, [autoContinue, ' Form satırı yetmezse kalan dersleri Quick Add’den sonra kendiliğinden ekle (her ders en fazla bir kez).']),
       el('div', { className: 'row' }, [quickBtn]),
       el('details', {}, [el('summary', { textContent: 'Saatli gönderim' }),
         el('label', {}, ['Gönderim zamanı (Türkiye, UTC+3)', sendAt]),
@@ -453,8 +459,10 @@
       return new RegExp('(^|[^A-Z0-9])' + course.abbr + course.code + '\\.0*' + Number(course.section) + '(?!\\d)').test(text);
     });
   }
-  function prepareForm(writeValues) {
-    clearLog(); invalidate();
+  function prepareForm(writeValues, options) {
+    options = options || {};
+    if (!options.quiet) clearLog();
+    invalidate();
     if (pageBlocked()) { say('BUIS kayıt servisi kapalı veya oturum açılmamış. Form açılınca yeniden dene.', 'warn'); return; }
     var parsed = parsePlan(input.value);
     if (parsed.error) { say(parsed.error, 'err'); return; }
@@ -464,8 +472,9 @@
     // because its message may quote the very course that failed.
     var failureShown = FAILURE_TEXT.test(pageText());
     var listed = failureShown ? [] : listedCourses(parsed.courses);
-    var pending = parsed.courses.filter(function (course) { return !listed.includes(course); });
-    if (!pending.length) { say('Plandaki bütün dersler listende görünüyor. Kontrol edip Send to Approval’a geçebilirsin.', 'ok'); return; }
+    var skip = options.skip || [];
+    var pending = parsed.courses.filter(function (course) { return !listed.includes(course) && !skip.includes(course.display); });
+    if (!pending.length) { say(skip.length ? 'Eklenecek başka ders kalmadı.' : 'Plandaki bütün dersler listende görünüyor. Kontrol edip Send to Approval’a geçebilirsin.', 'ok'); return; }
     var batch = pending.slice(0, rows.length), later = pending.slice(rows.length);
     var form = rows[0].abbr.form, values = [];
     try {
@@ -482,7 +491,8 @@
       });
     } catch (error) { say(error.message, 'err'); return; }
     if (writeValues) values.forEach(function (entry) { setValue(entry.node, entry.value); flash(entry.node); });
-    lastFill = { filled: writeValues, desired: values, controls: snapshotControls(form), form: form, action: form.action, method: form.method, target: form.target, enctype: form.enctype, input: input.value, rows: rows,
+    lastFill = { batch: batch.map(function (course) { return course.display; }), later: later.map(function (course) { return course.display; }), listedCount: listed.length,
+      filled: writeValues, desired: values, controls: snapshotControls(form), form: form, action: form.action, method: form.method, target: form.target, enctype: form.enctype, input: input.value, rows: rows,
       values: rows.flatMap(function (row) { return ['abbr', 'code', 'section'].map(function (key) { return { node: row[key], value: row[key].value }; }); }) };
     writePlan(input.value);
     submitTargets = Array.from(form.querySelectorAll('input[type="submit"], input[type="button"], button')).filter(function (node) {
@@ -495,7 +505,11 @@
     var names = function (courses) { return courses.map(function (course) { return course.display; }).join(', '); };
     if (failureShown) say('BUIS bir dersin eklenemediğini yazıyor; mesajı oku. Bu turda hiçbir ders atlanmadı.', 'warn');
     if (listed.length) say('Listende zaten görünen dersler atlandı: ' + names(listed), 'warn');
-    if (later.length) say('Form ' + rows.length + ' satırlık; sonraki tura kalan: ' + names(later) + '. Quick Add’den sonra yeniden "Formu doldur"a bas.', 'warn');
+    if (later.length) {
+      say('Form ' + rows.length + ' satırlık; sonraki tura kalan: ' + names(later) + (autoContinue.checked
+        ? '. Quick Add’den sonra sayfa yenilenince kendiliğinden eklenecek.' : '. Quick Add’den sonra yeniden "Formu doldur"a bas.'), 'warn');
+    }
+    if (options.quiet) return;
     say(batch.length + (writeValues ? ' ders forma yazıldı: ' + names(batch) + '. Gönderme yapılmadı.' : ' ders için form tanındı; alanlar değiştirilmedi. Kredi/tekrar seçeneklerini BUIS’te kontrol et.'), 'ok');
     say(submitTargets.length ? 'Listeyi kontrol edip doğru BUIS ders ekleme düğmesini seç.' : 'Ders ekleme düğmesi doğrulanamadı; BUIS’in kendi düğmesini kullan.', 'warn');
   }
@@ -546,7 +560,7 @@
       !target.node.getClientRects().length || target.signature !== targetSignature(target.node) || !ADD_LABEL.test(label(target.node))) return null;
     return target;
   }
-  function dispatchPlan(fillFirst) {
+  function dispatchPlan(fillFirst, previous) {
     var started = performance.now(), target = selectedTarget();
     if (!target || !fillFirst && !lastFill.filled || fillFirst && !reviewed.checked) {
       invalidate(); say('Form, seçenekler veya düğme değişti. Yeniden tanıtıp kontrol et.', 'err'); return;
@@ -562,10 +576,70 @@
     }
     if (!selectedTarget()) { invalidate(); say('Form değişti; gönderilmedi.', 'err'); return; }
     var node = target.node;
+    rememberRound(node, previous);
     invalidate(); // Clear both manual and timed paths BEFORE invoking the actual button.
     say('Doldurma/kontrol ' + (performance.now() - started).toFixed(1) + ' ms. Seçtiğin ekleme düğmesine bir kez basılıyor; sonuç BUIS yanıtında.', 'warn');
     try { node.click(); return true; } catch (error) { say('Düğme işlemi tamamlanamadı: ' + error.message, 'err'); return false; }
   }
+  // ------------------------------------------------------------ multi-round Quick Add
+  // A plan longer than the form goes in rounds: after each Quick Add the page reloads, the helper sees
+  // which sections are now listed and sends the rest with the same button. Every course is sent
+  // automatically at most once; an error message, no progress or a changed plan ends the run.
+  var QUICK_JOB_MS = 180000, MAX_ROUNDS = 12;
+  function saveQuickJob(job) {
+    try {
+      if (job) sessionStorage.setItem(QUICK_JOB_KEY, JSON.stringify(Object.assign({}, job, { at: Date.now() })));
+      else sessionStorage.removeItem(QUICK_JOB_KEY);
+    } catch (e) { /* özel mod */ }
+  }
+  function readQuickJob() {
+    try {
+      var job = JSON.parse(sessionStorage.getItem(QUICK_JOB_KEY) || 'null'), age = job && Date.now() - job.at;
+      var valid = job && typeof job.plan === 'string' && job.button && typeof job.button.name === 'string' && typeof job.button.label === 'string' &&
+        Number.isInteger(job.listed) && Number.isInteger(job.round) && job.round >= 1 && Array.isArray(job.tried) &&
+        job.tried.every(function (item) { return typeof item === 'string'; }) && age >= 0 && age < QUICK_JOB_MS;
+      return valid ? job : null;
+    } catch (e) { return null; }
+  }
+  function rememberRound(button, previous) {
+    // Saved even when nothing is left, so the reloaded page can report which courses made it onto the list.
+    if (!lastFill || !autoContinue.checked) { saveQuickJob(null); return; }
+    saveQuickJob({ plan: lastFill.input, button: { name: button.name || '', label: label(button) }, listed: lastFill.listedCount,
+      round: previous ? previous.round + 1 : 1, tried: (previous ? previous.tried : []).concat(lastFill.batch) });
+  }
+  // Filling with the helper and pressing BUIS's own Quick Add also starts the rounds.
+  document.addEventListener('submit', function (event) {
+    var button = event.submitter;
+    if (!lastFill || !lastFill.filled || !button || panel.contains(button) || button.form !== lastFill.form || !ADD_LABEL.test(label(button)) || !fillMatches()) return;
+    rememberRound(button, null);
+  }, true);
+  function resumeQuickAdd() {
+    var job = readQuickJob();
+    if (!job) return;
+    saveQuickJob(null);
+    if (job.plan !== input.value) { say('Plan değiştiği için kalan derslerin otomatik eklenmesi durdu.', 'warn'); return; }
+    if (pageBlocked()) { say('BUIS servisi kapalı veya oturum düştü; kalan dersler otomatik eklenmedi.', 'err'); return; }
+    if (FAILURE_TEXT.test(pageText())) { say('BUIS bir dersin eklenemediğini yazıyor; otomatik ekleme durdu. Mesajı oku, kalanlar için "Formu doldur"a bas.', 'err'); return; }
+    var parsed = parsePlan(input.value);
+    if (parsed.error) { say(parsed.error, 'err'); return; }
+    var listed = listedCourses(parsed.courses);
+    var names = function (courses) { return courses.map(function (course) { return course.display; }).join(', '); };
+    var failed = parsed.courses.filter(function (course) { return !listed.includes(course) && job.tried.includes(course.display); });
+    if (listed.length <= job.listed) { say('Son Quick Add’den sonra listende yeni ders görünmüyor (ya da BUIS listeyi farklı biçimde gösteriyor); otomatik ekleme durdu. Listeni kontrol et, kalanlar için "Formu doldur"a bas.', 'err'); return; }
+    if (listed.length === parsed.courses.length) { say('Plandaki ' + listed.length + ' dersin hepsi listende görünüyor. Kontrol edip Send to Approval’a geçebilirsin.', 'ok'); return; }
+    if (job.round >= MAX_ROUNDS) { say('Tur sınırına ulaşıldı; otomatik ekleme durdu.', 'err'); return; }
+    prepareForm(false, { quiet: true, skip: job.tried });
+    if (failed.length) say('Gönderildiği halde listede görünmeyen dersler tekrar denenmedi: ' + names(failed) + '. BUIS’in mesajını kontrol et.', 'warn');
+    if (!lastFill) return; // prepareForm said why, or nothing is left to send
+    var matches = submitTargets.filter(function (target) { return target.node.name === job.button.name && label(target.node) === job.button.label; });
+    if (matches.length !== 1) { invalidate(); say('Quick Add düğmesi bu sayfada tek başına bulunamadı; kalanları elle ekle.', 'err'); return; }
+    submitChoice.value = String(submitTargets.indexOf(matches[0]));
+    reviewed.checked = true;
+    say('Tur ' + (job.round + 1) + ': listende ' + listed.length + '/' + parsed.courses.length + ' ders var; ' + names(parsed.courses.filter(function (course) {
+      return lastFill.batch.includes(course.display); })) + ' ekleniyor.', 'ok');
+    dispatchPlan(true, job);
+  }
+
   submitBtn.addEventListener('click', function () { dispatchPlan(false); });
   quickBtn.addEventListener('click', function () { dispatchPlan(true); });
 
@@ -817,6 +891,7 @@
   };
   if (pageBlocked()) say('BUIS kayıt servisi kapalı veya giriş gerekiyor. Kapalı ekranı aşmak için istek gönderilmez.', 'warn');
   say('Hazır. Programı yapıştır ve "Formu doldur"a bas.', 'ok');
+  resumeQuickAdd();
   var pendingConsent = readJob();
   if (pendingConsent) { say('Consent adımı sürüyor: ' + pendingConsent.display); runConsent(pendingConsent, Date.now() + 8000); }
 })();

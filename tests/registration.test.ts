@@ -134,6 +134,11 @@ test('bookmarklet adds the helper to the BUIS registration frame, or reopens a l
   run(framed.window as unknown as Window);
   assert.match(inner.querySelector('script')!.src, /^https:\/\/boun-toolbox\.vercel\.app\/buis-kayit-yardimcisi\.user\.js\?b=\d+$/);
   assert.equal(framed.window.document.querySelectorAll('body > script').length, 0);
+  run(framed.window as unknown as Window); // pressed twice: no second script, no second reload listener
+  assert.equal(inner.querySelectorAll('script').length, 1);
+  inner.querySelector('script')!.remove(); // the frame reloads after Quick Add and loses the script
+  framed.window.document.querySelector('iframe')!.dispatchEvent(new framed.window.Event('load'));
+  assert.equal(inner.querySelectorAll('script[data-btbx]').length, 1, 're-added after the frame reload');
 
   const plain = new JSDOM('<p>Consent Requests</p>', { url: 'https://registration.boun.edu.tr/scripts/consent.asp', runScripts: 'outside-only' });
   let opened = 0;

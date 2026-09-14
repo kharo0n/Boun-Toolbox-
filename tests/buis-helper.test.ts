@@ -474,3 +474,85 @@ test('form report shows how dropdown labels are built without their text', t => 
   assert.match(report, /select\|select-one\|abbr\|\|3 seçenek: -- \/ AAAA \/ AAAA/);
   assert.doesNotMatch(report, /CMPE|Dear Professor/);
 });
+
+// ------------------------------------------------------------------ multi-round Quick Add
+const QUICK_JOB = 'boun-toolbox:buis-helper:quickadd-job', PLAN = 'boun-toolbox:buis-helper:plan';
+const eightPlan = JSON.stringify({ source: 'boun-toolbox', version: 1, semester: '2026/2027-1', courses: [
+  ['CMPE', '150', '01'], ['MATH', '101', '02'], ['EC', '101', '01'], ['HIST', '105', '01'], ['PHYS', '121', '01'], ['CHEM', '105', '01'], ['TK', '221', '01'], ['PSY', '101', '01'],
+].map(([abbr, code, section]) => ({ abbr, code, section })) });
+const listing = (...codes: string[]) => `<table>${codes.map(code => `<tr><td>${code}</td><td>Course</td></tr>`).join('')}</table>`;
+/** A page BUIS returns after Quick Add: the list so far plus a fresh form, with the tab's storage carried over. */
+function reloaded(t: TestContext, page: string, job: object | null, plan = eightPlan) {
+  return fixture(t, page, '{}', w => {
+    w.localStorage.setItem(PLAN, plan);
+    if (job) w.sessionStorage.setItem(QUICK_JOB, JSON.stringify({ at: Date.now(), ...job }));
+  });
+}
+const rows5 = form([1, 2, 3, 4, 5].map(row).join(''));
+const job = (f: ReturnType<typeof fixture>) => JSON.parse(f.w.sessionStorage.getItem(QUICK_JOB) || 'null');
+
+test('eight courses on a five-row form: one confirmation sends five, the reloaded page sends the other three', t => {
+  const first = fixture(t, rows5);
+  first.setPlan(eightPlan); first.button('Formu tanı').click(); first.choose();
+  first.d.querySelector<HTMLInputElement>('#btbx input[type="checkbox"]')!.click();
+  assert.match(log(first), /sonraki tura kalan: CHEM 105\.01, TK 221\.01, PSY 101\.01\. Quick Add’den sonra sayfa yenilenince kendiliğinden eklenecek/);
+  first.button('Doldur ve gönder').click();
+  assert.equal(first.submissions(), 1);
+  const saved = job(first);
+  assert.deepEqual([saved.round, saved.listed, saved.tried.length, saved.button.label], [1, 0, 5, 'Quick Add']);
+
+  const second = reloaded(t, listing('CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01') + rows5, saved);
+  assert.equal(second.submissions(), 1, 'second round sent without another click');
+  assert.deepEqual([1, 2, 3].map(n => second.field(`abbr${n}`).value), ['CHEM', 'TK', 'PSY']);
+  assert.equal(second.field('abbr4').value, '');
+  assert.match(log(second), /Tur 2: listende 5\/8 ders var; CHEM 105\.01, TK 221\.01, PSY 101\.01 ekleniyor/);
+  assert.equal(job(second).tried.length, 8);
+
+  const third = reloaded(t, listing('CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01', 'CHEM 105.01', 'TK 221.01', 'PSY 101.01') + rows5, job(second));
+  assert.equal(third.submissions(), 0);
+  assert.match(log(third), /8 dersin hepsi listende görünüyor/);
+  assert.equal(job(third), null);
+});
+
+test('pressing BUIS’s own Quick Add after "Formu doldur" also starts the rounds', t => {
+  const f = fixture(t, form(row(1) + row(2)));
+  f.fill(eightPlan);
+  const add = f.d.querySelector<HTMLButtonElement>('#add')!;
+  add.click();
+  assert.equal(f.submissions(), 1);
+  const saved = job(f);
+  assert.ok(saved, 'job saved from the submit event');
+  assert.deepEqual(saved.tried, ['CMPE 150.01', 'MATH 101.02']);
+});
+
+test('a course that was sent but did not appear is not sent again', t => {
+  const previous = { plan: eightPlan, button: { name: '', label: 'Quick Add' }, listed: 0, round: 1, tried: ['CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01'] };
+  const f = reloaded(t, listing('CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'PHYS 121.01') + rows5, previous);
+  assert.equal(f.submissions(), 1);
+  assert.deepEqual([1, 2, 3, 4].map(n => f.field(`abbr${n}`).value), ['CHEM', 'TK', 'PSY', '']);
+  assert.match(log(f), /tekrar denenmedi: HIST 105\.01/);
+});
+
+test('rounds stop on an error message, no progress, a changed plan, a stale job or when switched off', t => {
+  const previous = { plan: eightPlan, button: { name: '', label: 'Quick Add' }, listed: 0, round: 1, tried: ['CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01'] };
+  const five = listing('CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01');
+  const cases: [string, ReturnType<typeof fixture>, RegExp][] = [
+    ['error', reloaded(t, "<p>MATH 101.02 course couldn't be added to your list</p>" + five + rows5, previous), /eklenemediğini yazıyor/],
+    ['no progress', reloaded(t, rows5, previous), /yeni ders görünmüyor/],
+    ['changed plan', reloaded(t, five + rows5, previous, 'CMPE 150.01'), /Plan değiştiği/],
+    ['different button', reloaded(t, five + form([1, 2, 3, 4, 5].map(row).join(''), '<button>Add Selected Course</button>'), previous), /Quick Add düğmesi/],
+    ['stale', reloaded(t, five + rows5, { ...previous, at: Date.now() - 10 * 60000 }), /Hazır/],
+  ];
+  for (const [name, f, expected] of cases) {
+    assert.equal(f.submissions(), 0, name);
+    assert.equal(f.field('abbr1').value, '', name);
+    assert.match(log(f), expected, name);
+  }
+  const off = fixture(t, rows5, '{}', w => w.localStorage.setItem('boun-toolbox:buis-helper:auto-continue', 'off'));
+  off.setPlan(eightPlan); off.button('Formu tanı').click(); off.choose();
+  off.d.querySelector<HTMLInputElement>('#btbx input[type="checkbox"]')!.click();
+  off.button('Doldur ve gönder').click();
+  assert.equal(off.submissions(), 1);
+  assert.equal(job(off), null);
+  assert.match(log(off), /yeniden "Formu doldur"a bas/);
+});

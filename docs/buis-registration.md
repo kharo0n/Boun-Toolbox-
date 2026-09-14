@@ -141,3 +141,16 @@ sayısı, consent listelerinin yenilenme davranışı ve form hedefi **Form rapo
 incelenmeli. İşlem sonucunun nasıl gösterildiği ve varsa ders başına hata kodları
 henüz bilinmiyor; otomatik başarı yorumlama veya hataya göre tekrar deneme
 uygulanmadı. Oturumun açık olması, kayıt servisinin açık olduğu anlamına gelmez.
+
+## Yardımcı 1.4.0: sekiz ders tek hamlede (15 Eylül 2026)
+
+Quick Add formunun satır sayısı canlıda görülmedi. Plan formdan uzunsa yardımcı
+turlarla ekler: ilk Quick Add (kullanıcının kendi basışı veya **Doldur ve gönder**)
+bir iş kaydeder; BUIS yanıt sayfası yüklenince listede `ABBR KOD.ŞUBE` biçiminde
+görünen şubeler sayılır, gönderilmemiş dersler aynı ad ve etiketli düğmeyle
+gönderilir. Durma koşulları: sayfada ekleme hatası, listede yeni ders olmaması,
+değişen plan, düğmenin tek başına bulunamaması, 3 dakikayı aşan bekleme, 12 tur.
+Gönderildiği halde listede görünmeyen ders tekrar gönderilmez. BUIS listeyi başka
+biçimde gösterirse ilk turdan sonra güvenli biçimde durur. Yer imi, çerçevenin
+`load` olayında script'i yeniden ekler. `/buis-helper-demo.html` 5 satırlık formda
+8 dersi gerçek sayfa yenilemesiyle iki turda ekler.
