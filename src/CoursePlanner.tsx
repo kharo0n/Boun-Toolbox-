@@ -195,14 +195,17 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
 
         <details className="assistant-help">
           <summary>BUIS kayıt yardımcısını kullan</summary>
-          <p className="assistant-note">Gerçek ders ekleme ekranıyla doğrulama bekleniyor. Kayıt saatinde otomatik gönderim henüz desteklenmiyor.</p>
+          <p className="assistant-note">BUIS’te Quick Add formu açıldığında tek tıkla veya seçtiğiniz saatte gönderebilirsiniz. Canlı form şu an kapalı; gerçek kayıt uyumluluğu henüz doğrulanmadı.</p>
           <ol>
             <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin. (Alternatif: script’i kopyalayıp BUIS sekmesinde tarayıcı konsoluna yapıştırın.)</li>
             <li>BUIS’e kendiniz giriş yapıp ders ekleme ekranını açın; sağ üstte panel çıkar.</li>
-            <li><strong>Planı kopyala</strong> ile dönem bilgisini de alıp panele yapıştırın, <strong>Formu doldur</strong>’a basın.</li>
+            <li><strong>Planı kopyala</strong> ile dönemli planı alın. BUIS’te <strong>Course List Preparation</strong> içindeki yardımcıya yapıştırıp <strong>Formu tanı</strong>’ya basın.</li>
             <li><strong>Kontenjan kontrol</strong> ile şubelerin doluluğunu görebilirsiniz.</li>
-            <li>Formu gözden geçirin, panelden BUIS ders ekleme düğmesini seçip <strong>Formu gönder</strong>’e basın. Ardından BUIS’in sonucunu kontrol edin.</li>
+            <li><strong>Quick Add</strong> düğmesini seçin. Dönemi, listeyi ve BUIS’in kredi/tekrar seçeneklerini kontrol edip kutuyu işaretleyin. <strong>Doldur ve gönder</strong> tüm satırları yazıp düğmeye bir kez basar.</li>
+            <li>İsterseniz <strong>Saatli gönderim</strong> bölümünden Türkiye saatini seçip başlatın. Form açık, sekme görünür olmalı; sayfa yenilenirse zamanlama iptal olur.</li>
+            <li>BUIS sonucunu kontrol edin. <strong>Send to Approval</strong> danışman onayı için ayrı işlemdir.</li>
           </ol>
+          <p><a href={`${import.meta.env.BASE_URL}buis-helper-demo.html`} target="_blank" rel="noreferrer">Hızlı gönderimi örnek formda dene →</a></p>
           <p className="assistant-note">Yardımcı şifrenizi toplamaz. Kontenjan sorgusu ve seçtiğiniz ders ekleme işlemi kendi BUIS oturumunuzdan BUIS’e gönderilir. LAB/P.S. seçimleri programlama amaçlıdır; BUIS’te ayrıca işlem gerekebilir.</p>
         </details>
       </>}

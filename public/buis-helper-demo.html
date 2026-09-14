@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BOUN Toolbox · Hızlı kayıt denemesi</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183047;font:16px/1.55 system-ui,sans-serif}main{max-width:1050px;margin:40px auto;padding:24px 390px 24px 24px}h1{font-size:28px;line-height:1.2}a{color:#165b94}.badge{color:#8a5300;background:#fff0cf;display:inline-block;border-radius:8px;padding:6px 12px}form,.card{background:white;border:1px solid #d9e2ed;border-radius:12px;padding:18px;margin:20px 0}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:6px}td input{width:100%;min-width:45px;padding:8px;border:1px solid #bbc9d9;border-radius:5px}button{cursor:pointer;border:0;border-radius:7px;background:#0d3b66;color:white;padding:10px 14px;margin:4px 0}button.secondary{background:#e9eff5;color:#234}output{display:block;white-space:pre-wrap}.hint{font-size:13px;color:#4b5e71}@media(max-width:780px){main{margin:15px auto;padding:16px}#btbx{position:relative!important;inset:auto!important;width:calc(100% - 32px)!important;max-height:none!important;margin:16px}}
+</style>
+</head><body><main>
+<a href="./#/planner">← Programlayıcı</a>
+<p class="badge">Deneme ortamı · Gerçek ders kaydı yapılmaz</p>
+<h1>Derslerini tek seferde yazıp gönder</h1>
+<p>Bu örnek form, gerçek kayıt yardımcısını çalıştırır. Gönderimi burada durdurup sonucu gösterir; BUIS’e bağlanmaz.</p>
+<ol><li>Örnek planı yükle.</li><li>Yardımcıda <strong>Formu tanı</strong>’ya basıp <strong>Quick Add</strong> düğmesini seç.</li><li>Liste ve kredi/tekrar kontrol kutusunu işaretle.</li><li><strong>Doldur ve gönder</strong> ile dene. Saatli deneme için önce aşağıdan 5 saniye sonrasını ayarla, ardından yardımcıdan zamanlamayı başlat.</li></ol>
+<button type="button" id="load">Örnek planı yükle</button>
+<button type="button" id="soon" class="secondary">Saati 5 saniye sonrasına ayarla</button>
+<button type="button" id="reset" class="secondary">Denemeyi sıfırla</button>
+<form id="demo-form" method="post" action="/buis-helper-demo.html">
+<h2>Örnek Quick Add formu</h2>
+<table><thead><tr><th>Kısaltma</th><th>Numara</th><th>Şube</th></tr></thead><tbody>
+<tr><td><input aria-label="Ders 1 kısaltma" name="abbr1"></td><td><input aria-label="Ders 1 numara" name="code1"></td><td><input aria-label="Ders 1 şube" name="section1"></td></tr>
+<tr><td><input aria-label="Ders 2 kısaltma" name="abbr2"></td><td><input aria-label="Ders 2 numara" name="code2"></td><td><input aria-label="Ders 2 şube" name="section2"></td></tr>
+<tr><td><input aria-label="Ders 3 kısaltma" name="abbr3"></td><td><input aria-label="Ders 3 numara" name="code3"></td><td><input aria-label="Ders 3 şube" name="section3"></td></tr>
+</tbody></table>
+<label><input type="checkbox" name="noncredit"> Non-credit (deneme seçeneği)</label>
+<div><button class="secondary" type="submit" id="advisor">Send to Approval</button> <button type="submit" id="quick-add">Quick Add</button></div>
+</form>
+<div class="card"><h2>Deneme sonucu</h2><output id="result" role="status">Henüz gönderim yok.</output></div>
+<p class="hint">Buradaki hız, yalnızca alanları yazma ve düğmeyi tetikleme süresidir. Üniversite sunucusunun işlem süresi ve ders kabulü bu testin kapsamında değildir. Gerçek BUIS formu şu anda kapalı olduğu için canlı kayıt uyumluluğu henüz doğrulanmadı.</p>
+</main>
+<script>
+const demoForm=document.querySelector('#demo-form');
+let sends=0;
+demoForm.addEventListener('submit',event=>{
+ event.preventDefault(); sends++;
+ const entries=Array.from({length:3},(_,i)=>{const n=i+1;return [demoForm.elements['abbr'+n].value,demoForm.elements['code'+n].value,demoForm.elements['section'+n].value].join(' / ');});
+ document.querySelector('#result').textContent='Deneme gönderimi: '+sends+'\nDüğme: '+event.submitter?.textContent+'\n'+entries.join('\n')+'\nGerçek kayıt veya ağ isteği yapılmadı.';
+});
+document.querySelector('#load').addEventListener('click',()=>{
+ const input=document.querySelector('#btbx textarea'); if(!input)return;
+ input.value=JSON.stringify({source:'boun-toolbox',version:1,semester:'2026/2027-1',courses:[{abbr:'CMPE',code:'150',section:'01'},{abbr:'MATH',code:'101',section:'02'},{abbr:'EC',code:'101',section:'01'}]},null,2);
+ input.dispatchEvent(new Event('input',{bubbles:true}));
+});
+document.querySelector('#soon').addEventListener('click',()=>{
+ const input=document.querySelector('#btbx input[type="datetime-local"]'); if(!input)return;
+ input.value=new Date(Date.now()+6000+10800000).toISOString().slice(0,19); input.dispatchEvent(new Event('input',{bubbles:true}));
+});
+document.querySelector('#reset').addEventListener('click',()=>{
+ demoForm.reset(); demoForm.dispatchEvent(new Event('change',{bubbles:true})); sends=0;document.querySelector('#result').textContent='Henüz gönderim yok.';
+});
+</script><script src="./buis-kayit-yardimcisi.user.js"></script>
+</body></html>

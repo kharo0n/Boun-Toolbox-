@@ -8,7 +8,7 @@ const row = (n: number) => `<input name="abbr${n}"><input name="code${n}"><input
 const form = (fields = row(1), buttons = '<button id="delete">Delete</button><button id="add">Quick Add</button>') => `<form method="post" action="/fixture-add.aspx">${fields}${buttons}</form>`;
 function fixture(t: TestContext, html = form(), saved = '{}') {
   // Synthetic form, no BUIS session or network. Layout is mocked because jsdom has none.
-  const dom = new JSDOM(html, { url: 'https://registration.boun.edu.tr/buis/Fixture.aspx?token=URL_SECRET', runScripts: 'outside-only' });
+  const dom = new JSDOM(html, { url: 'https://registration.boun.edu.tr/buis/Fixture.aspx?token=URL_SECRET', runScripts: 'outside-only', pretendToBeVisual: true });
   t.after(() => dom.window.close());
   const w = dom.window;
   Object.defineProperty(w.HTMLElement.prototype, 'getClientRects', { value() { return this.hidden || this.style.display === 'none' ? [] : [{}]; } });
@@ -146,4 +146,122 @@ test('disabled fieldset course fields are not editable', t => {
   const f = fixture(t, form('<fieldset disabled>' + row(1) + '</fieldset>'));
   f.fill();
   assert.equal(f.field('abbr1').value, '');
+});
+
+const jsonPlan = JSON.stringify({ source: 'boun-toolbox', version: 1, semester: '2026/2027-1', courses: [{ abbr: 'CMPE', code: '150', section: '01' }, { abbr: 'MATH', code: '101', section: '02' }] });
+function readyFast(t: TestContext, html = form(row(1) + row(2))) {
+  const f = fixture(t, html);
+  f.setPlan(jsonPlan);
+  f.button('Formu tanı').click();
+  f.choose();
+  const review = f.d.querySelector<HTMLInputElement>('#btbx input[type="checkbox"]')!;
+  review.click();
+  return { ...f, review };
+}
+function fakeClock(f: ReturnType<typeof fixture>) {
+  let wall = Date.parse('2026-09-15T09:59:50+03:00'), mono = 0;
+  let callback: (() => void) | undefined;
+  Object.defineProperty(f.w.Date, 'now', { value: () => wall });
+  Object.defineProperty(f.w.performance, 'now', { value: () => mono });
+  f.w.setTimeout = (fn: () => void) => { callback = fn; return 1; };
+  f.w.clearTimeout = () => { callback = undefined; };
+  const time = f.d.querySelector<HTMLInputElement>('#btbx input[type="datetime-local"]')!;
+  time.value = '2026-09-15T10:00:00';
+  return { time, advance(ms: number, monotonicMs = ms) { wall += ms; mono += monotonicMs; const fn = callback; callback = undefined; fn?.(); } };
+}
+
+test('fast path leaves fields untouched during preparation, fills and submits both courses once', t => {
+  const f = readyFast(t);
+  assert.equal(f.field('abbr1').value, '');
+  assert.equal(f.submissions(), 0);
+  assert.equal(f.button('Formu gönder').disabled, true);
+  f.button('Doldur ve gönder').click();
+  f.button('Doldur ve gönder').click();
+  assert.equal(f.field('abbr1').value, 'CMPE');
+  assert.equal(f.field('code2').value, '101');
+  assert.equal(f.field('section2').value, '02');
+  assert.equal(f.submissions(), 1);
+  assert.equal(f.networkCalls(), 0);
+});
+
+test('a changed repeat/credit selection prevents fast submission, including silent JS changes', t => {
+  const f = readyFast(t, form(row(1) + row(2) + '<input type="checkbox" name="noncredit">'));
+  f.d.querySelector<HTMLInputElement>('[name="noncredit"]')!.checked = true;
+  f.button('Doldur ve gönder').click();
+  assert.equal(f.submissions(), 0);
+  assert.equal(f.field('abbr1').value, '');
+});
+
+test('closed service never offers a send path even if old inputs remain', t => {
+  const f = readyFast(t, '<h1>SERVICE IS CURRENTLY CLOSED!</h1>' + form(row(1) + row(2)));
+  assert.equal(f.button('Doldur ve gönder').disabled, true);
+  assert.equal(f.button('Saatli gönderimi başlat').disabled, true);
+  assert.equal(f.field('abbr1').value, '');
+});
+
+test('BUIS wrapper leaves the helper to its inner registration frame', t => {
+  const dom = new JSDOM('<iframe id="ifCPL" src="about:blank"></iframe>', { url: 'https://registration.boun.edu.tr/buis/manage/ObikasASPFrame.aspx', runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.eval(script);
+  assert.equal(dom.window.document.querySelector('#btbx'), null);
+});
+
+test('timer waits until the chosen instant then fills and submits once', t => {
+  const f = readyFast(t), clock = fakeClock(f);
+  f.button('Saatli gönderimi başlat').click();
+  assert.equal(f.button('Doldur ve gönder').disabled, true);
+  clock.advance(9900);
+  assert.equal(f.submissions(), 0);
+  assert.equal(f.field('abbr1').value, '');
+  clock.advance(100);
+  clock.advance(1000);
+  assert.equal(f.submissions(), 1);
+  assert.equal(f.field('code2').value, '101');
+});
+
+for (const scenario of ['cancel', 'plan edit', 'button change', 'late wake', 'clock jump', 'hidden', 'pagehide', 'closed']) {
+  test(`scheduled submission stops on ${scenario}`, t => {
+    const f = readyFast(t), clock = fakeClock(f);
+    f.button('Saatli gönderimi başlat').click();
+    if (scenario === 'cancel') f.button('Zamanlamayı iptal et').click();
+    if (scenario === 'plan edit') f.setPlan('MATH101.01');
+    if (scenario === 'button change') f.d.querySelector('#add')!.textContent = 'Send to approval';
+    if (scenario === 'hidden') { Object.defineProperty(f.d, 'visibilityState', { value: 'hidden' }); f.d.dispatchEvent(new f.w.Event('visibilitychange')); }
+    if (scenario === 'pagehide') f.w.dispatchEvent(new f.w.Event('pagehide'));
+    if (scenario === 'closed') f.d.body.insertAdjacentHTML('afterbegin', '<p>SERVICE IS CURRENTLY CLOSED!</p>');
+    clock.advance(scenario === 'late wake' ? 13000 : 10000, scenario === 'clock jump' ? 300 : scenario === 'late wake' ? 13000 : 10000);
+    assert.equal(f.submissions(), 0);
+    assert.equal(f.field('abbr1').value, '');
+  });
+}
+
+test('time parser is explicitly Turkey time and rejects normalized invalid dates', t => {
+  const f = fixture(t);
+  const parse = f.w.__bounToolboxHelper.parseSendTime;
+  assert.equal(parse('2026-09-15T10:00:00'), Date.parse('2026-09-15T07:00:00Z'));
+  assert.equal(parse('2026-09-15T10:00'), Date.parse('2026-09-15T07:00:00Z'));
+  assert.ok(Number.isNaN(parse('2026-02-30T10:00:00')));
+  assert.ok(Number.isNaN(parse('not a date')));
+});
+
+test('already passed time does not submit or arm', t => {
+  const f = readyFast(t), clock = fakeClock(f);
+  clock.time.value = '2026-09-15T09:00:00';
+  f.button('Saatli gönderimi başlat').click();
+  clock.advance(60000);
+  assert.equal(f.submissions(), 0);
+  assert.equal(f.button('Zamanlamayı iptal et').disabled, true);
+});
+
+test('forged manual send event cannot submit a preview with unfilled fields', t => {
+  const f = readyFast(t);
+  f.button('Formu gönder').dispatchEvent(new f.w.MouseEvent('click'));
+  assert.equal(f.submissions(), 0);
+});
+
+test('unknown origin cannot install the helper outside the explicit demo page', t => {
+  const dom = new JSDOM(form(), { url: 'https://example.com/buis/Fixture.aspx', runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.eval(script);
+  assert.equal(dom.window.document.querySelector('#btbx'), null);
 });

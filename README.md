@@ -70,10 +70,18 @@ bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
 programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
 doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js` sürüm 1.1.0, kullanıcının açık BUIS
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.2.0, kullanıcının açık BUIS
 sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir. Mevcut kurulumu
-yeni dosyayla güncellemek gerekir. **Gerçek, oturum açılmış ders ekleme
-formuyla uyumluluk henüz doğrulanmadı. Kayıt saatinde otomatik gönderim yok.**
+yeni dosyayla güncellemek gerekir. **Quick Add formu kapalı olduğundan canlı ders ekleme uyumluluğu henüz doğrulanmadı.**
+
+**Formu tanı → Quick Add düğmesini seç → Kontrol kutusunu işaretle → Doldur ve
+gönder** ile bütün ders alanları yazılıp düğmeye bir kez basılır. **Saatli gönderim**,
+önceden açılmış ve tanınmış formda Türkiye saatine göre çalışır. Kapalı ekrandan
+form açmaz; yenileme, gizlenen sekme, değişen form veya saat kayması zamanlamayı
+iptal eder. [Deneme sayfası](https://boun-toolbox.vercel.app/buis-helper-demo.html)
+gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
+
+[BUIS ve İTÜ incelemesi, kurulum ve doğrulama sınırları](docs/buis-registration.md).
 
 - **Formu doldur**, bilinen ad desenleriyle tek formdaki ders alanlarını arar.
   Tablo düzeninden tahmin yapmaz. Bulamazsa **Alanları tanıt** ile aynı formun
@@ -99,8 +107,9 @@ isteği BUIS'e gider; Toolbox sunucusuna oturum bilgisi aktarılmaz.
 ### BUIS incelemesinin sınırı (14 Eylül 2026)
 
 - Oturumsuz `BuisDashboard.aspx` açılışı giriş ekranına dönüyor. Mevcut tarayıcı
-  sekmeleri de `Login.aspx` üzerinde; oturum içindeki ders ekleme ekranı ve
-  istekleri henüz incelenemedi.
+  oturumunda Course List Preparation açıldı: `ObikasASPFrame.aspx` içindeki
+  `iframe#ifCPL`, `/scripts/loginst.asp` yükledi. İçerik `SERVICE IS CURRENTLY CLOSED!`
+  olduğundan gerçek ders ekleme formu ve istek hedefi henüz incelenemedi.
 - Herkese açık giriş sayfasında ASP.NET WebForms alanları var. Bu bulgu,
   oturum içindeki bütün ekranların aynı yöntemle çalıştığını veya BUIS'te
   JSON API olmadığını kanıtlamaz. Kayıt endpoint'i tahmin edilmedi.
@@ -110,7 +119,7 @@ isteği BUIS'e gider; Toolbox sunucusuna oturum bilgisi aktarılmaz.
   Toolbox sayfası BUIS ekranını doğrudan okuyup dolduramaz. Mevcut yardımcı bu
   nedenle kullanıcının BUIS sekmesinde çalışır.
 
-Otomatik gönderim için sonraki adım: kullanıcının oturum açtığı ders ekleme
+Canlı kayıt uyumluluğu için sonraki adım: kullanıcının oturum açtığı ders ekleme
 sayfasında gerçek alanları, dönem bilgisini, gönderme hedefini ve BUIS başarı/
 hata durumlarını doğrulamak. Bu incelemede gerçek bir ders kayıt isteği
 gönderilmedi. Sentetik form testleri gerçek BUIS uyumluluğunun yerine geçmez.
