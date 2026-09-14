@@ -4,7 +4,7 @@ Boğaziçi Üniversitesi ders programlayıcı, GPA ve müfredat araçları. Reac
 
 ## Çalıştırma
 
-Node.js 20.19+ veya 22.12+ gerektirir.
+Node.js 20.19+ veya 22.13+ gerektirir.
 
 ```sh
 npm ci
@@ -64,41 +64,63 @@ Güncel ders verisi referans projeden kopyalanmadı; üniversitenin yayımladı�
 
 ## Kayıt Asistanı ve BUIS yardımcısı
 
-Planner'daki **🎓 Kayıt Asistanı** düğmesi, seçili dersleri BUIS'in ders ekleme
-formunun beklediği `ABBR KOD.ŞUBE` biçimine çevirir (`CMPE 150.01`). Listeyi
-kopyalayabilir veya `kayit-plani-*.json` olarak indirebilirsiniz. Panel ayrıca
-LAB/P.S. seçimi eksik kalan dersleri ve aynı dersin iki şubesinin seçildiği
-durumları uyarı olarak gösterir.
+Planner'daki **🎓 Kayıt Asistanı**, seçili ana dersleri `ABBR KOD.ŞUBE`
+biçiminde listeler (`CMPE 150.01`). **Planı kopyala** ve **JSON indir** dönem
+bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
+programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
+doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js`, BUIS sekmesinde çalışan bir tarayıcı
-yardımcısıdır. Tampermonkey/Violentmonkey ile kurulabilir veya doğrudan tarayıcı
-konsoluna yapıştırılabilir. Yaptığı iş:
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.1.0, kullanıcının açık BUIS
+sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir. Mevcut kurulumu
+yeni dosyayla güncellemek gerekir. **Gerçek, oturum açılmış ders ekleme
+formuyla uyumluluk henüz doğrulanmadı. Kayıt saatinde otomatik gönderim yok.**
 
-- Ders ekleme formundaki satırları bulup listeyi yazar (`abbr1/code1/section1`,
-  ASP.NET'in `ctl00$...$abbr1` biçimi ve son çare olarak tablo düzeni denenir;
-  hiçbiri tutmazsa **Alanları tanıt** ile alanlar elle gösterilebilir).
-- `scripts/quotasearch.asp` üzerinden kontenjan ve bölüm kısıtlaması gösterir.
-- **Form raporu** ile sayfanın alan yapısını döker; BUIS formu değişirse
-  desenleri güncellemek için bu çıktı kullanılır.
+- **Formu doldur**, bilinen ad desenleriyle tek formdaki ders alanlarını arar.
+  Tablo düzeninden tahmin yapmaz. Bulamazsa **Alanları tanıt** ile aynı formun
+  üç ayrı alanı seçilebilir (bu yöntem bir satır içindir).
+- Geçersiz satır, yinelenen ders, yetersiz satır veya mevcut farklı değer varsa
+  tüm doldurma durur. Liste sessizce kısaltılmaz, mevcut dersler ezilmez.
+- Doldurma sırasında değişim olayları üretilmez; böylece alanlara değer yazmak
+  kendi başına ASP.NET AutoPostBack tetiklemez.
+- Kullanıcı tanınan **ders ekleme düğmesini** listeden seçer, ardından **Formu
+  gönder** o düğmeye bir kez basar. İlk gönderme düğmesine basma veya ham
+  `form.submit()` yedeği yoktur. Plan/alan/düğme/hedef değişirse yeniden kontrol
+  gerekir. İşlemin başarı durumu BUIS yanıtından kullanıcı tarafından okunur.
+- **Kontenjan kontrol**, dönemli JSON gerektirir. `/scripts/quotasearch.asp`
+  sorgularını sırayla yapar; yanıt giriş/hata sayfasıysa kontenjanmış gibi
+  göstermez. Sonuç, öğrencinin ders alabileceğine dair onay değildir.
+- **Form raporu**, planı silmeden ayrı alana yazılır. URL sorgu parametreleri,
+  alan değerleri, parolalar, çerezler ve gizli form değerleri rapora alınmaz.
 
-Yardımcı kimlik bilgisi istemez, saklamaz ve hiçbir veriyi dışarı göndermez;
-yalnızca kullanıcının kendi açtığı oturumda formu doldurur. **Gönderme adımı
-kullanıcıya bırakılmıştır** — kota, onay ve önkoşul hatalarının okunması ve
-kayıt anında sunucuya otomatik istek yağdırılmaması için.
+Plan ve tanıtılan alanlar BUIS kökeninin yerel tarayıcı deposunda sayfa yoluna
+göre saklanır. Yardımcı şifre toplamaz. Kontenjan ve kullanıcının seçtiği ekleme
+isteği BUIS'e gider; Toolbox sunucusuna oturum bilgisi aktarılmaz.
 
-### BUIS hakkında notlar (12 Eylül 2026 itibarıyla)
+### BUIS incelemesinin sınırı (14 Eylül 2026)
 
-- BUIS bir JSON API sunmuyor; `/buis/*.aspx` ekranları `__VIEWSTATE` /
-  `__EVENTVALIDATION` taşıyan klasik ASP.NET WebForms postalarıyla çalışıyor.
-  Oturumsuz `BuisDashboard.aspx` isteği `Logout.aspx`'e yönleniyor.
-- Eski `scripts/loginst.asp` girişi emekliye ayrılmış (hata sayfasına
-  yönlendiriyor); `secchaact.asp` ve `studentaction.asp` hâlâ duruyor ama geçerli
-  oturum istiyor. Bu yüzden yardımcı, kendi oturum açmak yerine kullanıcının
-  açık sekmesinde çalışır.
-- `scripts/quotasearch.asp` oturum gerektirmeden çalışıyor ve CORS başlığı
-  göndermiyor; bu yüzden kontenjan sorgusu yalnızca BUIS sayfası içinden
-  (aynı köken) yapılabiliyor.
-- Resmî ders tablosunda CRN sütunu yok; kayıt kod+şube ile yapılıyor.
+- Oturumsuz `BuisDashboard.aspx` açılışı giriş ekranına dönüyor. Mevcut tarayıcı
+  sekmeleri de `Login.aspx` üzerinde; oturum içindeki ders ekleme ekranı ve
+  istekleri henüz incelenemedi.
+- Herkese açık giriş sayfasında ASP.NET WebForms alanları var. Bu bulgu,
+  oturum içindeki bütün ekranların aynı yöntemle çalıştığını veya BUIS'te
+  JSON API olmadığını kanıtlamaz. Kayıt endpoint'i tahmin edilmedi.
+- Resmî ders kataloğu `/scripts/schdepsel.asp` ve `/scripts/sch.asp` üzerinden
+  okunuyor. Katalogdaki kod/şube, kayıt formunun doğrulandığı anlamına gelmez.
+- Toolbox ile BUIS ayrı kökenlerde. Tarayıcının aynı köken kuralı nedeniyle
+  Toolbox sayfası BUIS ekranını doğrudan okuyup dolduramaz. Mevcut yardımcı bu
+  nedenle kullanıcının BUIS sekmesinde çalışır.
+
+Otomatik gönderim için sonraki adım: kullanıcının oturum açtığı ders ekleme
+sayfasında gerçek alanları, dönem bilgisini, gönderme hedefini ve BUIS başarı/
+hata durumlarını doğrulamak. Bu incelemede gerçek bir ders kayıt isteği
+gönderilmedi. Sentetik form testleri gerçek BUIS uyumluluğunun yerine geçmez.
+
+### Yardımcı doğrulaması (14 Eylül 2026)
+
+Otomatik testler gerçek yardımcı dosyasını yerel, sentetik formlarda çalıştırır.
+Yanlış düğme seçimi, kısmi doldurma, dolu alanlar, geçersiz plan, değişen form,
+tekrarlanan gönderme, dönem eksikliği ve raporda değer sızıntısı denetlenir.
+Testlerde gerçek BUIS oturumu veya ağ isteği kullanılmaz.
 
 ## Doğrulama (12 Eylül 2026)
 

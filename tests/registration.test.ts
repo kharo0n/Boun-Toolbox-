@@ -19,6 +19,7 @@ test('splits a course code into the three Quick Add fields', () => {
 test('pads a one-digit section and rejects codes it cannot read', () => {
   assert.equal(parseCourseCode('TK 221.1')?.section, '01');
   assert.equal(parseCourseCode('nonsense'), null);
+  assert.equal(parseCourseCode('CMPE150.00'), null);
   assert.equal(parseCourseCode(''), null);
 });
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BOUN Toolbox — BUIS Kayıt Yardımcısı
 // @namespace    https://github.com/kharo0n/Boun-Toolbox-
-// @version      1.0.0
+// @version      1.1.0
 // @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar, kontenjanları kontrol eder. Gönderme tuşuna sen basarsın.
 // @match        https://registration.boun.edu.tr/*
 // @match        https://registration.bogazici.edu.tr/*
@@ -16,14 +16,16 @@
  */
 (function () {
   'use strict';
+  if (location.protocol !== 'https:' || !['registration.boun.edu.tr', 'registration.bogazici.edu.tr'].includes(location.hostname)) return;
   if (window.__bounToolboxHelper) { window.__bounToolboxHelper.open(); return; }
 
-  var STORE_KEY = 'boun-toolbox:buis-helper';
+  var STORE_KEY = 'boun-toolbox:buis-helper:v2:' + location.pathname.toLowerCase();
   var QUOTA_URL = '/scripts/quotasearch.asp';
 
   // ---------------------------------------------------------------- yardımcılar
   function el(tag, props, children) {
     var node = document.createElement(tag);
+    if (tag === 'button') node.type = 'button';
     Object.assign(node, props || {});
     (children || []).forEach(function (child) {
       node.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
@@ -32,20 +34,22 @@
   }
 
   function readStore() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { return {}; }
+    try {
+      var value = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    } catch (e) { return {}; }
   }
   function writeStore(patch) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(Object.assign(readStore(), patch))); } catch (e) { /* özel mod */ }
   }
 
-  /** React/ASP.NET doğrulamalarının fark etmesi için değeri setter üzerinden yazar. */
+  /** Form değerini yazar; değişim olaylarıyla erken gönderim tetiklemez. */
   function setValue(node, value) {
     var proto = node instanceof HTMLSelectElement ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
     var setter = Object.getOwnPropertyDescriptor(proto, 'value');
     if (setter && setter.set) setter.set.call(node, value); else node.value = value;
-    ['input', 'change', 'blur'].forEach(function (type) {
-      node.dispatchEvent(new Event(type, { bubbles: true }));
-    });
+    // Native form values are enough for WebForms. Synthetic change/blur events
+    // can invoke ASP.NET AutoPostBack before all course fields have been filled.
   }
 
   function flash(node) {
@@ -58,33 +62,31 @@
   // ------------------------------------------------------- plan girdisini okuma
   /** Hem Toolbox JSON'unu hem de düz "CMPE 150.01" listesini kabul eder. */
   function parsePlan(text) {
-    var trimmed = (text || '').trim();
+    var trimmed = (text || '').trim(), source, semester;
     if (!trimmed) return { courses: [], error: 'Önce programı yapıştır.' };
-    if (trimmed.charAt(0) === '{') {
-      try {
+    try {
+      if (trimmed.charAt(0) === '{') {
         var payload = JSON.parse(trimmed);
-        var list = (payload.courses || []).filter(function (c) { return c && c.abbr && c.code && c.section; });
-        if (!list.length) return { courses: [], error: 'JSON içinde ders bulunamadı.' };
-        return { courses: list, semester: payload.semester };
-      } catch (e) {
-        return { courses: [], error: 'JSON okunamadı: ' + e.message };
-      }
-    }
-    var courses = [], bad = [];
-    trimmed.split(/[\n,;]+/).forEach(function (line) {
-      var raw = line.trim();
-      if (!raw) return;
-      var match = /^([A-Za-z]{1,6})\s*(\d{2,3}[A-Za-z]?)\s*[.\-/]\s*(\d{1,2})$/.exec(raw);
-      if (!match) { bad.push(raw); return; }
-      courses.push({
-        abbr: match[1].toUpperCase(),
-        code: match[2].toUpperCase(),
-        section: match[3].length === 1 ? '0' + match[3] : match[3],
-        display: match[1].toUpperCase() + ' ' + match[2].toUpperCase() + '.' + match[3]
+        if (payload.source !== 'boun-toolbox' || payload.version !== 1 || !Array.isArray(payload.courses)) throw new Error('Toolbox JSON biçimi tanınmadı.');
+        if (!/^\d{4}\/\d{4}-[123]$/.test(payload.semester || '')) throw new Error('Dönem bilgisi geçersiz.');
+        semester = payload.semester;
+        source = payload.courses.map(function (c) {
+          if (!c || !['abbr', 'code', 'section'].every(function (key) { return typeof c[key] === 'string'; })) throw new Error('Geçersiz ders kaydı.');
+          return c.abbr + ' ' + c.code + '.' + c.section;
+        });
+      } else source = trimmed.split(/[\n,;]+/).filter(function (line) { return line.trim(); });
+      if (!source.length || source.length > 50) throw new Error('Liste 1–50 ders içermeli.');
+      var seen = new Set();
+      var courses = source.map(function (line) {
+        var match = /^([A-Za-z]{1,6})\s*(\d{2,3}[A-Za-z]?)\s*[.\-/]\s*(\d{1,2})$/.exec(line.trim());
+        if (!match || Number(match[3]) === 0) throw new Error('Geçersiz ders: ' + line);
+        var abbr = match[1].toUpperCase(), code = match[2].toUpperCase(), section = match[3].padStart(2, '0');
+        if (seen.has(abbr + code)) throw new Error('Aynı ders iki kez yazılmış: ' + abbr + code);
+        seen.add(abbr + code);
+        return { abbr: abbr, code: code, section: section, display: abbr + ' ' + code + '.' + section };
       });
-    });
-    if (!courses.length) return { courses: [], error: 'Hiçbir satır okunamadı. Örnek: CMPE 150.01' };
-    return { courses: courses, skipped: bad };
+      return { courses: courses, semester: semester };
+    } catch (error) { return { courses: [], error: error.message }; }
   }
 
   // ------------------------------------------------------------ form keşfi
@@ -95,58 +97,60 @@
     nc: /(?:^|[^a-z])r?nc[_$]?(\d+)/i
   };
 
+  function editable(node) {
+    return node && node.isConnected && !node.closest('#btbx') && !node.matches(':disabled') && !node.readOnly &&
+      node.getClientRects().length > 0 && getComputedStyle(node).visibility === 'visible' &&
+      (node instanceof HTMLSelectElement || (node instanceof HTMLInputElement && ['text', ''].includes(node.type)));
+  }
   function candidateFields() {
-    return Array.prototype.slice.call(
-      document.querySelectorAll('input[type="text"], input:not([type]), select')
-    ).filter(function (node) { return node.offsetParent !== null || node.type === 'hidden'; });
+    return Array.from(document.querySelectorAll('input[type="text"], input:not([type]), select')).filter(editable);
   }
-
-  /** ASP.NET isimleri "ctl00$x$abbr1" gibi olabildiği için ada/id'ye desen uygular. */
-  function discoverRows() {
-    var buckets = { abbr: {}, code: {}, section: {}, nc: {} };
-    candidateFields().forEach(function (node) {
-      var identity = (node.name || '') + ' ' + (node.id || '');
-      Object.keys(FIELD_PATTERNS).forEach(function (field) {
-        var match = FIELD_PATTERNS[field].exec(identity);
-        if (match && !buckets[field][match[1]]) buckets[field][match[1]] = node;
-      });
-    });
-    var rows = Object.keys(buckets.abbr)
-      .filter(function (index) { return buckets.code[index] && buckets.section[index]; })
-      .sort(function (a, b) { return Number(a) - Number(b); })
-      .map(function (index) {
-        return { index: index, abbr: buckets.abbr[index], code: buckets.code[index],
-                 section: buckets.section[index], nc: buckets.nc[index] || null };
-      });
-    return rows;
-  }
-
-  /** İsim deseni tutmazsa: aynı tablo satırındaki üçlü metin kutularını kullan. */
-  function discoverRowsByLayout() {
-    var rows = [];
-    Array.prototype.slice.call(document.querySelectorAll('tr')).forEach(function (tr) {
-      var inputs = Array.prototype.slice.call(tr.querySelectorAll('input[type="text"], input:not([type])'))
-        .filter(function (node) { return !node.disabled && !node.readOnly && node.offsetParent !== null; });
-      if (inputs.length >= 3) {
-        rows.push({ index: String(rows.length + 1), abbr: inputs[0], code: inputs[1], section: inputs[2], nc: null, guessed: true });
-      }
-    });
-    return rows;
-  }
-
-  function findRows() {
-    var rows = discoverRows();
-    if (rows.length) return rows;
-    var taught = readStore().selectors;
-    if (taught) {
-      var resolved = ['abbr', 'code', 'section'].map(function (field) {
-        try { return document.querySelector(taught[field]); } catch (e) { return null; }
-      });
-      if (resolved.every(Boolean)) {
-        return [{ index: '1', abbr: resolved[0], code: resolved[1], section: resolved[2], nc: null, taught: true }];
+  function validRows(rows) {
+    if (!rows.length) return false;
+    var form = rows[0].abbr.form, fields = [];
+    if (!form) return false;
+    for (var row of rows) {
+      for (var key of ['abbr', 'code', 'section']) {
+        var node = row[key];
+        if (!editable(node) || node.form !== form || fields.includes(node)) return false;
+        fields.push(node);
       }
     }
-    return discoverRowsByLayout();
+    return true;
+  }
+  function findRows() {
+    var taught = readStore().selectors;
+    if (taught) {
+      try {
+        var resolved = { index: '1' };
+        for (var key of ['abbr', 'code', 'section']) {
+          var matches = document.querySelectorAll(taught[key]);
+          if (matches.length !== 1) return [];
+          resolved[key] = matches[0];
+        }
+        return validRows([resolved]) ? [resolved] : [];
+      } catch (e) { return []; }
+    }
+    var byForm = new Map(), ambiguous = false;
+    candidateFields().forEach(function (node) {
+      if (!node.form) return;
+      if (!byForm.has(node.form)) byForm.set(node.form, {});
+      var buckets = byForm.get(node.form);
+      var identity = (node.name || '') + ' ' + (node.id || '');
+      ['abbr', 'code', 'section'].forEach(function (field) {
+        var match = FIELD_PATTERNS[field].exec(identity);
+        if (!match) return;
+        var row = buckets[match[1]] || (buckets[match[1]] = { index: match[1] });
+        if (row[field] && row[field] !== node) ambiguous = true;
+        row[field] = node;
+      });
+    });
+    var groups = Array.from(byForm.values()).map(function (buckets) {
+      if (Object.values(buckets).some(function (row) { return !row.abbr || !row.code || !row.section; })) { ambiguous = true; return []; }
+      return Object.values(buckets)
+        .sort(function (a, b) { return Number(a.index) - Number(b.index); });
+    }).filter(validRows);
+    return !ambiguous && groups.length === 1 ? groups[0] : [];
   }
 
   // --------------------------------------------------------------- kontenjan
@@ -164,6 +168,7 @@
         rows.push({ department: cells[0], status: cells[1], quota: cells[2], current: cells[3] });
       }
     });
+    if (!capacity && !rows.length) throw new Error('Kontenjan tablosu tanınmadı; giriş veya hata sayfası gelmiş olabilir.');
     return {
       capacity: capacity ? capacity[1] : null,
       restriction: restriction ? restriction[1] : null,
@@ -179,7 +184,7 @@
     var body = new URLSearchParams({ abbr: course.abbr, code: course.code, section: course.section });
     if (semester) body.set('donem', semester);
     return fetch(QUOTA_URL, {
-      method: 'POST', credentials: 'same-origin',
+      method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(15000),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: body.toString()
     }).then(function (response) {
@@ -215,6 +220,9 @@
 
   var input = el('textarea', { placeholder: 'Boun Toolbox → Kayıt Asistanı → "Kopyala" ile aldığın listeyi buraya yapıştır.\n\nCMPE 150.01\nMATH 101.02' });
   var log = el('div', { className: 'log' });
+  var reportOutput = el('textarea', { readOnly: true, hidden: true, ariaLabel: 'Form raporu' });
+  var submitChoice = el('select', { ariaLabel: 'BUIS ders ekleme düğmesi', disabled: true });
+  var submitTargets = [];
   var fillBtn = el('button', { className: 'act', textContent: 'Formu doldur' });
   var quotaBtn = el('button', { className: 'act ghost', textContent: 'Kontenjan kontrol' });
   var submitBtn = el('button', { className: 'act', textContent: 'Formu gönder', disabled: true });
@@ -228,15 +236,16 @@
       input,
       el('div', { className: 'row' }, [fillBtn, quotaBtn]),
       el('div', { className: 'row' }, [teachBtn, reportBtn]),
-      el('div', { className: 'row' }, [submitBtn]),
+      el('div', { className: 'row' }, [submitChoice, submitBtn]),
+      reportOutput,
       log,
-      el('div', { className: 'hint', textContent: 'Gönderme tuşuna basmadan önce formu gözden geçir. Bu script şifre istemez ve hiçbir veriyi dışarı göndermez.' })
+      el('div', { className: 'hint', textContent: 'Gönderme tuşuna basmadan önce formu gözden geçir. Şifre/token toplanmaz. Kontenjan sorgusu ve seçtiğin ekleme işlemi yalnız BUIS’e gönderilir.' })
     ])
   ]);
   document.body.appendChild(panel);
 
   var saved = readStore().plan;
-  if (saved) input.value = saved;
+  if (typeof saved === 'string') input.value = saved;
   input.addEventListener('change', function () { writeStore({ plan: input.value }); });
 
   function say(message, kind) {
@@ -245,48 +254,78 @@
   function clearLog() { log.textContent = ''; }
 
   // ------------------------------------------------------------------ eylemler
-  var lastForm = null;
-
+  var lastFill = null;
+  function invalidate() {
+    lastFill = null; submitBtn.disabled = true; submitChoice.disabled = true;
+    submitTargets = []; submitChoice.replaceChildren(el('option', { value: '', textContent: 'Önce formu doldur' }));
+  }
+  input.addEventListener('input', invalidate);
+  document.addEventListener('input', function (event) { if (!panel.contains(event.target) && lastFill && lastFill.form.contains(event.target)) invalidate(); }, true);
+  document.addEventListener('change', function (event) { if (!panel.contains(event.target) && lastFill && lastFill.form.contains(event.target)) invalidate(); }, true);
+  var ADD_LABEL = /^(quick\s*add|add(?:\s+selected)?\s+courses?|ders(?:leri)?\s+ekle|hızlı\s+ekle)$/i;
+  function label(node) { return (node instanceof HTMLInputElement ? node.value : node.textContent).trim().replace(/\s+/g, ' '); }
+  function targetSignature(node) {
+    return JSON.stringify([node.name, node.type, label(node), node.getAttribute('onclick'), node.getAttribute('formaction'), node.getAttribute('formmethod'), node.getAttribute('formtarget')]);
+  }
+  function actionUrl(form) { return new URL(form.action || location.href, location.href); }
+  function fillMatches() {
+    var currentRows = findRows();
+    return lastFill && lastFill.form.isConnected && lastFill.input === input.value &&
+      lastFill.form.action === lastFill.action && lastFill.form.method === lastFill.method &&
+      lastFill.form.target === lastFill.target && lastFill.form.enctype === lastFill.enctype &&
+      currentRows.length === lastFill.rows.length && currentRows.every(function (row, index) { return ['abbr', 'code', 'section'].every(function (key) { return row[key] === lastFill.rows[index][key]; }); }) &&
+      validRows(lastFill.rows) && lastFill.values.every(function (entry) { return entry.node.value === entry.value; });
+  }
+  function optionValue(node, desired) {
+    if (!(node instanceof HTMLSelectElement)) return desired;
+    var options = Array.from(node.options).filter(function (option) { return !option.disabled &&
+      (option.value.toUpperCase() === desired || /^\d+$/.test(desired) && /^\d+$/.test(option.value) && Number(option.value) === Number(desired)); });
+    if (options.length !== 1) throw new Error('Seçenek bulunamadı veya belirsiz: ' + desired);
+    return options[0].value;
+  }
   fillBtn.addEventListener('click', function () {
-    clearLog();
+    clearLog(); invalidate();
     var parsed = parsePlan(input.value);
     if (parsed.error) { say(parsed.error, 'err'); return; }
-    writeStore({ plan: input.value });
-
     var rows = findRows();
-    if (!rows.length) {
-      say('Ders ekleme formu bulunamadı. Doğru sayfada mısın? Değilsen "Alanları tanıt"ı kullan.', 'err');
-      return;
-    }
-    if (rows[0].guessed) say('Alan adları tanınmadı, tablo düzenine göre tahmin edildi — kontrol et.', 'warn');
-
-    var filled = 0;
-    parsed.courses.forEach(function (course, i) {
-      var row = rows[i];
-      if (!row) return;
-      setValue(row.abbr, course.abbr);
-      setValue(row.code, course.code);
-      setValue(row.section, course.section);
-      [row.abbr, row.code, row.section].forEach(flash);
-      lastForm = row.abbr.form || lastForm;
-      filled++;
-    });
-
-    say(filled + ' ders forma yazıldı (' + rows.length + ' satırlık form).', 'ok');
-    if (parsed.courses.length > filled) {
-      var rest = parsed.courses.slice(filled).map(function (c) { return c.display || (c.abbr + ' ' + c.code + '.' + c.section); });
-      say('Forma sığmayan ' + rest.length + ' ders: ' + rest.join(', ') + ' — bunları ikinci turda ekle.', 'warn');
-    }
-    if (parsed.skipped && parsed.skipped.length) {
-      say('Okunamayan satırlar: ' + parsed.skipped.join(', '), 'warn');
-    }
-    submitBtn.disabled = !lastForm;
+    if (!rows.length) { say('Tek ve doğrulanabilir ders formu bulunamadı. Alanları tanıt veya form raporunu paylaş.', 'err'); return; }
+    if (parsed.courses.length > rows.length) { say('Liste forma sığmıyor; hiçbir alan değiştirilmedi. Listeyi bu formun satır sayısına göre böl.', 'err'); return; }
+    var form = rows[0].abbr.form, values = [];
+    try {
+      if (actionUrl(form).origin !== location.origin) throw new Error('Form hedefi BUIS ile aynı kökende değil.');
+      rows.forEach(function (row, index) {
+        ['abbr', 'code', 'section'].forEach(function (key) {
+          var node = row[key], course = parsed.courses[index];
+          if (!course) { if (node.value.trim()) throw new Error('Liste dışındaki satırda mevcut ders var; önce BUIS formunu kontrol et.'); return; }
+          var value = optionValue(node, course[key]);
+          if (node.maxLength > 0 && value.length > node.maxLength) throw new Error('Değer alan sınırını aşıyor: ' + course.display);
+          if (node.value.trim() && node.value !== value) throw new Error('Dolu alanın üzerine yazılmadı; önce BUIS formunu kontrol et.');
+          values.push({ node: node, value: value });
+        });
+      });
+    } catch (error) { say(error.message, 'err'); return; }
+    values.forEach(function (entry) { setValue(entry.node, entry.value); flash(entry.node); });
+    lastFill = { form: form, action: form.action, method: form.method, target: form.target, enctype: form.enctype, input: input.value, rows: rows,
+      values: rows.flatMap(function (row) { return ['abbr', 'code', 'section'].map(function (key) { return { node: row[key], value: row[key].value }; }); }) };
+    writeStore({ plan: input.value });
+    submitTargets = Array.from(form.querySelectorAll('input[type="submit"], input[type="button"], button')).filter(function (node) {
+      return !panel.contains(node) && node.form === form && ['submit', 'button'].includes(node.type) && !node.matches(':disabled') && node.getClientRects().length && getComputedStyle(node).visibility === 'visible' && ADD_LABEL.test(label(node)) &&
+        !node.hasAttribute('formaction') && !node.hasAttribute('formmethod') && !node.hasAttribute('formtarget');
+    }).map(function (node) { return { node: node, signature: targetSignature(node) }; });
+    submitChoice.replaceChildren(el('option', { value: '', textContent: 'BUIS ders ekleme düğmesini seç' }));
+    submitTargets.forEach(function (target, index) { submitChoice.appendChild(el('option', { value: String(index), textContent: label(target.node) + ' (' + (target.node.id || target.node.name || index + 1) + ')' })); });
+    submitChoice.disabled = !submitTargets.length;
+    say(parsed.courses.length + ' ders forma yazıldı. Gönderme yapılmadı.', 'ok');
+    say(submitTargets.length ? 'Listeyi kontrol edip doğru BUIS ders ekleme düğmesini seç.' : 'Ders ekleme düğmesi doğrulanamadı; BUIS’in kendi düğmesini kullan.', 'warn');
   });
+  submitChoice.addEventListener('change', function () { submitBtn.disabled = !fillMatches() || submitChoice.value === ''; });
+  invalidate();
 
   quotaBtn.addEventListener('click', function () {
     clearLog();
     var parsed = parsePlan(input.value);
     if (parsed.error) { say(parsed.error, 'err'); return; }
+    if (!parsed.semester) { say('Dönemli sorgu için Toolbox’tan Planı kopyala ile aldığın JSON’u yapıştır.', 'err'); return; }
     quotaBtn.disabled = true;
     say('Kontenjanlar sorgulanıyor…');
 
@@ -297,7 +336,7 @@
           var label = course.display || (course.abbr + ' ' + course.code + '.' + course.section);
           var detail = quota.rows.map(function (r) { return r.department + ' ' + r.current + '/' + r.quota; }).join(' · ');
           say(label + ' — kapasite ' + (quota.capacity || '?') + (detail ? ' · ' + detail : '') +
-              (quota.restriction ? ' · sadece: ' + quota.restriction : ''), quota.full ? 'warn' : 'ok');
+              (quota.restriction ? ' · sadece: ' + quota.restriction : ''), 'warn');
         }).catch(function (error) {
           say((course.display || course.abbr) + ' kontenjanı alınamadı: ' + error.message, 'err');
         }).then(function () {
@@ -306,19 +345,26 @@
       });
     }, Promise.resolve()).then(function () {
       quotaBtn.disabled = false;
-      say('Kontenjan kontrolü bitti.', 'ok');
+      say('Kontenjan kontrolü bitti. Bu sonuç kayıt garantisi veya senin bölümüne uygunluk onayı değildir.', 'warn');
     });
   });
 
   submitBtn.addEventListener('click', function () {
-    if (!lastForm) { say('Gönderilecek form bulunamadı.', 'err'); return; }
-    var trigger = lastForm.querySelector('input[type="submit"], button[type="submit"]');
-    say('Form gönderiliyor…');
-    if (trigger) trigger.click(); else lastForm.submit();
+    var target = submitChoice.value !== '' ? submitTargets[Number(submitChoice.value)] : null;
+    if (!fillMatches() || !target || !target.node.isConnected || target.node.form !== lastFill.form || target.node.matches(':disabled') || getComputedStyle(target.node).visibility !== 'visible' ||
+      !target.node.getClientRects().length || target.signature !== targetSignature(target.node) || !ADD_LABEL.test(label(target.node))) {
+      invalidate(); say('Form veya düğme değişti. Yeniden doldurup kontrol et.', 'err'); return;
+    }
+    var node = target.node;
+    invalidate();
+    say('Seçtiğin ders ekleme düğmesine basılıyor. Başarı durumunu BUIS yanıtından kontrol et.', 'warn');
+    node.click();
   });
 
+  var cancelTeaching = null;
   teachBtn.addEventListener('click', function () {
-    clearLog();
+    clearLog(); invalidate();
+    if (cancelTeaching) cancelTeaching();
     var fields = ['abbr', 'code', 'section'], picked = {}, step = 0;
     var labels = { abbr: 'ders kısaltması (ör. CMPE)', code: 'ders numarası (ör. 150)', section: 'şube (ör. 01)' };
     say('Sırayla tıkla: ' + labels[fields[0]], 'warn');
@@ -330,11 +376,13 @@
     }
     function onPick(event) {
       var node = event.target;
-      if (!(node instanceof HTMLInputElement || node instanceof HTMLSelectElement)) return;
+      if (!editable(node)) return;
       if (panel.contains(node)) return;
-      event.preventDefault(); event.stopPropagation();
+      event.preventDefault(); event.stopImmediatePropagation();
       var selector = selectorFor(node);
       if (!selector) { say('Bu alanın id/name değeri yok, seçilemedi.', 'err'); return; }
+      if (Object.values(picked).includes(selector)) { say('Aynı alan iki kez seçilemez.', 'err'); return; }
+      if (step && document.querySelector(picked.abbr)?.form !== node.form) { say('Alanlar aynı formda olmalı.', 'err'); return; }
       picked[fields[step]] = selector;
       flash(node);
       step++;
@@ -343,16 +391,18 @@
       writeStore({ selectors: picked });
       say('Alanlar kaydedildi. Artık "Formu doldur" çalışacak.', 'ok');
     }
+    cancelTeaching = function () { document.removeEventListener('click', onPick, true); };
     document.addEventListener('click', onPick, true);
   });
 
   reportBtn.addEventListener('click', function () {
     clearLog();
     var report = {
-      url: location.href,
+      url: location.origin + location.pathname,
+      scripts: Array.from(document.scripts).filter(function (script) { return script.src; }).map(function (script) { var url = new URL(script.src, location.href); return url.origin + url.pathname; }),
       forms: Array.prototype.slice.call(document.forms).map(function (form) {
         return {
-          action: form.getAttribute('action'), method: form.method,
+          action: actionUrl(form).origin + actionUrl(form).pathname, method: form.method,
           fields: Array.prototype.slice.call(form.elements).slice(0, 80).map(function (node) {
             return [node.tagName.toLowerCase(), node.type || '', node.name || '', node.id || ''].join('|');
           })
@@ -360,12 +410,12 @@
       })
     };
     var text = JSON.stringify(report, null, 2);
-    input.value = text;
-    say('Form yapısı yukarıya yazıldı. Alanlar tanınmıyorsa bu raporu paylaş.', 'ok');
+    reportOutput.hidden = false; reportOutput.value = text;
+    say('Form yapısı ayrı rapor alanına yazıldı; planın korundu. Rapor alan değerleri, parola, çerez veya URL sorgu parametreleri içermez.', 'ok');
     say(document.forms.length + ' form, ' + findRows().length + ' ders satırı tespit edildi.');
   });
 
-  closeBtn.addEventListener('click', function () { panel.style.display = 'none'; });
+  closeBtn.addEventListener('click', function () { if (cancelTeaching) cancelTeaching(); invalidate(); panel.style.display = 'none'; });
 
   window.__bounToolboxHelper = {
     open: function () { panel.style.display = 'block'; },

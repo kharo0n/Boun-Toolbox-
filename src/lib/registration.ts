@@ -27,7 +27,7 @@ const CODE_PATTERN = /^([A-Z]{1,6})\s*(\d{2,3}[A-Z]?)\.(\d{1,2})$/;
 /** Splits `CMPE 150.01` into the three fields the Quick Add form asks for. */
 export function parseCourseCode(code: string) {
   const match = CODE_PATTERN.exec(normalizeCode(code));
-  if (!match) return null;
+  if (!match || Number(match[3]) === 0) return null;
   const [, abbr, number, section] = match;
   return { abbr, code: number, section: section.padStart(2, '0') };
 }
@@ -40,8 +40,8 @@ const sessionLabel = (course: Course) => {
 
 /**
  * Turns the planner selection into the list of sections to register.
- * Only lectures are registered; LAB/P.S. rows ride along with their lecture,
- * so they are reported as context rather than as separate entries.
+ * Export lecture codes; LAB/P.S. selections are planning context. Their actual
+ * registration/assignment rules must be verified in BUIS for each department.
  */
 export function buildRegistrationPlan(selected: Course[], catalogue: Course[], semester: string): RegistrationPlan {
   const lectures = selected.filter(c => c.sessionType === 'lecture');

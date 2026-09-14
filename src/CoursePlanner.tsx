@@ -175,7 +175,7 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
       {!plan.entries.length && <p className="assistant-empty">Henüz ders seçmediniz. Programınızı oluşturduktan sonra buraya dönün.</p>}
 
       {plan.entries.length > 0 && <>
-        <p className="assistant-lead">{plan.entries.length} ders · BUIS’e bu kodlarla kayıt olacaksınız.</p>
+        <p className="assistant-lead">{plan.entries.length} ders · BUIS ders ekleme ekranı için hazırlanan plan.</p>
         <ol className="assistant-list">{plan.entries.map(entry => <li key={entry.display}>
           <code>{entry.display}</code>
           <span className="assistant-name">{entry.name}</span>
@@ -187,21 +187,23 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
         {plan.warnings.map(warning => <p key={warning} className="assistant-warn">⚠️ {warning}</p>)}
 
         <div className="assistant-actions">
+          <button className="footer-btn" onClick={() => void copy(planToJson(plan), 'Dönemli kayıt planı kopyalandı.')}>📋 Planı kopyala</button>
           <button className="footer-btn" onClick={() => void copy(text, 'Ders listesi kopyalandı.')}>📋 Listeyi kopyala</button>
           <button className="footer-btn" onClick={download}>⬇️ JSON indir</button>
         </div>
         {copied && <p role="status" className="assistant-copied">{copied}</p>}
 
         <details className="assistant-help">
-          <summary>BUIS ders ekleme formunu otomatik doldur</summary>
+          <summary>BUIS kayıt yardımcısını kullan</summary>
+          <p className="assistant-note">Gerçek ders ekleme ekranıyla doğrulama bekleniyor. Kayıt saatinde otomatik gönderim henüz desteklenmiyor.</p>
           <ol>
             <li>Tampermonkey / Violentmonkey kurun ve <a href={helperUrl} target="_blank" rel="noreferrer">kayıt yardımcısı script’ini</a> ekleyin. (Alternatif: script’i kopyalayıp BUIS sekmesinde tarayıcı konsoluna yapıştırın.)</li>
             <li>BUIS’e kendiniz giriş yapıp ders ekleme ekranını açın; sağ üstte panel çıkar.</li>
-            <li>Yukarıdaki listeyi kopyalayıp panele yapıştırın, <strong>Formu doldur</strong>’a basın.</li>
+            <li><strong>Planı kopyala</strong> ile dönem bilgisini de alıp panele yapıştırın, <strong>Formu doldur</strong>’a basın.</li>
             <li><strong>Kontenjan kontrol</strong> ile şubelerin doluluğunu görebilirsiniz.</li>
-            <li>Formu gözden geçirip <strong>gönderme tuşuna kendiniz basın.</strong></li>
+            <li>Formu gözden geçirin, panelden BUIS ders ekleme düğmesini seçip <strong>Formu gönder</strong>’e basın. Ardından BUIS’in sonucunu kontrol edin.</li>
           </ol>
-          <p className="assistant-note">Script şifrenizi istemez, saklamaz ve hiçbir veriyi dışarı göndermez; yalnızca sizin açtığınız BUIS oturumunda formu doldurur.</p>
+          <p className="assistant-note">Yardımcı şifrenizi toplamaz. Kontenjan sorgusu ve seçtiğiniz ders ekleme işlemi kendi BUIS oturumunuzdan BUIS’e gönderilir. LAB/P.S. seçimleri programlama amaçlıdır; BUIS’te ayrıca işlem gerekebilir.</p>
         </details>
       </>}
     </div>
