@@ -154,3 +154,27 @@ Gönderildiği halde listede görünmeyen ders tekrar gönderilmez. BUIS listeyi
 biçimde gösterirse ilk turdan sonra güvenli biçimde durur. Yer imi, çerçevenin
 `load` olayında script'i yeniden ekler. `/buis-helper-demo.html` 5 satırlık formda
 8 dersi gerçek sayfa yenilemesiyle iki turda ekler.
+
+
+## 16 Eylül 2026: aktif ekran görüntüsüne uyarlama (1.4.1)
+
+Kullanıcının verdiği ekran görüntüsü Course List Preparation içindeki aktif
+Quick Add tablosunu gösteriyor: yedi satır, kısaltma ve ders numarası metin
+alanları, başlangıçta 01 seçili şube listesi, Credit/Noncredit radyo düğmeleri
+ve Repeat With listesi.
+
+Bu beş başlıkla tanımlanan tablo için ayrı alan eşleyici eklendi. Başlıklar
+ve alan türleri eşleşmezse rastgele tablo seçilmez. Alan adları görüntüden
+çıkarılmadı; testlerde kasıtlı olarak farklı adlar kullanılarak başlıkla
+eşlemenin çalıştığı doğrulandı.
+
+Varsayılan şubeli boş satırları dolu sayan hata giderildi. Kısaltma/numara
+boşken 01 yerine planın şubesi seçilebilir; diğer dolu alanların üzerine
+yazılmaz. Boş kalan satırların 01 değeri korunur. Kredi/tekrar alanları
+değiştirilmez. Demo bu yedi satırlı düzeni ve sekiz dersin 7+1 turunu örnekler.
+
+Codex tarayıcısında eski kayıt sayfası yenilendiğinde kullanıcı bilgisi ve
+iç çerçeve yüklenmedi. Ekran görüntüsünün alındığı Safari oturumu tarayıcı
+aracından erişilebilir değildi. Gerçek HTML/POST hedefi ve sunucuda kayıt
+başarısı hâlâ doğrulanmayı bekliyor; kullanıcıdan Codex içinde yeniden
+oturum açması istendi. Bu çalışma hiçbir gerçek kayıt isteği göndermedi.

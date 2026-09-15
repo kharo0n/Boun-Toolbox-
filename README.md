@@ -70,10 +70,10 @@ bilgisini de taşır; **Listeyi kopyala** düz metin verir. LAB/P.S. seçimleri
 programlama bağlamıdır; bunların BUIS'teki kayıt/atama kuralları henüz
 doğrulanmadı. Yardımcı bu oturumları ayrıca kaydetmez.
 
-`public/buis-kayit-yardimcisi.user.js` sürüm 1.4.0, kullanıcının açık BUIS
+`public/buis-kayit-yardimcisi.user.js` sürüm 1.4.1, kullanıcının açık BUIS
 sekmesinde çalışır. Tampermonkey/Violentmonkey ile kurulabilir; 1.3.0'dan sonra
 `@updateURL` ile canlı siteden güncellenir, daha eski kurulumlar bir kez elle
-güncellenmelidir. **Quick Add ve consent formları kapalı olduğundan canlı uyumluluk henüz doğrulanmadı.**
+güncellenmelidir. **16 Eylül ekran görüntüsündeki yedi satırlı Quick Add düzeni desteklenir. Gerçek BUIS hesabına gönderim denenmedi; Consent ekranının canlı uyumluluğu ayrıca doğrulanmalıdır.**
 Eklenti kurmadan kullanmak için Kayıt Asistanı bir **yer imi** (bookmarklet) verir:
 yer imleri çubuğuna sürüklenir, BUIS ekranında basılınca aynı script'i canlı siteden
 yükler. Course List Preparation aynı kökenli `#ifCPL` çerçevesinde olduğundan script
@@ -93,7 +93,7 @@ gerçek kayıt yapmadan aynı yardımcıyı denemeyi sağlar.
 
 - **Formu doldur**, bilinen ad desenleriyle (`abbr1`, `code1`, `section1`) tek
   formdaki ders alanlarını arar ve tek tıkla bütün dersleri yazar. Kendiliğinden
-  tablo düzeninden tahmin yapmaz. Bulamazsa **Alanları tanıt** ile ilk satırın
+  Quick Add Menu başlığı ve beş sütunu birebir tanınırsa alan adından bağımsız eşler. Diğer tabloları tahmin etmez. Bulamazsa **Alanları tanıt** ile ilk satırın
   üç alanı seçilir; diğer satırlar alan numarasından (`…1` → `…2`), numara yoksa
   aynı tablodaki sonraki satırlardan bulunur.
 - Plan formdaki satırlardan uzunsa sığan dersler yazılır, kalanlar adıyla
@@ -171,3 +171,17 @@ Testlerde gerçek BUIS oturumu veya ağ isteği kullanılmaz.
 Derleme, ders kataloğunun ana pakete dahil olması nedeniyle 500 kB üzeri paket uyarısı veriyor; bu bir derleme hatası değil. Mobil kırılımlar düzenlendi fakat ayrı cihaz testi yapılmadı.
 
 Canlı site: https://boun-toolbox.vercel.app. Vercel, GitHub deposunun `main` dalına bağlıdır; bu dala gönderilen değişiklikler üretim dağıtımını tetikler. Yeni ders verisinin yayınlanması için güncelleme komutundan sonra değişen JSON dosyaları da commit edilmelidir.
+
+## 16 Eylül Quick Add düzeltmesi (1.4.1)
+
+- Kullanıcının ekran görüntüsündeki **7 satırlı** Quick Add tablosu,
+  Abbreviation / Code / Section / Credit-Noncredit / Repeat With başlıklarından
+  tanınır. Böylece alan adı değişse de bu belirli düzen eşlenebilir.
+- Kısaltma ve numara boşken şubenin **01** seçili olması normal boş satırdır.
+  Planın 02/03 gibi şubeleri seçilebilir; kullanılmayan satırların şube
+  varsayılanı doldurmayı engellemez. Yazılmış bir dersin şubesi ezilmez.
+- Credit/Noncredit ve Repeat With seçenekleri korunur. Mevcut çok turlu
+  ekleme davranışıyla sekiz ders **7 + 1** olarak sentetik formda doğrulandı.
+- Görsel aktif formu gösteriyor. Codex tarayıcısındaki eski oturum yenilemede
+  iç formu yüklemedi; gerçek HTML alan adları/istek hedefi bu güncellemede
+  doğrulanamadı. Gerçek kayıt, silme veya danışman onayı gönderilmedi.

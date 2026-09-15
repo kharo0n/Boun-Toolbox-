@@ -4,14 +4,14 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BOUN Toolbox · Hızlı kayıt denemesi</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#0f1f33;font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}main{max-width:1050px;margin:32px auto;padding:24px 390px 24px 24px}h1{font-size:28px;line-height:1.2;margin:.4em 0}a{color:#1560bd}.badge{color:#9a5700;background:#fff3dc;display:inline-block;border-radius:8px;padding:6px 12px;font-size:14px}form,.card{background:#fff;border:1px solid #dde4ee;border-radius:12px;padding:18px;margin:18px 0}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:6px}td input{width:100%;min-width:45px;padding:8px;border:1px solid #c3cedd;border-radius:6px}button{cursor:pointer;border:0;border-radius:8px;background:#1560bd;color:#fff;padding:10px 14px;margin:4px 0;font:inherit;font-weight:600}button.secondary{background:#e9eff5;color:#234}.list td{border-top:1px solid #eef2f7}.ok{color:#13733a;font-weight:600}.hint{font-size:13px;color:#647589}#round{font-weight:600}@media(max-width:780px){main{margin:12px auto;padding:16px}#btbx{position:relative!important;inset:auto!important;width:calc(100% - 32px)!important;max-height:none!important;margin:16px}}
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#0f1f33;font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}main{max-width:1450px;margin:32px auto;padding:24px 390px 24px 24px}h1{font-size:28px;line-height:1.2;margin:.4em 0}a{color:#1560bd}.badge{color:#9a5700;background:#fff3dc;display:inline-block;border-radius:8px;padding:6px 12px;font-size:14px}form,.card{background:#fff;border:1px solid #dde4ee;border-radius:12px;padding:18px;margin:18px 0}td input[type="radio"]{width:auto}td label{display:block;font-size:12px}td select{max-width:110px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:6px}td input:not([type="radio"]){width:100%;min-width:45px;padding:8px;border:1px solid #c3cedd;border-radius:6px}button{cursor:pointer;border:0;border-radius:8px;background:#1560bd;color:#fff;padding:10px 14px;margin:4px 0;font:inherit;font-weight:600}button.secondary{background:#e9eff5;color:#234}.list td{border-top:1px solid #eef2f7}.ok{color:#13733a;font-weight:600}.hint{font-size:13px;color:#647589}#round{font-weight:600}@media(max-width:780px){main{margin:12px auto;padding:16px}#btbx{position:relative!important;inset:auto!important;width:calc(100% - 32px)!important;max-height:none!important;margin:16px}}
 </style>
 </head><body><main>
 <a href="./#/planner">← Ders Programı</a>
 <p class="badge">Deneme ortamı · Gerçek ders kaydı yapılmaz</p>
-<h1>8 dersi 5 satırlık forma tek hamlede ekle</h1>
+<h1>8 dersi 7 satırlık forma tek hamlede ekle</h1>
 <p>Bu örnek form BUIS gibi davranır: Quick Add’e basınca dersler listene eklenir ve sayfa yenilenir. Yardımcı sığmayan dersleri yenilenen sayfada kendiliğinden ekler.</p>
-<ol><li>Örnek planı yükle (8 ders).</li><li>Yardımcıda <strong>Formu doldur</strong>’a, ardından formdaki <strong>Quick Add</strong>’e bas. Ya da <strong>Formu tanı</strong> → düğmeyi seç → kutuyu işaretle → <strong>Doldur ve gönder</strong>.</li><li>Sayfa yenilenince kalan 3 ders kendiliğinden eklenir; yardımcı sonunda “hepsi listende” der.</li></ol>
+<ol><li>Örnek planı yükle (8 ders).</li><li>Yardımcıda <strong>Formu doldur</strong>’a, ardından formdaki <strong>Quick Add</strong>’e bas. Ya da <strong>Formu tanı</strong> → düğmeyi seç → kutuyu işaretle → <strong>Doldur ve gönder</strong>.</li><li>Sayfa yenilenince kalan 1 ders kendiliğinden eklenir; yardımcı sonunda “hepsi listende” der.</li></ol>
 <button type="button" id="load">Örnek planı yükle</button>
 <button type="button" id="soon" class="secondary">Saati 5 saniye sonrasına ayarla</button>
 <button type="button" id="reset" class="secondary">Denemeyi sıfırla</button>
@@ -21,24 +21,23 @@
 
 <form id="demo-form" method="post" action="/buis-helper-demo.html">
 <h2>Örnek Quick Add formu</h2>
-<table><thead><tr><th>Kısaltma</th><th>Numara</th><th>Şube</th></tr></thead><tbody id="rows"></tbody></table>
-<label><input type="checkbox" name="noncredit"> Non-credit (deneme seçeneği)</label>
+<table><thead><tr><th colspan="5">Quick Add Menu (multiple adding is possible)</th></tr><tr><th>Abbreviation (i.e. CMPE, AD)</th><th>Code (i.e. 101, 201)</th><th>Section</th><th>Credit / Noncredit</th><th>Repeat With</th></tr></thead><tbody id="rows"></tbody></table>
 <div><button class="secondary" type="submit" id="advisor">Send to Approval</button> <button type="submit" id="quick-add">Quick Add</button></div>
 </form>
-<p class="hint">Gerçek BUIS formunun kaç satırlı olduğu kayıt açılınca görülecek. Hız yalnızca alanları yazma ve düğmeyi tetikleme süresidir; üniversite sunucusunun işlem süresi ve ders kabulü bu denemenin kapsamında değildir.</p>
+<p class="hint">Bu deneme, 16 Eylül ekran görüntüsündeki yedi satırı, varsayılan 01 şubesini ve kredi/tekrar alanlarını örnekler. Gerçek BUIS hesabına ders göndermez. Hız yalnızca alanları yazma ve düğmeyi tetikleme süresidir; üniversite sunucusunun işlem süresi ve ders kabulü bu denemenin kapsamında değildir.</p>
 </main>
 <script>
 const LIST='btbx-demo-list', ROUNDS='btbx-demo-rounds';
 const read=(k,f)=>{try{return JSON.parse(sessionStorage.getItem(k))??f}catch(e){return f}};
 const list=read(LIST,[]), rounds=read(ROUNDS,0);
-document.querySelector('#rows').innerHTML=[1,2,3,4,5].map(n=>`<tr><td><input aria-label="Ders ${n} kısaltma" name="abbr${n}"></td><td><input aria-label="Ders ${n} numara" name="code${n}"></td><td><input aria-label="Ders ${n} şube" name="section${n}"></td></tr>`).join('');
+document.querySelector('#rows').innerHTML=[1,2,3,4,5,6,7].map(n=>`<tr><td><input aria-label="Ders ${n} kısaltma" name="abbr${n}"></td><td><input aria-label="Ders ${n} numara" name="code${n}"></td><td><select aria-label="Ders ${n} şube" name="section${n}"><option value="01">01</option><option value="02">02</option><option value="03">03</option></select></td><td><label><input type="radio" name="rnc${n}" value="N" checked>Credit</label><label><input type="radio" name="rnc${n}" value="NC">Noncredit</label></td><td><select aria-label="Ders ${n} tekrar" name="rcourse${n}"><option value=""></option><option value="OLD">Önceki ders</option></select></td></tr>`).join('');
 document.querySelector('#course-list').innerHTML=list.map(c=>`<tr><td>${c}</td><td class="ok">Eklendi</td></tr>`).join('');
 if(rounds) document.querySelector('#round').textContent=`${rounds} kez Quick Add’e basıldı · listede ${list.length} ders`;
 const demoForm=document.querySelector('#demo-form');
 demoForm.addEventListener('submit',event=>{
  event.preventDefault();
  if(event.submitter?.id!=='quick-add'){document.querySelector('#round').textContent='Send to Approval denemede kapalı.';return;}
- for(let n=1;n<=5;n++){
+ for(let n=1;n<=7;n++){
   const [a,c,s]=['abbr','code','section'].map(k=>demoForm.elements[k+n].value.trim());
   if(a&&c&&s){const code=`${a.toUpperCase()} ${c.toUpperCase()}.${s.padStart(2,'0')}`; if(!list.includes(code)) list.push(code);}
  }

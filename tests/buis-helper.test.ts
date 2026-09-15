@@ -556,3 +556,78 @@ test('rounds stop on an error message, no progress, a changed plan, a stale job 
   assert.equal(job(off), null);
   assert.match(log(off), /yeniden "Formu doldur"a bas/);
 });
+
+// 16 September screenshot: seven rows, default section 01, separate credit/repeat controls.
+// Deliberately opaque input names ensure the labelled-table adapter is being tested.
+function buisQuickAddScreen() {
+  const sections = '<option value="01">01</option><option value="02">02</option><option value="03">03</option>';
+  const rows = Array.from({ length: 7 }, (_, i) => {
+    const n = i + 1;
+    return `<tr><td><input name="department_${n}"></td><td><input name="number_${n}"></td><td><select name="group_${n}">${sections}</select></td><td><input type="radio" name="rnc${n}" value="N" checked>Credit<input type="radio" name="rnc${n}" value="NC">Noncredit</td><td><select name="rcourse${n}"><option value=""></option><option value="PREV">Previous course</option></select></td></tr>`;
+  }).join('');
+  return `<form method="post" action="/fixture-add.aspx"><h1>COURSE LIST PREPARATION SCREEN</h1><table><tr><th>Courses Selected</th></tr></table><button>Drop</button><button>Change Section</button><table><tr><th colspan="5">Quick Add Menu (multiple adding is possible)</th></tr><tr><td>Abbreviation (i.e. CMPE, AD)</td><td>Code (i.e. 101, 201)</td><td>Section</td><td>Credit / Noncredit</td><td>Repeat With</td></tr>${rows}<tr><td colspan="5"><input type="submit" name="B1" value="Quick Add"></td></tr></table><button>Send To Approval</button></form>`;
+}
+
+test('screenshot-shaped Quick Add maps seven rows despite unknown names and default sections', t => {
+  const f = fixture(t, buisQuickAddScreen());
+  assert.equal(f.w.__bounToolboxHelper.findRows().length, 7);
+  f.fill('MATH 101.02\nCMPE 150.03');
+  assert.equal(f.field('department_1').value, 'MATH');
+  assert.equal(f.field('group_1').value, '02');
+  assert.equal(f.field('group_2').value, '03');
+  assert.equal(f.field('department_3').value, '');
+  assert.equal(f.field('group_3').value, '01');
+  assert.equal(f.field('rcourse1').value, '');
+  assert.equal(f.d.querySelector<HTMLInputElement>('[name="rnc1"][value="N"]')!.checked, true);
+  assert.equal(f.choice.options.length, 2);
+  f.choose(); f.button('Formu gönder').click();
+  assert.equal(f.submissions(), 1);
+});
+
+test('named legacy fields also allow defaults in unused rows and selecting another section', t => {
+  const rows = [1, 2, 3].map(n => `<input name="abbr${n}"><input name="code${n}"><select name="section${n}"><option value="01">01</option><option value="02">02</option></select>`).join('');
+  const f = fixture(t, form(rows));
+  f.fill('CMPE 150.02');
+  assert.equal(f.field('section1').value, '02');
+  assert.equal(f.field('abbr2').value, '');
+  assert.equal(f.field('section2').value, '01');
+});
+
+test('an occupied Quick Add row is not silently changed to a different section', t => {
+  const f = fixture(t, buisQuickAddScreen());
+  f.field('department_1').value = 'MATH'; f.field('number_1').value = '101';
+  f.fill('MATH101.02');
+  assert.equal(f.field('group_1').value, '01');
+  assert.match(log(f), /Dolu alan/);
+  assert.equal(f.choice.disabled, true);
+});
+
+test('partial extra row blocks the entire fill even though its section is a default', t => {
+  const f = fixture(t, buisQuickAddScreen()); f.field('number_7').value = '321';
+  f.fill('MATH101.02');
+  assert.equal(f.field('department_1').value, '');
+  assert.equal(f.field('number_7').value, '321');
+});
+
+test('ambiguous or malformed labelled Quick Add tables do not fall back to guesses', t => {
+  for (const html of [buisQuickAddScreen() + buisQuickAddScreen(), buisQuickAddScreen().replace('<input name="number_7">', '<input name="number_7"><input name="extra">')]) {
+    const f = fixture(t, html); f.fill();
+    assert.equal(f.w.__bounToolboxHelper.findRows().length, 0);
+    assert.equal(f.submissions(), 0);
+  }
+});
+
+test('eight courses fit in two real-shaped rounds; default 01 in six unused rows is harmless', t => {
+  const first = fixture(t, buisQuickAddScreen());
+  first.setPlan(eightPlan); first.button('Formu tanı').click(); first.choose();
+  first.d.querySelector<HTMLInputElement>('#btbx input[type="checkbox"]')!.click();
+  first.button('Doldur ve gönder').click();
+  assert.equal(first.submissions(), 1);
+  assert.equal(job(first).tried.length, 7);
+  const seven = listing('CMPE 150.01', 'MATH 101.02', 'EC 101.01', 'HIST 105.01', 'PHYS 121.01', 'CHEM 105.01', 'TK 221.01');
+  const second = reloaded(t, seven + buisQuickAddScreen(), job(first));
+  assert.equal(second.submissions(), 1);
+  assert.equal(second.field('department_1').value, 'PSY');
+  assert.equal(second.field('department_2').value, '');
+  assert.equal(second.field('group_2').value, '01');
+});

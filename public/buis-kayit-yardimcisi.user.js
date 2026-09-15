@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BOUN Toolbox — BUIS Kayıt Yardımcısı
 // @namespace    https://github.com/kharo0n/Boun-Toolbox-
-// @version      1.4.0
+// @version      1.4.1
 // @description  Boun Toolbox'ta hazırladığın ders programını BUIS ders ekleme formuna yazar (satır yetmezse tur tur hepsini ekler), kontenjan ve consent durumunu gösterir, consent formunu mesajınla doldurur. Ders eklemeyi tek tıkla veya seçtiğin saatte bir kez gönderir; consent isteğini göndermeyi sana bırakır.
 // @match        https://registration.boun.edu.tr/*
 // @match        https://registration.bogazici.edu.tr/*
@@ -194,7 +194,42 @@
     }
     return rows;
   }
+  /** Recognize the five labelled columns shown in the live BUIS Quick Add menu.
+   * Field names can change: only this explicit header permits structural mapping. */
+  function quickAddTableRows() {
+    var groups = [], invalid = false, found = false;
+    Array.from(document.querySelectorAll('table')).forEach(function (table) {
+      var trs = Array.from(table.querySelectorAll('tr')).filter(function (tr) { return tr.closest('table') === table; });
+      if (!trs.some(function (tr) { return /^quick\s+add\s+menu\b/i.test(tr.textContent.trim()); })) return;
+      var headers = trs.filter(function (tr) {
+        var text = Array.from(tr.cells).map(function (cell) { return cell.textContent.trim().replace(/\s+/g, ' '); });
+        return text.length === 5 && /^abbreviation\b/i.test(text[0]) && /^code\b/i.test(text[1]) &&
+          /^section$/i.test(text[2]) && /^credit\s*\/\s*noncredit$/i.test(text[3]) && /^repeat with$/i.test(text[4]);
+      });
+      if (!headers.length) return;
+      found = true;
+      if (headers.length !== 1) { invalid = true; return; }
+      var rows = [];
+      trs.slice(trs.indexOf(headers[0]) + 1).forEach(function (tr) {
+        var fields = Array.from(tr.querySelectorAll('input,select')).filter(editable);
+        if (!fields.length) return;
+        if (tr.cells.length !== 5) { invalid = true; return; }
+        var row = { index: String(rows.length + 1) };
+        ['abbr', 'code', 'section'].forEach(function (key, index) {
+          var candidates = Array.from(tr.cells[index].querySelectorAll('input,select')).filter(editable);
+          if (candidates.length !== 1 || (key === 'section' ? !(candidates[0] instanceof HTMLSelectElement) : !(candidates[0] instanceof HTMLInputElement))) { invalid = true; return; }
+          row[key] = candidates[0];
+        });
+        if (row.abbr && row.code && row.section) rows.push(row);
+      });
+      if (!validRows(rows)) invalid = true;
+      groups.push(rows);
+    });
+    return { found: found, rows: !invalid && groups.length === 1 ? groups[0] : [] };
+  }
   function findRows() {
+    var labelled = quickAddTableRows();
+    if (labelled.found) return labelled.rows;
     var taught = readStore().selectors;
     if (taught && typeof taught === 'object') {
       var first = { index: '1' };
@@ -480,12 +515,15 @@
     try {
       if (actionUrl(form).origin !== location.origin) throw new Error('Form hedefi BUIS ile aynı kökende değil.');
       rows.forEach(function (row, index) {
+        // BUIS initializes EVERY section dropdown to 01, including unused rows.
+        // Only an abbreviation or course number makes such a row occupied.
+        var courseRowEmpty = !row.abbr.value.trim() && !row.code.value.trim();
         ['abbr', 'code', 'section'].forEach(function (key) {
           var node = row[key], course = batch[index];
-          if (!course) { if (node.value.trim()) throw new Error('Liste dışındaki satırda mevcut ders var; önce BUIS formunu kontrol et.'); return; }
+          if (!course) { if (node.value.trim() && !(key === 'section' && node instanceof HTMLSelectElement && courseRowEmpty)) throw new Error('Liste dışındaki satırda mevcut ders var; önce BUIS formunu kontrol et.'); return; }
           var value = optionValue(node, course[key]);
           if (node.maxLength > 0 && value.length > node.maxLength) throw new Error('Değer alan sınırını aşıyor: ' + course.display);
-          if (node.value.trim() && node.value !== value) throw new Error('Dolu alanın üzerine yazılmadı; önce BUIS formunu kontrol et.');
+          if (node.value.trim() && node.value !== value && !(key === 'section' && node instanceof HTMLSelectElement && courseRowEmpty)) throw new Error('Dolu alanın üzerine yazılmadı; önce BUIS formunu kontrol et.');
           values.push({ node: node, value: value });
         });
       });

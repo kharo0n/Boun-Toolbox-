@@ -490,7 +490,7 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
           </div> : <div className="ra-method">
             <ol>
               <li>Tarayıcına Tampermonkey veya Violentmonkey eklentisini kur.</li>
-              <li><a href={helperUrl} target="_blank" rel="noreferrer">Kayıt yardımcısı script’ini</a> aç ve “Yükle”ye bas (1.4.0, kendini günceller).</li>
+              <li><a href={helperUrl} target="_blank" rel="noreferrer">Kayıt yardımcısı script’ini</a> aç ve “Yükle”ye bas (1.4.1, kendini günceller).</li>
               <li>Chrome’da panel çıkmazsa eklentinin ayrıntılarından “Kullanıcı komut dosyalarına izin ver”i aç.</li>
             </ol>
           </div>}
@@ -500,7 +500,7 @@ function RegistrationAssistant({ plan, onClose }: { plan: RegistrationPlan; onCl
           <h3><span className="ra-no">4</span> Kayıt günü</h3>
           <ol className="ra-day">
             <li><strong>Hemen şimdi:</strong> panele planı yapıştır. Kayıt açılmadan, giriş sayfasında da olur. <em>Kontenjan kontrol</em> consent ve boş yeri gösterir.</li>
-            <li><strong>Kayıt açılınca:</strong> Course List Preparation’da <em>Formu doldur</em>, sonra BUIS’in <em>Quick Add</em> düğmesi. Form 8 ders almıyorsa kalanlar sayfa yenilenince <em>kendiliğinden</em> eklenir; her ders en fazla bir kez gönderilir, BUIS hata yazarsa durur.</li>
+            <li><strong>Kayıt açılınca:</strong> Course List Preparation’da <em>Formu doldur</em>, sonra BUIS’in <em>Quick Add</em> düğmesi. Ekrandaki 7 satırı aşan dersler sayfa yenilenince <em>kendiliğinden</em> eklenir; her ders en fazla bir kez gönderilir, BUIS hata yazarsa durur.</li>
             <li><strong>Consent:</strong> Consent Requests ekranında panelden dersin düğmesine bas; ders seçilir, mesajın yazılır, <em>göndermeyi sen yaparsın</em>. Onay 24 saat geçerli.</li>
             <li><strong>Son:</strong> sonucu BUIS’ten kontrol et, danışman onayı için <em>Send to Approval</em>.</li>
           </ol>
